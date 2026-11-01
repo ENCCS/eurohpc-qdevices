@@ -1,0 +1,10 @@
+{
+  "format": "qdevices/1",
+  "site": "piastq",
+  "machine": "AQT",
+  "project": "MY-PROJECT",
+  "source": "AQT Public API 1.1.1, https://arnica.aqt.eu/api/v1/docs, the default example of POST /submit/{workspace}/{resource}",
+  "jobs": [
+    {"order": 1, "name": "NATIVE", "file": "NATIVE.json", "sha256": "3fd948330d2b5e031e6a34bb6599342f54a0140bd714fbb15c0038ffb579a209", "shots": 100}
+  ]
+}

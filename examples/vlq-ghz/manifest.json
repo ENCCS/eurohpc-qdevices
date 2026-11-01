@@ -1,0 +1,12 @@
+{
+  "format": "qdevices/1",
+  "site": "vlq",
+  "machine": "VLQ",
+  "project": "MY-PROJECT",
+  "lexis_project": "MY-LEXIS-PROJECT",
+  "resource": "MY-VLQ-RESOURCE",
+  "source": "IT4I GHZ_example.ipynb; IQM Academy DenebGHZ.ipynb (Apache-2.0)",
+  "jobs": [
+    {"order": 1, "name": "GHZ", "file": "GHZ.qasm", "sha256": "bf28888df5c19f0b5641c11e75bfe4bda84720b695e4629468014975ffc49026", "shots": 1000}
+  ]
+}

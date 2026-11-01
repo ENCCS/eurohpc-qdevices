@@ -1,0 +1,114 @@
+[project]
+name = "eurohpc-qdevices"
+version = "0.1.0"
+description = "Send a fixed list of circuits to a EuroHPC quantum computer, one job at a time, and keep an exact record."
+readme = "README.md"
+# The code is MIT (LICENSE.code); LICENSE is CC BY-SA 4.0 and covers the manual in content/, not the package.
+license = "MIT"
+license-files = ["LICENSE.code"]
+authors = [{ name = "Karim Elgammal", email = "karim.elgammal@enccs.se" }]
+requires-python = ">=3.11"
+dependencies = ["httpx>=0.27", "cryptography>=42"]
+keywords = ["quantum computing", "EuroHPC", "HPC", "job submission"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+
+[project.urls]
+Documentation = "https://enccs.github.io/eurohpc-qdevices/"
+Repository = "https://github.com/ENCCS/eurohpc-qdevices"
+
+[project.scripts]
+qdevices = "qdevices.cli:main"
+
+# Written by `pixi add --feature docs --pypi ...` as a standard group, so pip or uv can install it (`--group docs`).
+[dependency-groups]
+docs = [
+    "jupytext>=1.18.1",
+    "myst-nb>=1.3.0",
+    "sphinx>=8.2.3,<9",
+    "sphinx-evita>=0.3.1b0",
+    "sphinx-lesson>=0.8.16",
+    "sphinxcontrib-bibtex>=2.6.5",
+]
+# The offline tests (fake sites, no network): `pixi run -e test test`.
+test = ["pytest>=8"]
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling>=1.27"]     # license-files (PEP 639)
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/qdevices"]
+
+[tool.hatch.build.targets.sdist]
+exclude = ["/PLAN.md", "/.pixi", "/_build", "/.github"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["tests"]            # the shared fakes; conftest.py does not edit sys.path
+
+# Lint only, pinned as preview rules change between releases; no `ruff format` (own wrapping, aligned comments):
+# `pixi exec --spec "ruff==0.17.1" ruff check src tests examples`
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+
+[tool.ruff.lint]
+preview = true                    # needed for PLR1702, a preview rule
+explicit-preview-rules = true     # only PLR1702 is taken from preview
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "C4", "C90", "N", "D", "RUF", "PLR1702"]
+ignore = ["D105", "D107", "D401", "N818"]
+# D105, D107: the class docstring covers __init__ and magic methods. D401: noun phrases. N818: exception names stay.
+
+[tool.ruff.lint.mccabe]
+max-complexity = 8
+
+[tool.ruff.lint.pylint]
+max-nested-blocks = 3
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+[tool.ruff.lint.isort]
+known-first-party = ["qdevices"]  # fakes stays in the third-party block of the tests
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D", "N802", "RUF012"]           # tests: no docstrings; the fakes keep STATE names and class tables
+"src/qdevices/record.py" = ["SIM115"]          # a Record keeps its file open until its own close
+"src/qdevices/runner/loop.py" = ["SIM105"]     # explicit except Exception: test_source_rules.py scans them
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-arm64"]
+
+[tool.pixi.dependencies]          # the default environment: what the app needs, and no more
+python = "3.12.*"
+httpx = "*"
+cryptography = "*"
+
+[tool.pixi.pypi-dependencies]
+eurohpc-qdevices = { path = ".", editable = true }
+
+# The offline tests; the dependency group `test` above makes the feature `test`.
+[tool.pixi.feature.test.tasks]
+test = "pytest -q"
+
+# The manual in content/, from ENCCS/sphinx-lesson-template@cc3-footer (2efcd6e), with the six packages it declares
+# (furo comes with sphinx-evita). Python 3.13 as it requires, and no default feature: the manual needs no app.
+[tool.pixi.feature.docs.dependencies]
+python = "3.13.*"
+
+# _build/html is the template's BUILDDIR
+[tool.pixi.feature.docs.tasks]
+docs = "sphinx-build -n -W --keep-going -b html content _build/html"
+
+# Use `pixi run -e test test`: a bare `pixi run test` asks which, and a batch job cannot answer.
+# Qrisp has a workspace of its own in examples/qrisp/, so this lock holds no Qrisp.
+[tool.pixi.environments]
+default = { solve-group = "default" }
+test = { features = ["test"], solve-group = "default" }   # the same httpx and cryptography as the app
+docs = { features = ["docs"], no-default-feature = true }

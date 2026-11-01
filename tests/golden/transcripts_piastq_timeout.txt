@@ -1,0 +1,15 @@
+=== call 1: exit 2
+--- stdout
+Record: <TMP>/records/piastq/m/run_20260105T120000Z.jsonl
+[1/1] J1: sending
+  rule machine: pass
+  rule site_status: pass
+  rule shots: pass
+  rule shots_times_gates: pass
+  rule budget: pass
+  rule token: pass
+  rule window: pass
+  job p-1 sent
+STOP: order 1 (J1), job p-1: still Running after 60 s. Not cancelled: the job stays open and a resume collects it. Collect it the same day: how long the broker keeps a result is not published
+Record: <TMP>/records/piastq/m/run_20260105T120000Z.jsonl
+--- stderr

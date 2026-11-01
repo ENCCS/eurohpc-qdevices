@@ -1,0 +1,11 @@
+exit 0
+--- stdout
+usage: qdevices unlock [-h] --host NAME {euroqexa,piastq,vlq}
+
+positional arguments:
+  {euroqexa,piastq,vlq}
+
+options:
+  -h, --help            show this help message and exit
+  --host NAME
+--- stderr

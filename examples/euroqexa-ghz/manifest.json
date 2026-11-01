@@ -1,0 +1,10 @@
+{
+  "format": "qdevices/1",
+  "site": "euroqexa",
+  "machine": "EQE1",
+  "project": "MY-PROJECT",
+  "source": "LRZ MQSS Training-Material, examples/04_reading_from_qasm.py, commit fa35d0e",
+  "jobs": [
+    {"order": 1, "name": "GHZ", "file": "GHZ.qasm", "sha256": "ad6de3bf6c92ab4c70ced19bee2b03a09148c60bbaa45d4bf7dc7290d917e16a", "shots": 100}
+  ]
+}

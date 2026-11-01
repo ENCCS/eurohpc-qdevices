@@ -1,0 +1,11 @@
+{
+  "format": "qdevices/1",
+  "site": "euroqexa",
+  "machine": "EQE1",
+  "project": "MY-PROJECT",
+  "made_with": "Qrisp, examples/qrisp/write_manifests.py",
+  "ideal": "100, 110, 001 and 011, a quarter each",
+  "jobs": [
+    {"order": 1, "name": "CONSTRAINED_MIXER", "file": "CONSTRAINED_MIXER.qasm", "sha256": "3d8f854b48025d9a681e016e135e1545a1730c430e2e7534de0c65c6fc2639b9", "shots": 1000}
+  ]
+}

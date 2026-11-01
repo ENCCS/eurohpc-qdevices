@@ -1,0 +1,11 @@
+{
+  "format": "qdevices/1",
+  "site": "euroqexa",
+  "machine": "EQE1",
+  "project": "MY-PROJECT",
+  "made_with": "Qrisp, examples/qrisp/write_manifests.py",
+  "ideal": "(psi, phase) (00, 0), (10, 0.5), (01, 0.125), (11, 0.625), a quarter each",
+  "jobs": [
+    {"order": 1, "name": "TUTORIAL_QPE", "file": "TUTORIAL_QPE.qasm", "sha256": "517a692c245f995be5502a7cb3f95fe2b4a7cc5d2dd5e508a353ccd0e47723c6", "shots": 1000}
+  ]
+}

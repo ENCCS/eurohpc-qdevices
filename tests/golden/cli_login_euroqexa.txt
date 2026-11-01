@@ -1,0 +1,6 @@
+exit 0
+--- stdout
+Euro-Q-Exa: make a token on the Tokens page of the Munich Quantum Portal, https://portal.quantum.lrz.de.
+On a 403, check that you can log in to the portal before you make a new token.
+Then, in the shell of the call:   set +x; export MQSS_TOKEN="$(cat FILE)"
+--- stderr

@@ -1,0 +1,9 @@
+$ qdevices runs <TMP>/absent.jsonl
+euroqexa  TEST-PROJECT  m  <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl: 2 results of 3 jobs; 3.0 s measured; 2026-01-05T12:00:00Z to 2026-01-05T12:00:00Z; end: the orders [3] are not sent
+vlq  TEST-PROJECT  v  <TMP>/records/vlq/v/run_20260105T120000Z.jsonl: 0 results of 1 jobs; 0.0 s measured; 0.0 s by the published rule; open or lost: order 1 open; 2026-01-05T12:00:00Z to 2026-01-05T12:01:00Z; stop: order 1 (J1), job J-1: still RUNNING after 60 s. Not cancelle...
+euroqexa  TEST-AWARD  old-run  <TMP>/older/eqe/run3_20260101T100000Z.jsonl: 1 results of 2 jobs; 2.5 s measured; 2026-01-01T10:00:00Z to 2026-01-01T10:05:00Z; end: done
+piastq  TEST-AWARD  piastq  <TMP>/older/piastq/run1_20260101T100000Z.jsonl: 1 results of - jobs; 61.0 s measured; - to -; in progress, or cut off
+vlq  TEST-LEXIS  vlq  <TMP>/older/vlq/run1_20260101T100000Z.jsonl: 1 results of 3 jobs; 0.2 s measured; 0.9 s by the published rule; 3 init jobs; open or lost: order 3 open; - to -; stop: no reason given
+piastq  TEST-AWARD  decided  <TMP>/decided/batch_20260101T100000Z.jsonl: 0 results of - jobs; 0.0 s measured; 100.0 s counted (1 orders resolved over the limit or expired); 2026-01-01T10:00:00Z to 2026-01-01T10:00:00Z; stop: no reason given
+<TMP>/absent.jsonl: <TMP>/absent.jsonl cannot be read: FileNotFoundError
+exit 0

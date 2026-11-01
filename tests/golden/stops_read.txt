@@ -1,0 +1,2 @@
+exit 1
+{"event": "stop", "utc": "2026-01-05T12:00:00+00:00", "app": "qdevices", "site": "euroqexa", "machine": "M1", "project": "TEST-PROJECT", "reason": "the machine cannot be read: HTTP 503 to GET resources/M1. Nothing was sent in this call", "kind": "read", "error": "HTTP 503 to GET resources/M1", "http_status": 503, "body": "busy", "step": "read"}

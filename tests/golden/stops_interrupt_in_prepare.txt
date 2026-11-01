@@ -1,0 +1,2 @@
+exit 130
+{"event": "stop", "utc": "2026-01-05T12:00:00+00:00", "app": "qdevices", "site": "vlq", "machine": "M1", "project": "TEST-PROJECT", "lexis_project": "TEST-LEXIS", "resource": "R1", "kind": "interrupt", "reason": "interrupted by Ctrl-C; nothing was cancelled", "order": 1, "name": "J1", "phase": "prepare", "init_job": 5}

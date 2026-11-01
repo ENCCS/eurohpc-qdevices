@@ -1,0 +1,22 @@
+exit 0
+made ['euroqexa']
+--- stdout
+MQSS_TOKEN: set (the token is never printed)
+  M1: 5 qubits, online True
+  M2: 9 qubits, online False
+List of the machines stored in <TMP>/reads/euroqexa/list_20260105T120000Z.json. No job was made.
+--- stderr
+--- stored euroqexa/list_20260105T120000Z.json
+{
+ "read_at": "2026-01-05T12:00:00+00:00",
+ "resources": {
+  "M2": {
+   "qubits": 9,
+   "online": false
+  },
+  "M1": {
+   "qubits": 5,
+   "online": true
+  }
+ }
+}

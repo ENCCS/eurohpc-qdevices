@@ -1,0 +1,32 @@
+--job:
+  <TMP>/older/run1_20260101T100000Z.jsonl is a record of another runner: the app does not collect it, so --job and --expired are not taken (collect it with that runner). --gone takes an open order whose job the site no longer gives
+--expired:
+  <TMP>/older/run1_20260101T100000Z.jsonl is a record of another runner: the app does not collect it, so --job and --expired are not taken (collect it with that runner). --gone takes an open order whose job the site no longer gives
+--gone on a final order:
+  order 3 of <TMP>/older/run1_20260101T100000Z.jsonl is final: --gone takes only an open order, with a job id and no final line, whose job the site no longer gives
+--gone on a lost order:
+  order 2 of <TMP>/older/run1_20260101T100000Z.jsonl is lost: --gone takes only an open order, with a job id and no final line, whose job the site no longer gives
+--gone on an order not in the record:
+  order 9 of <TMP>/older/run1_20260101T100000Z.jsonl is not in the record: --gone takes only an open order, with a job id and no final line, whose job the site no longer gives
+--none on an open order:
+  order 1 of <TMP>/older/run1_20260101T100000Z.jsonl is open: in a record of another runner --none takes only a lost order, with a 'submitting' line and no job id; for an open order whose job the site no longer gives, give --gone
+--none on a final order:
+  order 3 of <TMP>/older/run1_20260101T100000Z.jsonl is final: in a record of another runner --none takes only a lost order, with a 'submitting' line and no job id
+--none on an order not in the record:
+  order 9 of <TMP>/older/run1_20260101T100000Z.jsonl is not in the record: in a record of another runner --none takes only a lost order, with a 'submitting' line and no job id
+--over-limit on an open order:
+  order 1 of <TMP>/older/run1_20260101T100000Z.jsonl is open: --over-limit takes only a final order whose result has more seconds than job_seconds_limit (it has no result with seconds)
+--over-limit on a lost order:
+  order 2 of <TMP>/older/run1_20260101T100000Z.jsonl is lost: --over-limit takes only a final order whose result has more seconds than job_seconds_limit (it has no result with seconds)
+--over-limit on an order not in the record:
+  order 9 of <TMP>/older/run1_20260101T100000Z.jsonl is not in the record: --over-limit takes only a final order whose result has more seconds than job_seconds_limit (it has no line)
+--over-limit on a result within the limit:
+  order 3 of <TMP>/older/run1_20260101T100000Z.jsonl is final: --over-limit takes only a final order whose result has more seconds than job_seconds_limit (its 500.0 s are within job_seconds_limit, 600 s)
+--none on a lost order while the lock of the site is held:
+  another live call holds the lock <TMP>/state/piastq.lock
+--gone on an order decided gone:
+  order 1 of <TMP>/older/run1_20260101T100000Z.jsonl is final: --gone takes only an open order, with a job id and no final line, whose job the site no longer gives
+--none on that order:
+  order 1 of <TMP>/older/run1_20260101T100000Z.jsonl is final: in a record of another runner --none takes only a lost order, with a 'submitting' line and no job id
+--over-limit on an order resolved over the limit:
+  order 3 of <TMP>/older/run1_20260101T100000Z.jsonl is final: --over-limit takes only a final order whose result has more seconds than job_seconds_limit (it is resolved already)

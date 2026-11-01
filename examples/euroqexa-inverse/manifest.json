@@ -1,0 +1,10 @@
+{
+  "format": "qdevices/1",
+  "site": "euroqexa",
+  "machine": "EQE1",
+  "project": "MY-PROJECT",
+  "source": "Munich Quantum Software Stack, MQSS adapter example examples/inverse_unitary_test.py, commit ea83f4e, Apache-2.0",
+  "jobs": [
+    {"order": 1, "name": "INVERSE", "file": "INVERSE.qasm", "sha256": "acbde3ff678c94e7260043b19181a276563ebd2d53c1759e69ab903f7557e76b", "shots": 200}
+  ]
+}

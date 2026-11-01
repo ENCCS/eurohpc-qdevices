@@ -1,0 +1,29 @@
+$ qdevices runs
+<TMP>/records/piastq/older_decisions.jsonl: <TMP>/records/piastq/older_decisions.jsonl cannot be read: PermissionError
+euroqexa  TEST-PROJECT  m  <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl: 2 results of 3 jobs; 3.0 s measured; 2026-01-05T12:00:00Z to 2026-01-05T12:00:00Z; end: the orders [3] are not sent
+vlq  TEST-PROJECT  v  <TMP>/records/vlq/v/run_20260105T120000Z.jsonl: 0 results of 1 jobs; 0.0 s measured; 0.0 s by the published rule; open or lost: order 1 open; 2026-01-05T12:00:00Z to 2026-01-05T12:01:00Z; stop: order 1 (J1), job J-1: still RUNNING after 60 s. Not cancelle...
+euroqexa  TEST-AWARD  old-run  <TMP>/older/eqe/run3_20260101T100000Z.jsonl: 1 results of 2 jobs; 2.5 s measured; 2026-01-01T10:00:00Z to 2026-01-01T10:05:00Z; end: done
+piastq  TEST-AWARD  piastq  <TMP>/older/piastq/run1_20260101T100000Z.jsonl: 1 results of - jobs; 61.0 s measured; - to -; in progress, or cut off
+vlq  TEST-LEXIS  vlq  <TMP>/older/vlq/run1_20260101T100000Z.jsonl: 1 results of 3 jobs; 0.2 s measured; 0.9 s by the published rule; 3 init jobs; open or lost: order 3 open; - to -; stop: no reason given
+piastq  TEST-AWARD  decided  <TMP>/decided/batch_20260101T100000Z.jsonl: 0 results of - jobs; 0.0 s measured; open or lost: order 1 open, order 2 lost; 2026-01-01T10:00:00Z to 2026-01-01T10:00:00Z; stop: no reason given
+exit 0
+$ qdevices usage
+<TMP>/records/piastq/older_decisions.jsonl: <TMP>/records/piastq/older_decisions.jsonl cannot be read: PermissionError; the older records are in the totals below, read without the decisions of this file
+site      project                records  jobs    shots   seconds   counted published init jobs init node s
+euroqexa  TEST-AWARD                   1     1      100       2.5       2.5         -         0         0.0
+euroqexa  TEST-PROJECT                 1     2       20       3.0       3.0         -         0         0.0
+piastq    TEST-AWARD                   2     1      200      61.0      61.0         -         0         0.0
+vlq       TEST-LEXIS                   1     1      100       0.2       0.2       0.9         3         0.0
+vlq       TEST-PROJECT                 1     0        0       0.0       0.0       0.0         0         0.0
+euroqexa: award 1 h = 3,600 s; 5.5 s measured in the records found (0.15 %), 5.5 s counted (0.15 %)
+vlq: award 10 h = 36,000 s; 0.2 s measured in the records found (0.00 %), 0.2 s counted (0.00 %)
+These totals are read from the records found, not from the accounting of the sites. The seconds are what each site measures: VLQ the device seconds of the job, Euro-Q-Exa the time from scheduled to completed, Piast-Q wall seconds. The counted seconds put the seconds of a decision of `qdevices resolve --over-limit`, `--expired` or `--gone` in place of the measured ones. VLQ init jobs book classical node time only.
+exit 0
+$ qdevices jobs <TMP>/decided/batch_20260101T100000Z.jsonl
+<TMP>/records/piastq/older_decisions.jsonl: <TMP>/records/piastq/older_decisions.jsonl cannot be read: PermissionError
+order  name         id                                     state                   shots   seconds
+    1  K1           p-1                                    open (no state)             -         -
+       stop: -
+       stop: -
+    2  K2           -                                      lost: resolve it            -         -
+exit 0

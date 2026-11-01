@@ -1,0 +1,44 @@
+exit 0
+made ['euroqexa']
+--- stdout
+MQSS_TOKEN: set (the token is never printed)
+  machine: M1
+  online: True
+  qubits: 5
+  pairs: 5
+  layout_sha256: e6abe6ab5e5d4cf426168dafa014c42e8e28a9cc447008d9ebdbab9582f38ea1
+  pending_jobs: 0
+  to pin this layout, add to the manifest:  "layout": {"layout_sha256": "e6abe6ab5e5d4cf426168dafa014c42e8e28a9cc447008d9ebdbab9582f38ea1", "qubits": 5, "pairs": 5}
+Read stored in <TMP>/reads/euroqexa/read_20260105T120000Z.json. No job was made.
+--- stderr
+--- stored euroqexa/read_20260105T120000Z.json
+{
+ "read_at": "2026-01-05T12:00:00+00:00",
+ "machine": "M1",
+ "qubits": 5,
+ "online": true,
+ "connectivity": null,
+ "instructions": [
+  [
+   "r",
+   {}
+  ],
+  [
+   "cz",
+   {
+    "(0, 1)": null,
+    "(1, 2)": null,
+    "(2, 3)": null,
+    "(3, 4)": null,
+    "(0, 4)": null
+   }
+  ]
+ ],
+ "gate_names": [
+  "cz",
+  "r"
+ ],
+ "pending_jobs": 0,
+ "layout_sha256": "e6abe6ab5e5d4cf426168dafa014c42e8e28a9cc447008d9ebdbab9582f38ea1",
+ "pairs": 5
+}

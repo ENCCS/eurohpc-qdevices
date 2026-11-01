@@ -1,0 +1,2 @@
+order 1 has the job J-5; a resume collects it
+{"event": "resolved", "utc": "2026-01-05T12:00:00+00:00", "app": "qdevices", "site": "vlq", "project": "TEST-PROJECT", "id": "J-5", "order": 1, "name": "J1", "by_host": "host-a"}

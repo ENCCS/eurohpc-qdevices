@@ -1,0 +1,10 @@
+exit 0
+--- stdout
+usage: qdevices jobs [-h] record
+
+positional arguments:
+  record
+
+options:
+  -h, --help  show this help message and exit
+--- stderr

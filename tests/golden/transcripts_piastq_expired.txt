@@ -1,0 +1,15 @@
+=== call 1: exit 1
+--- stdout
+Record: <TMP>/records/piastq/m/run_20260105T120000Z.jsonl
+[1/1] J1: sending
+  rule machine: pass
+  rule site_status: pass
+  rule shots: pass
+  rule shots_times_gates: pass
+  rule budget: pass
+  rule token: pass
+  rule window: pass
+  job p-1 sent
+STOP: order 1 (J1), job p-1: the site does not know the job any more, so its result may be lost (the broker answered code 4, 'Unknown job. May be expired.'). The order stays open and is never sent again. Resume once more, 10 minutes or more later; when two calls got this answer, record it with: qdevices resolve <TMP>/records/piastq/m/run_20260105T120000Z.jsonl 1 --expired
+Record: <TMP>/records/piastq/m/run_20260105T120000Z.jsonl
+--- stderr

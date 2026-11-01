@@ -1,0 +1,5 @@
+exit 1
+--- stdout
+Dry run: no network call, no token.
+  FAILED: <TMP>/reads/euroqexa/list_20260105T114000Z.json names no machine, so it is not a read of M1 (a list of the machines of a site names none)
+--- stderr

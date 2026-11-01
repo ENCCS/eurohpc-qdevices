@@ -1,0 +1,6 @@
+euroqexa, no manifest: EuroQExa {'machine': None}
+euroqexa, a manifest: EuroQExa {'machine': 'M1'}
+vlq, no manifest: VLQ {'machine': 'VLQ', 'lexis_project': None, 'resource_name': None, 'wait_seconds': 60.0}
+vlq, a manifest: VLQ {'machine': 'M1', 'lexis_project': 'TEST-LEXIS', 'resource_name': 'R1', 'wait_seconds': 60.0}
+piastq, no manifest: PiastQ {'machine': 'AQT'}
+piastq, a manifest: PiastQ {'machine': 'M1'}

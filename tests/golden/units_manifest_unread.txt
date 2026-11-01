@@ -1,0 +1,6 @@
+not_json: (None, ['<TMP>/not_json/manifest.json cannot be read as JSON: JSONDecodeError'])
+a_list: (None, ['<TMP>/a_list/manifest.json is not a JSON object'])
+site_unknown: (None, ['"format" must be "qdevices/1"', '"site" must be one of euroqexa, vlq, piastq'])
+no_jobs: (None, ['"jobs" must be a list of objects, one or more'])
+a_job_not_an_object: (None, ['"jobs" must be a list of objects, one or more'])
+absent: (None, ['<TMP>/absent.json cannot be read as JSON: FileNotFoundError'])

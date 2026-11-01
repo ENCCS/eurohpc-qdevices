@@ -1,0 +1,14 @@
+$ qdevices unlock vlq --host host-b
+REFUSED: there is no holder file <TMP>/state/vlq.holder
+exit 1
+$ qdevices unlock vlq --host host-c
+REFUSED: <TMP>/state/vlq.holder names the host 'host-b', not 'host-c'
+exit 1
+$ qdevices unlock vlq --host host-b
+removed <TMP>/state/vlq.holder, left by host-b (pid 99)
+exit 0
+$ qdevices unlock vlq --host host-b
+REFUSED: there is no holder file <TMP>/state/vlq.holder
+exit 1
+unlock.jsonl:
+{"event": "unlock", "utc": "2026-01-05T12:00:00+00:00", "app": "qdevices", "site": "vlq", "holder": {"host": "host-b", "pid": "<N>", "started": ""}, "by_host": "host-a"}

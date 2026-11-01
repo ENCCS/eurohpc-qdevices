@@ -1,0 +1,22 @@
+a record that does not exist:
+  no record at <TMP>/absent.jsonl
+a record with no start line:
+  <TMP>/x/no_start.jsonl has no start line
+a record made with another manifest:
+  <TMP>/a/records/euroqexa/m/run_20260105T120000Z.jsonl was made with another manifest or other files; it cannot be continued
+a copy of the record in another folder:
+  <TMP>/elsewhere/run_20260105T120000Z.jsonl sends nothing: it is not a record of the run folder <TMP>/a/records/euroqexa/m; its path, device or inode is not the one of its start line. It may be a copy, and a copy and its record would each send the same orders. Give --resume without --max-order to collect only
+a record started on another host:
+  <TMP>/a/records/euroqexa/m/run_20260105T120000Z.jsonl sends nothing: it was started on the host 'host-a', this is 'login-node'. It may be a copy, and a copy and its record would each send the same orders. Give --resume without --max-order to collect only
+another rules file than the one the record is held to:
+  <TMP>/a/records/euroqexa/m/run_20260105T120000Z.jsonl sends nothing with this rules file: the record is held to rules_a.py (SHA-256 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa), and this call gives rules_b.py (SHA-256 bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb). Give --rules rules_a.py to send with the rules the record is held to; give --new-rules to change the rules from here on (the resume line then holds both), or --resume without --max-order to collect only
+no rules file for a record held to one:
+  <TMP>/a/records/euroqexa/m/run_20260105T120000Z.jsonl sends nothing with this rules file: the record is held to rules_a.py (SHA-256 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa), and this call gives no rules file. Give --rules rules_a.py to send with the rules the record is held to; give --new-rules to change the rules from here on (the resume line then holds both), or --resume without --max-order to collect only
+the rules file of the record, changed in place:
+  <TMP>/a/records/euroqexa/m/run_20260105T120000Z.jsonl sends nothing with this rules file: the record is held to rules_a.py (SHA-256 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa), and this call gives rules_a.py (SHA-256 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc). rules_a.py has changed since the record was held to it: put back the file with SHA-256 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa to send with those rules; give --new-rules to change the rules from here on (the resume line then holds both), or --resume without --max-order to collect only
+a rules file for a record held to none:
+  <TMP>/z/records/euroqexa/m/run_20260105T120000Z.jsonl sends nothing with this rules file: the record is held to no rules file, and this call gives rules_a.py (SHA-256 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa). Leave out --rules to send with the rules the record is held to; give --new-rules to change the rules from here on (the resume line then holds both), or --resume without --max-order to collect only
+an older record of its run:
+  <TMP>/n/records/euroqexa/m/run_20260105T120000Z.jsonl sends nothing: it is not the newest record of <TMP>/n/records/euroqexa/m. It may be a copy, and a copy and its record would each send the same orders. Give --resume without --max-order to collect only
+a record with another inode at its path:
+  <TMP>/i/records/euroqexa/m/run_20260105T120005Z.jsonl sends nothing: its path, device or inode is not the one of its start line. It may be a copy, and a copy and its record would each send the same orders. Give --resume without --max-order to collect only

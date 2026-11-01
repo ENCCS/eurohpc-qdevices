@@ -1,0 +1,14 @@
+GET https://portal.quantum.lrz.de:4000/v1/resources/M1
+  authorization: Bearer <TOKEN>
+GET https://portal.quantum.lrz.de:4000/v1/resources/M1/num_pending_jobs
+  authorization: Bearer <TOKEN>
+POST https://portal.quantum.lrz.de:4000/v1/job
+  authorization: Bearer <TOKEN>
+  content-length: 203
+  content-type: application/json
+  body: {"circuit":"['OPENQASM 2.0;\\ninclude \"qelib1.inc\";\\nqreg q[1];\\ncreg c[1];\\nx q[0];\\nmeasure q -> c;\\n']","circuit_format":"qasm","resource_name":"M1","shots":10,"no_modify":false,"queued":false}
+  last line on disk: submitting
+GET https://portal.quantum.lrz.de:4000/v1/job/u-1/status
+  authorization: Bearer <TOKEN>
+GET https://portal.quantum.lrz.de:4000/v1/job/u-1/result
+  authorization: Bearer <TOKEN>

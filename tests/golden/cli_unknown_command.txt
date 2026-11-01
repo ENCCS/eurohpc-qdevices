@@ -1,0 +1,5 @@
+exit 1
+--- stdout
+--- stderr
+usage: qdevices [-h] [--version] {check,dry-run,send,resolve,unlock,runs,usage,jobs,login} ...
+qdevices: error: argument command: invalid choice: 'cancel' (choose from check, dry-run, send, resolve, unlock, runs, usage, jobs, login)

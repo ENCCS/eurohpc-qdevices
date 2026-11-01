@@ -1,0 +1,4 @@
+exit 1
+--- stdout
+REFUSED: "format" must be "qdevices/1"; "project" must be a text
+--- stderr

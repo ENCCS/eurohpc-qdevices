@@ -1,0 +1,5 @@
+exit 0
+--- stdout
+Piast-Q: the API key that PCSS issues for the broker; no public page says how it is issued.
+Then, in the shell of the call:   set +x; export PCSS_API_KEY="$(cat FILE)"
+--- stderr

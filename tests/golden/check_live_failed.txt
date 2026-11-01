@@ -1,0 +1,6 @@
+exit 1
+made ['euroqexa']
+--- stdout
+MQSS_TOKEN: set (the token is never printed)
+FAILED: the machine cannot be read: HTTP 401 to GET resources/M1: the token [hidden] or [hidden] is not valid
+--- stderr

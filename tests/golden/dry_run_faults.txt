@@ -1,0 +1,31 @@
+exit 1
+--- stdout
+Dry run: no network call, no token.
+  manifest  <TMP>/f/manifest.json  SHA-256 94305663649bf6786c8ed624ecdbf4cc9221146b849d68fc63949dadf01cac97
+  site      euroqexa, machine , project 7
+  run       a run
+  read      no read of  is saved: qubits and gates are checked only where the text alone allows
+  plan
+    [1/3] J 1               0 shots  ../J1.qasm  options {'queued': True}  ok
+    [3/3] J2               10 shots  J2.qasm  options {'no_modify': 'yes'}  ok
+    [4/3] J3             None shots  None  options {}  ok
+  totals    3 jobs, 10 shots
+  billing   EuroHPC time on Euro-Q-Exa is billed in wall-clock QPU seconds (LRZ); LRZ also defines a unit for its quantum systems, the equivalent qubit-second; the records give the seconds from scheduled to completed
+  FAILED: "format" must be "qdevices/1"
+  FAILED: "machine" must be a text
+  FAILED: "project" must be a text
+  FAILED: the run name 'a run' is not of [A-Za-z0-9_-]+: give "run" in the manifest
+  FAILED: the orders must be 1 to N in sequence, without gaps
+  FAILED: job 1: the name 'J 1' is not of [A-Za-z0-9_-]+
+  FAILED: job 1: the file '../J1.qasm' must be a file name next to the manifest
+  FAILED: job 1: sha256 is not 64 lower-case hex digits
+  FAILED: job 1: shots must be a whole number of 1 or more
+  FAILED: job 1: the option 'queued' is not one of this site (no_modify)
+  FAILED: job 2: there is no file <TMP>/f/J2.qasm
+  FAILED: job 2: the option 'no_modify' has the wrong type
+  FAILED: job 3: no file
+  FAILED: job 3: no sha256
+  FAILED: job 3: no shots
+  FAILED: the project 7 is not listed for euroqexa in qdevices.toml
+Dry run FAILED. Nothing was sent.
+--- stderr

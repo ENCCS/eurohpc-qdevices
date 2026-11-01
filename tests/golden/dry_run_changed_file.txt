@@ -1,0 +1,16 @@
+exit 1
+--- stdout
+Dry run: no network call, no token.
+  manifest  <TMP>/m/manifest.json  SHA-256 d6d1fc08b7801a19c944c73040d8685b76463e3e0c6e83c48f2b593c56e34ef0
+  site      euroqexa, machine M1, project TEST-PROJECT
+  run       m
+  read      no read of M1 is saved: qubits and gates are checked only where the text alone allows
+  plan
+    [1/2] J1               10 shots  J1.qasm  options {}  3 gates, 30 shots times gates  ok
+  note      order 1 (J1): without no_modify the site compiles the circuit, so its own count of gates can be higher
+    [2/2] J2               10 shots  J2.qasm  options {}  ok
+  totals    2 jobs, 20 shots
+  billing   EuroHPC time on Euro-Q-Exa is billed in wall-clock QPU seconds (LRZ); LRZ also defines a unit for its quantum systems, the equivalent qubit-second; the records give the seconds from scheduled to completed
+  FAILED: order 1: the SHA-256 of J1.qasm is d2ab8580282f15c4c08e2440b6a24b86c64312722f7477122f46ba2cd1bb9d32, the manifest has d4e4d687dcf142a6abb5e404fdeb651da5c3dabac8e648c9186e1d03623f99ac
+Dry run FAILED. Nothing was sent.
+--- stderr

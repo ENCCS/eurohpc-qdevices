@@ -1,0 +1,18 @@
+not_toml: the config is not TOML: Expected ']' at the end of a table declaration (at line 1, column 5)
+unknown_table: the config has the unknown table 'secrets'; the tables are euroqexa, vlq, piastq
+not_a_table: [vlq] is not a table
+unknown_key: [vlq] has the unknown key 'token'; the keys are award_hours, budget_seconds, job_seconds_limit, lexis_projects, max_shots, older_records, projects, wait_seconds
+key_of_another_site: [euroqexa] has the unknown key 'lexis_projects'; the keys are award_hours, budget_seconds, job_seconds_limit, max_shots, older_records, projects, wait_seconds
+window_at_vlq: [vlq] has the unknown key 'window'; the keys are award_hours, budget_seconds, job_seconds_limit, lexis_projects, max_shots, older_records, projects, wait_seconds
+wrong_type: [vlq] budget_seconds has the wrong type
+a_bool: [vlq] max_shots has the wrong type
+site_max_shots_not_whole: [piastq] site_max_shots has the wrong type
+zone_not_a_text: [piastq] window_zone has the wrong type
+not_finite: [vlq] wait_seconds must be a finite number
+not_texts: [vlq] projects must be a list of texts
+window_not_texts: [piastq] window must be a list of texts
+window_form: [piastq] window 'weekdays' is not in the form 'Wed-Thu 14:00-18:00'
+window_wraps: [piastq] window 'Fri-Mon 09:00-17:00' wraps or is empty: a window does not wrap, so give Fri-Sun and Mon as two windows, and an end after the start within one day, in the form 'Wed-Thu 14:00-18:00'
+window_empty: [piastq] window 'Mon 09:00-09:00' wraps or is empty: a window does not wrap, so give Fri-Sun and Mon as two windows, and an end after the start within one day, in the form 'Wed-Thu 14:00-18:00'
+window_zone: [piastq] window_zone 'Europe/Nowhere' is not a known time zone, such as 'Europe/Warsaw'
+a_folder: <TMP>/folder.toml cannot be read: [Errno 21] Is a directory: '<TMP>/folder.toml'

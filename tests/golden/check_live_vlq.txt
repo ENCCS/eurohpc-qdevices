@@ -1,0 +1,52 @@
+exit 0
+made ['vlq']
+--- stdout
+LEXIS_TOKEN: set (the token is never printed)
+LEXIS token: 120 minutes left
+  machine: VLQ
+  member: True
+  templates: ['RunQExecute', 'RunQInit']
+  status: {'flags': {'QPU_status': False, 'QCCW_status': True, 'queue_available': True, 'total_status': True}, 'timestamp': '2026-01-05T11:59:00+00:00', 'error': None}
+Read stored in <TMP>/reads/vlq/read_20260105T120000Z.json. No job was made.
+--- stderr
+--- stored vlq/read_20260105T120000Z.json
+{
+ "read_at": "2026-01-05T12:00:00+00:00",
+ "machine": "VLQ",
+ "lexis_project": "TEST-LEXIS",
+ "member": true,
+ "status": {
+  "flags": {
+   "QPU_status": false,
+   "QCCW_status": true,
+   "queue_available": true,
+   "total_status": true
+  },
+  "timestamp": "2026-01-05T11:59:00+00:00",
+  "error": null
+ },
+ "resource": {
+  "resource_name": "R1",
+  "project_resource_id": "res-1",
+  "location_name": "loc",
+  "allocation_amount": null
+ },
+ "project_name": "P",
+ "templates": [
+  "RunQExecute",
+  "RunQInit"
+ ],
+ "queues": {
+  "init_queue": {
+   "max_walltime": 7200,
+   "formula": "NumNodes * RunTime"
+  },
+  "compute_queue": {
+   "max_walltime": 7200,
+   "formula": "NumNodes * RunTime"
+  }
+ },
+ "dry_run": {
+  "JobId": null
+ }
+}

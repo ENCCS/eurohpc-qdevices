@@ -1,0 +1,4 @@
+exit 1
+--- stdout
+REFUSED: the config is not TOML: Expected ']' at the end of a table declaration (at line 1, column 10)
+--- stderr

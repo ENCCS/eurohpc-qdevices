@@ -1,0 +1,24 @@
+--none on an open order the site showed as RUNNING:
+  order 1 of <TMP>/b/records/euroqexa/m/run_20260105T120000Z.jsonl is open, not lost: with --job or --none only a lost order, an open VLQ order whose last stop is submit_unknown, or an open order that the site showed only as New for 3 days or more and still New in the last 24 h, is resolved (the site showed it as RUNNING)
+--job on it:
+  order 1 of <TMP>/b/records/euroqexa/m/run_20260105T120000Z.jsonl is open, not lost: with --job or --none only a lost order, an open VLQ order whose last stop is submit_unknown, or an open order that the site showed only as New for 3 days or more and still New in the last 24 h, is resolved (the site showed it as RUNNING)
+--expired on it:
+  order 1 of <TMP>/b/records/euroqexa/m/run_20260105T120000Z.jsonl is open: --expired takes only an open order whose last stop is result_expired, after two calls 10 minutes or more apart got that answer (its last stop is not result_expired)
+--over-limit on it:
+  order 1 of <TMP>/b/records/euroqexa/m/run_20260105T120000Z.jsonl is open: --over-limit takes only a final order whose result has more seconds than job_seconds_limit (it has no result with seconds)
+--none on an open order with no status line:
+  order 1 of <TMP>/c/records/vlq/m/run_20260105T120100Z.jsonl is open, not lost: with --job or --none only a lost order, an open VLQ order whose last stop is submit_unknown, or an open order that the site showed only as New for 3 days or more and still New in the last 24 h, is resolved (it has no status line)
+--job on an open VLQ order whose last stop is submit_unknown:
+  order 1 of <TMP>/c/records/vlq/m/run_20260105T120100Z.jsonl has the job 7 already. When the site shows it past Configuring, a resume collects it; when the site shows that it never ran, give --none
+--none on an order New for less than 3 days:
+  order 1 of <TMP>/d/records/euroqexa/m/run_20260105T120100Z.jsonl is open, not lost: with --job or --none only a lost order, an open VLQ order whose last stop is submit_unknown, or an open order that the site showed only as New for 3 days or more and still New in the last 24 h, is resolved (it is New for less than 3 days)
+--none on an order New whose last read is 4 days old:
+  order 1 of <TMP>/d/records/euroqexa/m/run_20260105T120100Z.jsonl is open, not lost: with --job or --none only a lost order, an open VLQ order whose last stop is submit_unknown, or an open order that the site showed only as New for 3 days or more and still New in the last 24 h, is resolved (its last read is older than 24 h: read it once more with a resume)
+--job on an order still New:
+  order 1 of <TMP>/d/records/euroqexa/m/run_20260105T120100Z.jsonl has the job J-1 already, still New: only --none is taken
+--none on an order the site showed as Queued:
+  order 1 of <TMP>/d/records/euroqexa/m/run_20260105T120100Z.jsonl is open, not lost: with --job or --none only a lost order, an open VLQ order whose last stop is submit_unknown, or an open order that the site showed only as New for 3 days or more and still New in the last 24 h, is resolved (the site showed it as Queued)
+--expired after one call got result_expired:
+  order 1 of <TMP>/e/records/piastq/m/run_20260109T120400Z.jsonl is open: --expired takes only an open order whose last stop is result_expired, after two calls 10 minutes or more apart got that answer (one call only got that answer: resume once more, 10 minutes or more later)
+--expired after two calls a minute apart:
+  order 1 of <TMP>/e/records/piastq/m/run_20260109T120400Z.jsonl is open: --expired takes only an open order whose last stop is result_expired, after two calls 10 minutes or more apart got that answer (the calls that got it are less than 10 minutes apart: resume once more later)

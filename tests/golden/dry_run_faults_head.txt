@@ -1,0 +1,6 @@
+exit 1
+--- stdout
+Dry run: no network call, no token.
+  FAILED: "format" must be "qdevices/1"
+  FAILED: "site" must be one of euroqexa, vlq, piastq
+--- stderr

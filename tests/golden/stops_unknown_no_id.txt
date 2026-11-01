@@ -1,0 +1,2 @@
+exit 2
+{"event": "stop", "utc": "2026-01-05T12:00:00+00:00", "app": "qdevices", "site": "euroqexa", "machine": "M1", "project": "TEST-PROJECT", "reason": "order 1 (J1): the answer has no id at submit. It is not known if a job runs. The order is never sent again: a resume stops at it until you record what became of it with `qdevices resolve`", "kind": "unknown", "order": 1, "name": "J1", "id": null, "error": "the answer has no id", "http_status": null, "body": null, "step": "submit"}

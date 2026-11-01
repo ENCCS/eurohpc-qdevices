@@ -1,0 +1,70 @@
+one qubit:
+  declared_gates []
+  qubits 1
+  gate_names ['measure', 'x']
+  register ('q', 1)
+  operations [('x', [0]), ('measure', [0])]
+  gate_count 2
+a defined gate and comments:
+  declared_gates ['bell']
+  qubits 2
+  gate_names ['bell', 'measure']
+  register ('q', 2)
+  operations [('bell', [0, 1]), ('measure', [0]), ('measure', [1])]
+  gate_count 4
+openqasm 3 with an int:
+  declared_gates []
+  qubits 2
+  gate_names ['cz', 'h', 'int', 'measure']
+  register ('q', 2)
+  operations [('h', [0]), ('cz', [0, 1]), ('measure', [0]), ('measure', [0]), ('measure', [1])]
+  gate_count 5
+if, parameters, reset and barrier:
+  declared_gates []
+  qubits 3
+  gate_names ['U', 'barrier', 'rz', 'x']
+  register ('q', 3)
+  operations [('rz', [0]), ('U', [1]), ('x', [2]), ('reset', [0]), ('barrier', [0]), ('barrier', [1]), ('barrier', [2])]
+  gate_count 4
+a whole register:
+  declared_gates []
+  qubits 3
+  gate_names ['cx', 'h', 'measure']
+  register ('q', 3)
+  operations [('h', [0]), ('h', [1]), ('h', [2]), ('cx', [0, 2]), ('measure', [0]), ('measure', [1]), ('measure', [2])]
+  gate_count 7
+braces:
+  declared_gates []
+  qubits 2
+  gate_names ['for']
+  register ('q', 2)
+  operations None
+  gate_count None
+a range:
+  declared_gates []
+  qubits 3
+  gate_names ['x']
+  register ('q', 3)
+  operations None
+  gate_count None
+two registers:
+  declared_gates []
+  qubits 3
+  gate_names ['cx']
+  register None
+  operations None
+  gate_count 1
+a qubit with no size:
+  declared_gates []
+  qubits 2
+  gate_names ['h', 'x']
+  register ('q', 2)
+  operations None
+  gate_count 3
+no register:
+  declared_gates []
+  qubits 0
+  gate_names []
+  register None
+  operations None
+  gate_count 0

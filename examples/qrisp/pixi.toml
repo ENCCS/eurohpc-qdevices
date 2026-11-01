@@ -1,0 +1,21 @@
+# The Qrisp examples and the tests with Qrisp, in a workspace of their own, so the app's pixi.lock holds no Qrisp.
+# From the top of the repository: `pixi run --manifest-path examples/qrisp/pixi.toml test` or `qrisp-examples`.
+[workspace]
+name = "qdevices-qrisp"
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-arm64"]
+
+[dependencies]                    # the app's default environment
+python = "3.12.*"
+httpx = "*"
+cryptography = "*"
+
+[pypi-dependencies]               # the app, Qrisp, and the dependency group `test` of pyproject.toml
+eurohpc-qdevices = { path = "../..", editable = true }
+qrisp = "*"
+pytest = ">=8"
+
+# Both run at the top of the repository, as before.
+[tasks]
+test = { cmd = "pytest -q", cwd = "../.." }
+qrisp-examples = { cmd = "python examples/qrisp/write_manifests.py", cwd = "../..", description = "Write the Qrisp examples and their manifests; no network" }

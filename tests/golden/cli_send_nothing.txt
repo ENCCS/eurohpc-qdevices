@@ -1,0 +1,4 @@
+exit 1
+--- stdout
+Nothing is sent: `send` needs --live, and --max-order N (send) or --resume FILE (collect).
+--- stderr

@@ -1,0 +1,2 @@
+exit 3
+{"event": "stop", "utc": "2026-01-05T12:00:00+00:00", "app": "qdevices", "site": "euroqexa", "machine": "M1", "project": "TEST-PROJECT", "kind": "error", "reason": "an error of the program: OSError: [Errno 28] No space left on device", "order": 1, "name": "J1", "id": "J-1"}

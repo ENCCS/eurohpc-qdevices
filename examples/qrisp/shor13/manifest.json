@@ -1,0 +1,11 @@
+{
+  "format": "qdevices/1",
+  "site": "euroqexa",
+  "machine": "EQE1",
+  "project": "MY-PROJECT",
+  "made_with": "Qrisp, examples/qrisp/write_manifests.py",
+  "ideal": "3 every time",
+  "jobs": [
+    {"order": 1, "name": "SHOR13", "file": "SHOR13.qasm", "sha256": "a65c58ac55837b9982c22fb01db93c54f0af880f938e2262cc066d9099ffae9e", "shots": 1000}
+  ]
+}

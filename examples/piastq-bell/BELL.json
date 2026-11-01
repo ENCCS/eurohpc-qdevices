@@ -1,0 +1,1 @@
+{"number_of_qubits": 2, "quantum_circuit": [{"operation": "RXX", "qubits": [0, 1], "theta": 0.5}, {"operation": "MEASURE"}]}

@@ -1,0 +1,10 @@
+own keys: {'zeta': 1, 'passed': True, 'rule': 'mine', 'alpha': [2], 'skip': [], 'reason': None}
+failed with no reason: {'passed': False, 'rule': 'mine', 'skip': [], 'reason': 'no reason given'}
+no rule: {'passed': True, 'rule': 'before_job', 'skip': [], 'reason': None}
+a rule that is a number: {'passed': True, 'rule': '7', 'skip': [], 'reason': None}
+not a dict: {'rule': 'before_job', 'passed': False, 'reason': 'the hook before_job did not answer with a verdict', 'skip': []}
+passed is not a bool: {'rule': 'before_job', 'passed': False, 'reason': 'the hook before_job did not answer with a verdict', 'skip': []}
+skip is not a list: {'rule': 'before_job', 'passed': False, 'reason': 'the hook before_job gave a skip that is not a list of orders', 'skip': []}
+skip holds a bool: {'rule': 'before_job', 'passed': False, 'reason': 'the hook before_job gave a skip that is not a list of orders', 'skip': []}
+skip holds a text: {'rule': 'before_job', 'passed': False, 'reason': 'the hook before_job gave a skip that is not a list of orders', 'skip': []}
+skip given: {'rule': 'later', 'passed': True, 'skip': [3, 2], 'reason': None}

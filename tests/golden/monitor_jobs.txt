@@ -1,0 +1,37 @@
+$ qdevices jobs <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl
+order  name         id                                     state                   shots   seconds
+    1  J1           J-1                                    result                     10     1.500
+    2  J2           J-2                                    result                     10     1.500
+exit 0
+$ qdevices jobs <TMP>/records/vlq/v/run_20260105T120000Z.jsonl
+order  name         id                                     state                   shots   seconds
+    1  J1           J-1                                    open (RUNNING)             10         -
+       stop: order 1 (J1), job J-1: still RUNNING after 60 s. Not cancelled: the job stays open and a resume c...
+exit 0
+$ qdevices jobs <TMP>/older/eqe/run3_20260101T100000Z.jsonl
+order  name         id                                     state                   shots   seconds
+    1  K1           u-1                                    result                    100     2.500
+    2  K2           -                                      refused                     -         -
+       refused: -
+exit 0
+$ qdevices jobs <TMP>/older/vlq/run1_20260101T100000Z.jsonl
+order  name         id                                     state                   shots   seconds
+    1  V1           502                                    result                    100     0.230
+    2  K1           504                                    never_submitted             -         -
+       stop: -
+    3  K2           506                                    open (no state)             -         -
+       stop: -
+       stop: -
+exit 0
+$ qdevices jobs <TMP>/older/piastq/run1_20260101T100000Z.jsonl
+order  name         id                                     state                   shots   seconds
+    1  K1           p-1                                    result                    200    61.000
+    2  K2           -                                      refusal                     -         -
+exit 0
+$ qdevices jobs <TMP>/decided/batch_20260101T100000Z.jsonl
+order  name         id                                     state                   shots   seconds
+    1  K1           p-1                                    resolved_gone               -         -
+       stop: -
+       stop: -
+    2  K2           -                                      resolved_none               -         -
+exit 0

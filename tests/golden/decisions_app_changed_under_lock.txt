@@ -1,0 +1,1 @@
+order 1 of <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl is open, not lost: with --job or --none only a lost order, an open VLQ order whose last stop is submit_unknown, or an open order that the site showed only as New for 3 days or more and still New in the last 24 h, is resolved (it has no status line)

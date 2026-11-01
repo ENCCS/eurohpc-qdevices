@@ -1,0 +1,11 @@
+{
+  "format": "qdevices/1",
+  "site": "vlq",
+  "machine": "VLQ",
+  "project": "MY-PROJECT",
+  "lexis_project": "MY-LEXIS-PROJECT",
+  "resource": "MY-VLQ-RESOURCE",
+  "jobs": [
+    {"order": 1, "name": "BELL", "file": "BELL.qasm", "sha256": "fa647fd9f9bd69f80db14aa817f2a2c14fa8249b6800a5008b1ad59503071f84", "shots": 100}
+  ]
+}

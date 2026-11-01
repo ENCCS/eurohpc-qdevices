@@ -1,0 +1,4 @@
+exit 0
+--- stdout
+qdevices 0.1.0
+--- stderr

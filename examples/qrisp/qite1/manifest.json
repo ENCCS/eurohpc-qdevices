@@ -1,0 +1,11 @@
+{
+  "format": "qdevices/1",
+  "site": "euroqexa",
+  "machine": "EQE1",
+  "project": "MY-PROJECT",
+  "made_with": "Qrisp, examples/qrisp/write_manifests.py",
+  "ideal": "11100 and 00011 most often, about 0.05 each",
+  "jobs": [
+    {"order": 1, "name": "QITE1", "file": "QITE1.qasm", "sha256": "12945e2d8a802e88a2807e9f04537deb7eaf65b183ac558e67f0551d17e7e4aa", "shots": 1000}
+  ]
+}

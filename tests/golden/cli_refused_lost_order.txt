@@ -1,0 +1,4 @@
+exit 1
+--- stdout
+REFUSED: a record of this site has an order that is open or lost: <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl: order 1 is lost. Collect an open order with --resume FILE; record what became of a lost one with `qdevices resolve`
+--- stderr

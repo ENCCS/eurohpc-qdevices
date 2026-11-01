@@ -1,0 +1,4 @@
+exit 1
+--- stdout
+REFUSED: another live call holds the lock <TMP>/state/euroqexa.lock
+--- stderr

@@ -1,0 +1,5 @@
+exit 1
+--- stdout
+MQSS_TOKEN: set (the token is never printed)
+REFUSED: "format" must be "qdevices/1"
+--- stderr

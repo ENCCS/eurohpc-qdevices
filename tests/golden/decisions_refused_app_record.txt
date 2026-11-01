@@ -1,0 +1,10 @@
+--gone on a record of the app:
+  <TMP>/r/records/euroqexa/m/run_20260105T120000Z.jsonl is a record of this app: --gone is only for a record of another runner. Here an open order whose result the site no longer gives is resolved with --expired
+--none on a lost order while the lock of its site is held:
+  another live call holds the lock <TMP>/r/state/euroqexa.lock
+a record of the app that names no site:
+  <TMP>/r/records/euroqexa/x/run_20260101T100000Z.jsonl names no site this app knows
+a record that does not exist:
+  no record at <TMP>/absent.jsonl
+a folder in place of a record:
+  no record at <TMP>/folder

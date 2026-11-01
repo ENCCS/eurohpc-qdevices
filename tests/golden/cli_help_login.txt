@@ -1,0 +1,10 @@
+exit 0
+--- stdout
+usage: qdevices login [-h] {euroqexa,piastq,vlq}
+
+positional arguments:
+  {euroqexa,piastq,vlq}
+
+options:
+  -h, --help            show this help message and exit
+--- stderr

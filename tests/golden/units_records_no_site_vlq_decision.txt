@@ -1,0 +1,8 @@
+$ qdevices runs
+unknown  TEST-AWARD  older  <TMP>/older/batch_20260101T100000Z.jsonl: 0 results of - jobs; 0.0 s measured; 100.0 s counted (1 orders resolved over the limit or expired); 2026-01-01T10:00:00Z to 2026-01-01T10:00:00Z; stop: no reason given
+exit 0
+$ qdevices usage
+site      project                records  jobs    shots   seconds   counted published init jobs init node s
+unknown   TEST-AWARD                   1     0        0       0.0     100.0         -         0         0.0
+These totals are read from the records found, not from the accounting of the sites. The seconds are what each site measures: VLQ the device seconds of the job, Euro-Q-Exa the time from scheduled to completed, Piast-Q wall seconds. The counted seconds put the seconds of a decision of `qdevices resolve --over-limit`, `--expired` or `--gone` in place of the measured ones. VLQ init jobs book classical node time only.
+exit 0

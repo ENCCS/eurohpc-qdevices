@@ -1,0 +1,2 @@
+# Keeps the Qrisp environment out of examples/, where the tests and pyflakes read every file.
+detached-environments = true

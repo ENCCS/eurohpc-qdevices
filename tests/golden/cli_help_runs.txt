@@ -1,0 +1,10 @@
+exit 0
+--- stdout
+usage: qdevices runs [-h] [paths ...]
+
+positional arguments:
+  paths       more records or folders, of this app or older runners
+
+options:
+  -h, --help  show this help message and exit
+--- stderr

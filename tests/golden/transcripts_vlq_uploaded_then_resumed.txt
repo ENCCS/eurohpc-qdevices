@@ -1,0 +1,21 @@
+=== call 1: exit 130
+--- stdout
+Record: <TMP>/records/vlq/m/run_20260105T120000Z.jsonl
+[1/3] J1: sending
+  rule machine: pass
+  rule site_status: pass
+  rule shots: pass
+  rule shots_times_gates: pass
+  rule budget: pass
+  rule token: pass
+  rule window: pass
+
+Interrupted by Ctrl-C. Nothing was cancelled. Collect with: qdevices send <TMP>/m/manifest.json --live --resume <TMP>/records/vlq/m/run_20260105T120000Z.jsonl
+Under way at the stop: order 1 (J1), job 7.
+--- stderr
+=== call 2: exit 1
+--- stdout
+[1/3] J1: job 7 has no result in the record; collecting it
+STOP: order 1 (J1), job 7: the site shows it Configuring and the record has no 'submitted' line, but the submit request may have reached the site. The job is not cancelled and is never sent again; the order stays open. Check the job at the site: when it has left Configuring, a resume collects it; when the site shows that it never ran, record it with: qdevices resolve <TMP>/records/vlq/m/run_20260105T120000Z.jsonl 1 --none
+Record: <TMP>/records/vlq/m/run_20260105T120000Z.jsonl
+--- stderr

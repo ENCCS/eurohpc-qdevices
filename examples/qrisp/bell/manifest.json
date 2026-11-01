@@ -1,0 +1,11 @@
+{
+  "format": "qdevices/1",
+  "site": "euroqexa",
+  "machine": "EQE1",
+  "project": "MY-PROJECT",
+  "made_with": "Qrisp, examples/qrisp/write_manifests.py",
+  "ideal": "00 and 11, about half each",
+  "jobs": [
+    {"order": 1, "name": "BELL", "file": "BELL.qasm", "sha256": "ae0cd142574796138ef95bd28378ae0a56b611999e3e31369cdacefe51a7b825", "shots": 100}
+  ]
+}

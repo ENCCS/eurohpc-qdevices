@@ -1,0 +1,15 @@
+exit 1
+--- stdout
+Dry run: no network call, no token.
+  manifest  <TMP>/m/manifest.json  SHA-256 f16bb550d395f60e2f9b6d77384ade27a6aafcdfd9677f4d0b2e3ef9697e1766
+  site      vlq, machine M1, project TEST-PROJECT, LEXIS project TEST-LEXIS, resource R1
+  run       m
+  read      no read of M1 is saved: qubits and gates are checked only where the text alone allows
+  plan
+    [1/2] V1               10 shots  V1.qasm  options {}  0.900 s by the published rule  ok
+    [2/2] V2             5000 shots  V2.qasm  options {}  2.000 s by the published rule  ok
+  totals    2 jobs, 5010 shots, 2.900 s by the published rule
+  billing   max(shots x 400 us, 0.9 s) per job (the guide's worst case), from the IT4I VLQ consumption guide (https://docs.it4i.cz/en/docs/clusters/vlq/vlq-consumption-guide). The device seconds a job reports can be below the 0.9 s floor; both are shown. Init jobs book classical node time only, shown apart
+  FAILED: no budget_seconds for vlq in qdevices.toml: a send is refused without it
+Dry run FAILED. Nothing was sent.
+--- stderr

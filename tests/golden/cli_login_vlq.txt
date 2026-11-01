@@ -1,0 +1,8 @@
+exit 0
+--- stdout
+VLQ: get a LEXIS access token with the LEXIS Python client and a MyAccessID login, as IT4I's access
+page shows (https://docs.it4i.cz/en/docs/clusters/vlq/access). Keep it in a file of your own.
+A job needs 30 minutes or more left on the token, or twice wait_seconds when that is longer.
+qdevices check vlq shows the minutes left, without printing the token.
+Then, in the shell of the call:   set +x; export LEXIS_TOKEN="$(cat FILE)"
+--- stderr

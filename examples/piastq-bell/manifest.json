@@ -1,0 +1,9 @@
+{
+  "format": "qdevices/1",
+  "site": "piastq",
+  "machine": "AQT",
+  "project": "MY-PROJECT",
+  "jobs": [
+    {"order": 1, "name": "BELL", "file": "BELL.json", "sha256": "85c60f455b634fe1e1a06721b6e8ba91126f08c2220086f422665b57c9151f7e", "shots": 100}
+  ]
+}

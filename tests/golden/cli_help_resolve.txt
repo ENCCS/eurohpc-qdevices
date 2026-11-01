@@ -1,0 +1,19 @@
+exit 0
+--- stdout
+usage: qdevices resolve [-h] (--job ID | --none | --over-limit | --expired | --gone) record order
+
+positional arguments:
+  record
+  order
+
+options:
+  -h, --help    show this help message and exit
+  --job ID      the job id found in the job list of the site (Piast-Q has none: ask PCSS)
+  --none        the site shows no job, shows that the job never ran, or showed it only as New for
+                days (not cancelled)
+  --over-limit  the seconds of the result are a wait at the site: it counts at job_seconds_limit
+  --expired     two calls, 10 minutes or more apart, stopped at result_expired: final, it counts
+                at job_seconds_limit
+  --gone        a record of another runner: the site no longer gives the job of an open order;
+                final, it counts at job_seconds_limit
+--- stderr

@@ -1,0 +1,10 @@
+# pixi environments, here and in examples/qrisp/
+**/.pixi/*
+!**/.pixi/config.toml
+__pycache__/
+*.egg-info/
+# the manual (Sphinx, from the ENCCS lesson template)
+/_build
+.jupyter_cache
+jupyter_execute
+

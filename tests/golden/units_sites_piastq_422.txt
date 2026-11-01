@@ -1,0 +1,10 @@
+the upstream 429 in a text: unknown
+the upstream 429 in an object: unknown
+a JSON list: refused
+a JSON text: refused
+a detail that is a list: refused
+a detail that is not JSON: refused
+a text that is not JSON: refused
+an empty text: refused
+no body: refused
+a number, not a text: refused

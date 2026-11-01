@@ -1,0 +1,4 @@
+absent.py: no rules file at <TMP>/absent.py
+folder.py: no rules file at <TMP>/folder.py
+broken.py: the rules file <TMP>/broken.py cannot be loaded: SyntaxError: '(' was never closed (broken.py, line 1)
+raises.py: the rules file <TMP>/raises.py cannot be loaded: RuntimeError: not ready

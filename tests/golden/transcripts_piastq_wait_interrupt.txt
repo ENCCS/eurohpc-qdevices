@@ -1,0 +1,17 @@
+=== call 1: exit 130
+--- stdout
+Record: <TMP>/records/piastq/m/run_20260105T120000Z.jsonl
+[1/1] J1: sending
+  rule machine: pass
+  rule site_status: pass
+  rule shots: pass
+  rule shots_times_gates: pass
+  rule budget: pass
+  rule token: pass
+  rule window: pass
+  job J-1 sent
+
+Interrupted by Ctrl-C. Nothing was cancelled. Collect with: qdevices send <TMP>/m/manifest.json --live --resume <TMP>/records/piastq/m/run_20260105T120000Z.jsonl
+Under way at the stop: order 1 (J1), job J-1.
+Collect it the same day: how long the broker keeps a result is not published
+--- stderr

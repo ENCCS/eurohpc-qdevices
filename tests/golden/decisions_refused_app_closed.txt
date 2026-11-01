@@ -1,0 +1,24 @@
+--none on a final order:
+  order 1 of <TMP>/a/records/euroqexa/m/run_20260105T120000Z.jsonl is final, not lost: with --job or --none only a lost order, an open VLQ order whose last stop is submit_unknown, or an open order that the site showed only as New for 3 days or more and still New in the last 24 h, is resolved
+--job on a final order:
+  order 1 of <TMP>/a/records/euroqexa/m/run_20260105T120000Z.jsonl is final, not lost: with --job or --none only a lost order, an open VLQ order whose last stop is submit_unknown, or an open order that the site showed only as New for 3 days or more and still New in the last 24 h, is resolved
+--none on an order not in the record:
+  order 9 of <TMP>/a/records/euroqexa/m/run_20260105T120000Z.jsonl is not in the record, not lost: with --job or --none only a lost order, an open VLQ order whose last stop is submit_unknown, or an open order that the site showed only as New for 3 days or more and still New in the last 24 h, is resolved
+--over-limit on a result within the limit:
+  order 1 of <TMP>/a/records/euroqexa/m/run_20260105T120000Z.jsonl is final: --over-limit takes only a final order whose result has more seconds than job_seconds_limit (its 1.5 s are within job_seconds_limit, 100 s)
+--over-limit on a lost order:
+  order 2 of <TMP>/a/records/euroqexa/m/run_20260105T120000Z.jsonl is lost: --over-limit takes only a final order whose result has more seconds than job_seconds_limit (it has no result with seconds)
+--over-limit on an order not in the record:
+  order 9 of <TMP>/a/records/euroqexa/m/run_20260105T120000Z.jsonl is not in the record: --over-limit takes only a final order whose result has more seconds than job_seconds_limit (it has no line)
+--expired on a final order:
+  order 1 of <TMP>/a/records/euroqexa/m/run_20260105T120000Z.jsonl is final: --expired takes only an open order whose last stop is result_expired, after two calls 10 minutes or more apart got that answer (it is not open)
+--expired on a lost order:
+  order 2 of <TMP>/a/records/euroqexa/m/run_20260105T120000Z.jsonl is lost: --expired takes only an open order whose last stop is result_expired, after two calls 10 minutes or more apart got that answer (it is not open)
+--expired on an order not in the record:
+  order 9 of <TMP>/a/records/euroqexa/m/run_20260105T120000Z.jsonl is not in the record: --expired takes only an open order whose last stop is result_expired, after two calls 10 minutes or more apart got that answer (it is not open)
+--none on an order a rule kept from being sent:
+  order 1 of <TMP>/f/records/euroqexa/m/run_20260105T120000Z.jsonl is unsent, not lost: with --job or --none only a lost order, an open VLQ order whose last stop is submit_unknown, or an open order that the site showed only as New for 3 days or more and still New in the last 24 h, is resolved
+--over-limit on that order:
+  order 1 of <TMP>/f/records/euroqexa/m/run_20260105T120000Z.jsonl is unsent: --over-limit takes only a final order whose result has more seconds than job_seconds_limit (it has no result with seconds)
+--over-limit on an order resolved over the limit:
+  order 1 of <TMP>/j/records/euroqexa/m/run_20260105T120000Z.jsonl is final: --over-limit takes only a final order whose result has more seconds than job_seconds_limit (it is resolved already)

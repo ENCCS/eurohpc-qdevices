@@ -1,0 +1,6 @@
+exit 0
+made []
+--- stdout
+PCSS_API_KEY: set (the token is never printed)
+window Mon 12:00-14:00 (Europe/Warsaw): inside now
+--- stderr

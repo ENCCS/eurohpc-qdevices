@@ -1,0 +1,5 @@
+exit 1
+--- stdout
+--- stderr
+usage: qdevices resolve [-h] (--job ID | --none | --over-limit | --expired | --gone) record order
+qdevices resolve: error: one of the arguments --job --none --over-limit --expired --gone is required

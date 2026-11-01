@@ -1,0 +1,42 @@
+take, a lock folder that cannot be made:
+  the lock folder <TMP>/t1 cannot be made: [Errno 17] File exists: '<TMP>/t1'
+take, a lock held by another call:
+  another live call holds the lock <TMP>/t2/vlq.lock
+unlock, a lock held by a live call:
+  another live call holds the lock <TMP>/t2/vlq.lock
+take, a file system with no flock:
+  the file system gives no lock at <TMP>/t3/vlq.lock (No locks available); a live call is refused
+take, a holder file that is not JSON:
+  the holder file <TMP>/t4/vlq.holder cannot be read (JSONDecodeError); check it and remove it by hand
+take, a holder file that is a folder:
+  the holder file <TMP>/t5/vlq.holder cannot be read (IsADirectoryError); check it and remove it by hand
+take, a holder file that is not an object:
+  the holder file <TMP>/t6/vlq.holder is not in the form of this app
+take, a holder of another host:
+  <TMP>/t7/vlq.holder names the host 'host-b': a live call may run there. Check that host, then `qdevices unlock vlq --host host-b`
+take, a holder of a live process of this host:
+  <TMP>/t8/vlq.holder names the live process <PID> on this host
+take, a holder file that cannot be made:
+  the holder file <TMP>/t9/vlq.holder cannot be made (Permission denied); a live call is refused
+take, a holder file made again by another call each time:
+  the holder file <TMP>/t10/vlq.holder cannot be made
+unlock, no lock folder:
+  there is no lock folder <TMP>/absent
+unlock, a file system with no flock:
+  the file system gives no lock at <TMP>/u3/vlq.lock (No locks available); a live call is refused
+unlock, no holder file:
+  there is no holder file <TMP>/u4/vlq.holder
+unlock, a holder file that is not JSON:
+  the holder file <TMP>/u5/vlq.holder cannot be read (JSONDecodeError); check it and remove it by hand
+unlock, a holder file that is not an object:
+  the holder file <TMP>/u6/vlq.holder is not in the form of this app
+unlock, a holder of another host than the one named:
+  <TMP>/u7/vlq.holder names the host 'host-b', not 'host-c'
+unlock, a holder of a live process of this host:
+  <TMP>/u8/vlq.holder names the live process <PID> on this host
+unlock, a holder of another host:
+  removed <TMP>/u9/vlq.holder, left by host-b (pid 99)
+the line of that unlock:
+  [{"event": "unlock", "site": "vlq", "holder": {"host": "host-b", "pid": "<N>"}, "by_host": "host-a"}]
+unlock, a holder of this host whose process has ended:
+  removed <TMP>/u10/vlq.holder, left by host-a (pid 4206649)

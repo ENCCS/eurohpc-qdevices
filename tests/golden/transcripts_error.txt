@@ -1,0 +1,15 @@
+=== call 1: exit 3
+--- stdout
+Record: <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl
+[1/3] J1: sending
+  rule machine: pass
+  rule site_status: pass
+  rule shots: pass
+  rule shots_times_gates: pass
+  rule budget: pass
+  rule token: pass
+  rule window: pass
+--- stderr
+Traceback (most recent call last):
+RuntimeError: a fault of the program
+FAILED: an error of the program in a live call. A job may be at the site: read the record <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl before the next step.

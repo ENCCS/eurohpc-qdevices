@@ -1,0 +1,10 @@
+an order lost in a record of the app, and one open in an older record:
+  a record of this site has an order that is open or lost: <TMP>/p/records/euroqexa/m/run_20260105T120000Z.jsonl: order 1 is lost; <TMP>/older/run3_20261001T000000Z.jsonl: order 4 is open. Collect an open order with --resume FILE; record what became of a lost one with `qdevices resolve`
+an older record folder that does not exist:
+  <TMP>/absent cannot be read: FileNotFoundError. A call that sends needs every record of the site readable: the budget and the open-order check read them all
+a decisions path that is a folder:
+  no record at <TMP>/d/records/euroqexa/older_decisions.jsonl. A call that sends needs every record of the site readable: the budget and the open-order check read them all
+an earlier record of the run with jobs that were sent:
+  <TMP>/e/records/euroqexa/m/run_20260105T120000Z.jsonl is an earlier record of this run with jobs that were sent. Go on with --resume <TMP>/e/records/euroqexa/m/run_20260105T120000Z.jsonl. A new record sends the first orders again: that needs --new-run, and it is your decision
+a new record in the second of a record of the run:
+  <TMP>/s/records/euroqexa/m/run_20260105T120000Z.jsonl exists already; start again in a second

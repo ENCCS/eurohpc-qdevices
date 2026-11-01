@@ -1,0 +1,14 @@
+=== call 1: exit 2
+--- stdout
+Record: <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl
+[1/1] J1: sending
+  rule machine: pass
+  rule site_status: pass
+  rule shots: NOT MET: 300 shots, the limit is 200
+  rule shots_times_gates: pass
+  rule budget: pass
+  rule token: pass
+  rule window: pass
+STOP: rule shots: 300 shots, the limit is 200
+Record: <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl
+--- stderr

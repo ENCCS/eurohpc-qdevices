@@ -1,0 +1,27 @@
+exit 1
+--- stdout
+usage: qdevices [-h] [--version] {check,dry-run,send,resolve,unlock,runs,usage,jobs,login} ...
+
+The command line: qdevices check, dry-run, send, resolve, unlock, runs, jobs, usage, login.
+
+positional arguments:
+  {check,dry-run,send,resolve,unlock,runs,usage,jobs,login}
+    check               the token and, with --live, one read of the machine (no job)
+    dry-run             check a manifest offline: no network, no token
+    send                send the jobs of a manifest, one at a time (needs --live)
+    resolve             record what became of a lost order, of a VLQ job whose submit request may
+                        have reached the site, of a job the site showed only as New for days, of a
+                        result above job_seconds_limit, or of a result or a job the site no longer
+                        gives (offline)
+    unlock              remove a holder file left by another host (offline)
+    runs                one line for each record
+    usage               totals by site and project
+    jobs                one line for each order of a record
+    login               how to get the token of a site
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+
+The bare command sends nothing.
+--- stderr

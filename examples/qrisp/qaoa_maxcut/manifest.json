@@ -1,0 +1,11 @@
+{
+  "format": "qdevices/1",
+  "site": "euroqexa",
+  "machine": "EQE1",
+  "project": "MY-PROJECT",
+  "made_with": "Qrisp, examples/qrisp/write_manifests.py",
+  "ideal": "11100 and 00011, about 0.2 each",
+  "jobs": [
+    {"order": 1, "name": "QAOA_MAXCUT", "file": "QAOA_MAXCUT.qasm", "sha256": "d557ccabf47895626a4913b4d4764a234dd156052a7237cd4a3c83f4037a6d84", "shots": 1000}
+  ]
+}

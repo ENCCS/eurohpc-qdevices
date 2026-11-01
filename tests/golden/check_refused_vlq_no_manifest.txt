@@ -1,0 +1,7 @@
+exit 1
+made []
+--- stdout
+LEXIS_TOKEN: set (the token is never printed)
+LEXIS token: 120 minutes left
+REFUSED: a live check of vlq needs --manifest FILE, for the LEXIS project and the resource
+--- stderr

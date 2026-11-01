@@ -1,0 +1,16 @@
+exit 1
+--- stdout
+Dry run: no network call, no token.
+  manifest  <TMP>/m/manifest.json  SHA-256 522ccfcbdf99c4ff6f865de8f832464a749eaa6b95c2e0e122b2c39d3dd867c5
+  site      piastq, machine M1, project TEST-PROJECT
+  run       m
+  read      no read of M1 is saved: qubits and gates are checked only where the text alone allows
+  note      site_max_shots 400 is above the limit of 200 the app holds for piastq: the site may accept such a job and not run it
+  plan
+    [1/2] P1              100 shots  P1.qasm  options {}  ok
+    [2/2] P2              500 shots  P2.qasm  options {}
+  totals    2 jobs, 600 shots
+  billing   no public rule; the records give wall seconds only
+  FAILED: order 2 (P2): 500 shots, the limit is 400
+Dry run FAILED. Nothing was sent.
+--- stderr

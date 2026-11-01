@@ -1,0 +1,25 @@
+path: PosixPath('<TMP>/m/manifest.json')
+folder: PosixPath('<TMP>/m')
+sha256: '834f9dcc03bc5c74fddf9f914cb2cfbe39c5de0d0c180d358e4eda0e6ef23933'
+site: 'euroqexa'
+run: 'm'
+machine: 'M1'
+project: 'TEST-PROJECT'
+lexis_project: None
+resource: None
+extra: {'note': 'a fact of the experiment'}
+job 1 order: 1
+job 1 name: 'J1'
+job 1 file: 'J1.qasm'
+job 1 sha256: 'd4e4d687dcf142a6abb5e404fdeb651da5c3dabac8e648c9186e1d03623f99ac'
+job 1 shots: 10
+job 1 options: {}
+job 1 text: b'OPENQASM 2.0;\ninclude "qelib1.inc";\nqreg q[1];\ncreg c[1];\nx q[0];\nmeasure q -> c;\n'
+job 2 options: {'no_modify': True}
+job 2 label: 'x'
+job 2 order: 2
+job 2 name: 'J2'
+job 2 file: 'J2.qasm'
+job 2 sha256: 'd4e4d687dcf142a6abb5e404fdeb651da5c3dabac8e648c9186e1d03623f99ac'
+job 2 shots: 20
+job 2 text: b'OPENQASM 2.0;\ninclude "qelib1.inc";\nqreg q[1];\ncreg c[1];\nx q[0];\nmeasure q -> c;\n'

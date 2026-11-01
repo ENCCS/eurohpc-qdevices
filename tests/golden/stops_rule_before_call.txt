@@ -1,0 +1,4 @@
+exit 2
+{"event": "rule", "utc": "2026-01-05T12:00:00+00:00", "app": "qdevices", "site": "euroqexa", "machine": "M1", "project": "TEST-PROJECT", "point": "before_call", "order": null, "rule": "machine", "passed": false, "reason": "the machine M1 is not online", "skip": []}
+{"event": "rule", "utc": "2026-01-05T12:00:00+00:00", "app": "qdevices", "site": "euroqexa", "machine": "M1", "project": "TEST-PROJECT", "point": "before_call", "order": null, "rule": "site_status", "passed": true, "reason": null, "skip": []}
+{"event": "stop", "utc": "2026-01-05T12:00:00+00:00", "app": "qdevices", "site": "euroqexa", "machine": "M1", "project": "TEST-PROJECT", "reason": "rule machine: the machine M1 is not online", "kind": "rule", "rule": "machine", "order": null}

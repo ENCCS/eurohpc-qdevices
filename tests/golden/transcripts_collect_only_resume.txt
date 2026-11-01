@@ -1,0 +1,46 @@
+=== call 1: exit 0
+--- stdout
+Record: <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl
+[1/3] J1: sending
+  NOTE: order 2 (J2): J2 is noted
+  rule machine: pass
+  rule site_status: pass
+  rule shots: pass
+  rule shots_times_gates: pass
+  rule budget: pass
+  rule token: pass
+  rule window: pass
+  rule mine: pass
+  NOTE: J1 is seen
+  job J-1 sent
+  job J-1: result in the record, 1.500 s
+  rule all_shots: pass
+  rule job_time: pass
+  rule skipper: pass
+[2/3] J2: sending
+  rule shots: pass
+  rule shots_times_gates: pass
+  rule budget: pass
+  rule token: pass
+  rule window: pass
+  rule mine: pass
+  NOTE: J2 is seen
+  job J-2 sent
+  job J-2: result in the record, 1.500 s
+  rule all_shots: pass
+  rule job_time: pass
+  rule skipper: pass
+  SKIP: the orders [3] are not sent
+[3/3] J3: skipped by a rule
+End: every order is final. 2 results in the record. Record: <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl
+--- stderr
+=== call 2: exit 0
+--- stdout
+NOTE: line 33 of the record is cut and is not read: {"event": "submitted", "order": 1, "name": "J1", "id": "J-47
+NOTE: line 33 holds the job id J-47; the id may be cut, as the line ends in it
+NOTE: the record is held to rules_a.py (SHA-256 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa); this call collects only, with rules_b.py (SHA-256 bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb)
+[1/3] J1: result in the record, not sent again
+[2/3] J2: result in the record, not sent again
+[3/3] J3: skipped by a rule
+End: every order is final. 2 results in the record. Record: <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl
+--- stderr

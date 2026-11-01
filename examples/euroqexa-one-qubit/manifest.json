@@ -1,0 +1,9 @@
+{
+  "format": "qdevices/1",
+  "site": "euroqexa",
+  "machine": "EQE1",
+  "project": "MY-PROJECT",
+  "jobs": [
+    {"order": 1, "name": "X", "file": "X.qasm", "sha256": "c845c4d643aeccb8a0c3e8c8cc6e192eca8c9c5c869510d9e2087ebae713bbb2", "shots": 100}
+  ]
+}

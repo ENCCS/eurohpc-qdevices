@@ -1,0 +1,14 @@
+=== call 1: exit 2
+--- stdout
+Record: <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl
+[1/3] J1: sending
+  rule machine: pass
+  rule site_status: pass
+  rule shots: pass
+  rule shots_times_gates: pass
+  rule budget: pass
+  rule token: pass
+  rule window: pass
+STOP: order 1 (J1): no answer at submit. It is not known if a job runs. The order is never sent again: a resume stops at it until you record what became of it with `qdevices resolve`
+Record: <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl
+--- stderr

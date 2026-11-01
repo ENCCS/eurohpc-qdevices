@@ -1,0 +1,2 @@
+order 1 of <TMP>/records/piastq/m/run_20260105T120000Z.jsonl is final: the site does not give its result; it is never sent again, and it counts at 100 s
+{"event": "resolved", "utc": "2026-01-05T12:11:00+00:00", "app": "qdevices", "site": "piastq", "project": "TEST-PROJECT", "order": 1, "name": "J1", "by_host": "host-a", "expired": true, "counted_seconds": 100.0}

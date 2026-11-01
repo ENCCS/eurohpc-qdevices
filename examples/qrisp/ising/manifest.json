@@ -1,0 +1,11 @@
+{
+  "format": "qdevices/1",
+  "site": "euroqexa",
+  "machine": "EQE1",
+  "project": "MY-PROJECT",
+  "made_with": "Qrisp, examples/qrisp/write_manifests.py",
+  "ideal": "000000 most often, about 0.13",
+  "jobs": [
+    {"order": 1, "name": "ISING", "file": "ISING.qasm", "sha256": "2e25feff47999827a630d889d6238fadce6d5d96d1c0fef78445f3dd6e84dc22", "shots": 1000}
+  ]
+}

@@ -1,0 +1,12 @@
+{"state": "unknown(0)", "final": false, "ok": false, "configuring": false, "code": 0}
+{"state": "Configuring", "final": false, "ok": false, "configuring": true, "code": 1}
+{"state": "Submitted", "final": false, "ok": false, "configuring": false, "code": 2}
+{"state": "unknown(3)", "final": false, "ok": false, "configuring": false, "code": 3}
+{"state": "Queued", "final": false, "ok": false, "configuring": false, "code": 4}
+{"state": "Running", "final": false, "ok": false, "configuring": false, "code": 8}
+{"state": "Finished", "final": true, "ok": true, "configuring": false, "code": 16}
+{"state": "Failed", "final": true, "ok": false, "configuring": false, "code": 32}
+{"state": "Canceled", "final": true, "ok": false, "configuring": false, "code": 64}
+{"state": "WaitingForServiceAccount", "final": false, "ok": false, "configuring": false, "code": 128}
+{"state": "Deleted", "final": true, "ok": false, "configuring": false, "code": 256}
+{"state": "unknown(512)", "final": true, "ok": false, "configuring": false, "code": 512}

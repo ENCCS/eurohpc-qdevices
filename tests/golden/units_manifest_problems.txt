@@ -1,0 +1,17 @@
+"format" must be "qdevices/1"
+"project" must be a text
+"lexis_project" must be a text
+"resource" must be a text
+the run name 'x/y' is not of [A-Za-z0-9_-]+: give "run" in the manifest
+the orders must be 1 to N in sequence, without gaps
+job 1: the name 7 is not of [A-Za-z0-9_-]+
+job 1: the file '..' must be a file name next to the manifest
+job 1: sha256 is not 64 lower-case hex digits
+job 1: shots must be a whole number of 1 or more
+job 1: the option 'no_modify' is not one of this site (none)
+job 2: there is no file <TMP>/f/J2.qasm
+job 2: shots must be a whole number of 1 or more
+job 2: options must be an object
+job 3: no name
+job 3: no sha256
+job 3: no shots

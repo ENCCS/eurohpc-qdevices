@@ -1,0 +1,19 @@
+=== call 1: exit 2
+--- stdout
+Record: <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl
+[1/3] J1: sending
+  rule machine: pass
+  rule site_status: pass
+  rule shots: pass
+  rule shots_times_gates: pass
+  rule budget: pass
+  rule token: pass
+  rule window: pass
+  job J-1 sent
+  job J-1: result in the record, 1.500 s
+  rule all_shots: pass
+  rule job_time: pass
+  rule skipper: pass
+STOP: a rule names orders to skip that were sent or do not exist: [1]
+Record: <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl
+--- stderr

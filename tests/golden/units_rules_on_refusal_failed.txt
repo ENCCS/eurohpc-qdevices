@@ -1,0 +1,1 @@
+{"job": {"order": 1, "name": "J1", "file": "J1.qasm", "sha256": "d4e4d687dcf142a6abb5e404fdeb651da5c3dabac8e648c9186e1d03623f99ac", "shots": 10, "options": {}}, "info": {"kind": "failed", "id": "J-1", "state": "FAILED", "reason": "the job ended FAILED"}}

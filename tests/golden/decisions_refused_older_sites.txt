@@ -1,0 +1,12 @@
+a record listed in no older_records:
+  <TMP>/older/run1_20260101T100000Z.jsonl is a record of another runner for piastq, and no older_records in qdevices.toml hold it. List it, or its folder, in older_records of piastq first: a decision on a record the app does not read has no effect
+a record listed only for another site:
+  <TMP>/older/run1_20260101T100000Z.jsonl is a record of another runner for piastq, and only the older_records of euroqexa hold it. List it, or its folder, in older_records of piastq first: a decision on a record the app does not read has no effect
+a record with no site listed for two sites:
+  <TMP>/no-site/run2_20260101T100000Z.jsonl names no site, and the older_records of euroqexa and vlq hold it: a decision on it is for one site, so list it for one site only
+a record with no site listed in no older_records:
+  <TMP>/no-site/run2_20260101T100000Z.jsonl is a record of another runner, and no older_records in qdevices.toml hold it. List it, or its folder, in older_records of its site first: a decision on a record the app does not read has no effect
+a record whose first line is not a start line:
+  the first line of <TMP>/no-start/run3_20260101T100000Z.jsonl is not a start line: a decision cannot be tied to the record, so the app would never read it
+a decisions path that is a folder:
+  no record at <TMP>/other/records/piastq/older_decisions.jsonl

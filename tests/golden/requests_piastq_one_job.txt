@@ -1,0 +1,12 @@
+GET https://api.quantum.psnc.pl/api/open/machines
+  x-api-key: <TOKEN>
+POST https://api.quantum.psnc.pl/api/open/tasks
+  x-api-key: <TOKEN>
+  content-length: 157
+  content-type: application/json
+  body: {"machine":"M1","payload":{"repetitions":10,"quantum_circuit":[{"operation":"RXX","qubits":[0,1],"theta":0.5},{"operation":"MEASURE"}],"number_of_qubits":2}}
+  last line on disk: submitting
+GET https://api.quantum.psnc.pl/api/open/tasks/p-1/status
+  x-api-key: <TOKEN>
+GET https://api.quantum.psnc.pl/api/open/tasks/p-1/results
+  x-api-key: <TOKEN>

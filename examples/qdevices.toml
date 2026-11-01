@@ -1,0 +1,26 @@
+# An example config. Copy it to ~/.config/qdevices/qdevices.toml and put in your own project names.
+# No token goes in this file: an unknown key is refused.
+
+[euroqexa]
+projects = ["MY-PROJECT"]
+award_hours = 5
+budget_seconds = 600          # the seconds the app may use on the site, as its records count them
+job_seconds_limit = 300       # the most one job may take; a lost or open order counts at this value
+wait_seconds = 900            # the longest wait for one job; the job then stays open
+
+[vlq]
+projects = ["MY-PROJECT"]
+lexis_projects = ["MY-LEXIS-PROJECT"]
+award_hours = 5
+budget_seconds = 600
+job_seconds_limit = 300
+wait_seconds = 900
+
+[piastq]
+projects = ["MY-PROJECT"]
+award_hours = 5
+budget_seconds = 3600
+job_seconds_limit = 600
+wait_seconds = 900
+# window = ["Mon 09:00-12:00", "Wed-Thu 14:00-18:00"]   # hours to send in, if you are given any
+# window_zone = "Europe/Warsaw"

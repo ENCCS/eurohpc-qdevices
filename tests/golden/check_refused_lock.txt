@@ -1,0 +1,6 @@
+exit 1
+made []
+--- stdout
+MQSS_TOKEN: set (the token is never printed)
+REFUSED: another live call holds the lock <TMP>/state/euroqexa.lock
+--- stderr

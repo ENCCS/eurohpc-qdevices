@@ -1,0 +1,2 @@
+order 1 is final: the job J-1 stayed New at the site; it is not cancelled, and it counts at the job time limit
+{"event": "resolved", "utc": "2026-01-09T12:02:00+00:00", "app": "qdevices", "site": "euroqexa", "project": "TEST-PROJECT", "none": true, "still_new": true, "order": 1, "name": "J1", "by_host": "host-a"}

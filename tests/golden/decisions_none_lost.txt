@@ -1,0 +1,2 @@
+order 1 is final with no job
+{"event": "resolved", "utc": "2026-01-05T12:00:00+00:00", "app": "qdevices", "site": "euroqexa", "project": "TEST-PROJECT", "none": true, "order": 1, "name": "J1", "by_host": "host-a"}

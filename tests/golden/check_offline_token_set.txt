@@ -1,0 +1,5 @@
+exit 0
+made []
+--- stdout
+MQSS_TOKEN: set (the token is never printed)
+--- stderr

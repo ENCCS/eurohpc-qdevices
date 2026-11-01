@@ -1,0 +1,6 @@
+$ qdevices runs
+<TMP>/older: <TMP>/older/batch.jsonl cannot be read: its first line is longer than 1 MiB, so it cannot be told whether it is a record; list each record of its folder by its own path
+exit 0
+$ qdevices runs
+<TMP>/older: <TMP>/older/sub cannot be read: PermissionError
+exit 0

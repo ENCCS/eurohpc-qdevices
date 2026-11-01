@@ -1,0 +1,4 @@
+exit 1
+--- stdout
+REFUSED: the rules file <TMP>/rules.py cannot be loaded: ValueError: the limits of this experiment are not set
+--- stderr

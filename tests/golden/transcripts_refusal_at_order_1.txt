@@ -1,0 +1,16 @@
+=== call 1: exit 2
+--- stdout
+Record: <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl
+[1/3] J1: sending
+  rule machine: pass
+  rule site_status: pass
+  rule shots: pass
+  rule shots_times_gates: pass
+  rule budget: pass
+  rule token: pass
+  rule window: pass
+  refused by the site: HTTP 400
+  rule refusal: NOT MET: order 1 (J1): refused: HTTP 400
+STOP: rule refusal: order 1 (J1): refused: HTTP 400
+Record: <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl
+--- stderr

@@ -1,0 +1,18 @@
+no --max-order and no --resume:
+  a live call needs --max-order N or --resume FILE; nothing is sent
+--new-run with --resume:
+  --new-run starts a new record; it does not go with --resume
+--new-rules with no --resume:
+  --new-rules goes with --resume: a new record is held to the rules file of its own call
+a manifest that fails:
+  "format" must be "qdevices/1"
+a site object of another site:
+  the manifest is for euroqexa, the site object is vlq
+--max-order past the last order:
+  --max-order 4: the manifest has the orders 1 to 3
+a project not listed:
+  the project 'OTHER' is not listed for euroqexa in qdevices.toml
+a VLQ project and LEXIS project not listed, and no budget_seconds:
+  the project 'OTHER' is not listed for vlq in qdevices.toml; the LEXIS project 'SOMEONE-ELSE' is not listed in lexis_projects for vlq in qdevices.toml: the device time is booked on it, and no flag changes it; no budget_seconds for vlq in qdevices.toml: the budget rule needs it
+a window zone that is not known:
+  the window zone 'Nowhere/Never' is not known

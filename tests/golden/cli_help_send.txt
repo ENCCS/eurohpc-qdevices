@@ -1,0 +1,18 @@
+exit 0
+--- stdout
+usage: qdevices send [-h] [--live] [--max-order N] [--resume FILE] [--new-run] [--new-rules]
+                     [--rules FILE]
+                     manifest
+
+positional arguments:
+  manifest
+
+options:
+  -h, --help     show this help message and exit
+  --live         a live call; without it nothing is sent
+  --max-order N  send the orders up to N
+  --resume FILE  go on with a record; without --max-order: collect only
+  --new-run      a new record that sends the first orders again
+  --new-rules    with --resume: send with a rules file other than the one the record is held to
+  --rules FILE   a Python file with the rules of an experiment
+--- stderr

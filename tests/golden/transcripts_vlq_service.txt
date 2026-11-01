@@ -1,0 +1,19 @@
+=== call 1: exit 0
+--- stdout
+Record: <TMP>/records/vlq/m/run_20260105T120000Z.jsonl
+[1/2] V1: sending
+  rule machine: pass
+  rule site_status: pass
+  rule shots: pass
+  rule shots_times_gates: pass
+  rule budget: pass
+  rule token: pass
+  rule window: pass
+  NOTE: order 1 (V1): the table of the day was not read (the pickle cannot be read: UnpicklingError), so the text was not checked against it
+  job 102 sent
+  job 102: result in the record, 0.420 s
+  rule all_shots: pass
+  rule job_time: pass
+End: the orders [2] are not sent. 1 results in the record. Record: <TMP>/records/vlq/m/run_20260105T120000Z.jsonl
+Go on with: qdevices send <TMP>/m/manifest.json --live --resume <TMP>/records/vlq/m/run_20260105T120000Z.jsonl --max-order N
+--- stderr

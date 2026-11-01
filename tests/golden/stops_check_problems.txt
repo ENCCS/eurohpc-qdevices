@@ -1,0 +1,2 @@
+exit 1
+{"event": "stop", "utc": "2026-01-05T12:00:00+00:00", "app": "qdevices", "site": "euroqexa", "machine": "M1", "project": "TEST-PROJECT", "reason": "the check of the jobs against the read of this call failed. Nothing was sent in this call", "kind": "check", "problems": ["order 1 (J1): the text has more qubits than the machine", "order 2 (J2): the text has more qubits than the machine", "order 3 (J3): the text has more qubits than the machine"]}

@@ -1,0 +1,40 @@
+machine_ready, not a member: {'rule': 'machine', 'passed': False, 'reason': 'the token is not a member of the LEXIS project TEST-LEXIS', 'skip': []}
+machine_ready, not online: {'rule': 'machine', 'passed': False, 'reason': 'the machine M1 is not online', 'skip': []}
+machine_ready, online is not true: {'rule': 'machine', 'passed': False, 'reason': 'the machine M1 is not online', 'skip': []}
+machine_ready, ready: {'rule': 'machine', 'passed': True, 'reason': None, 'skip': []}
+site_status, no status: {'rule': 'site_status', 'passed': True, 'reason': None, 'skip': []}
+site_status, not read: {'rule': 'site_status', 'passed': True, 'reason': None, 'skip': [], 'note': 'the VLQ status file could not be read: HTTP 500'}
+site_status, not an object: {'rule': 'site_status', 'passed': True, 'reason': None, 'skip': [], 'note': 'the VLQ status file could not be read: the read holds no flags'}
+site_status, two rows down: {'rule': 'site_status', 'passed': False, 'reason': 'the VLQ status file shows QPU and Overall down', 'skip': [], 'down': ['QPU', 'Overall']}
+site_status, a row unclear: {'rule': 'site_status', 'passed': True, 'reason': None, 'skip': [], 'note': 'the VLQ status file does not show Internal Scheduler as up or down'}
+site_status, up: {'rule': 'site_status', 'passed': True, 'reason': None, 'skip': []}
+shot_limit, above the site: {'rule': 'shots', 'passed': False, 'reason': '201 shots, the limit is 200', 'skip': [], 'shots': 201, 'limit': 200}
+shot_limit, above the own: {'rule': 'shots', 'passed': False, 'reason': '150 shots, the limit is 100', 'skip': [], 'shots': 150, 'limit': 100}
+shot_limit, no limit: {'rule': 'shots', 'passed': True, 'reason': None, 'skip': [], 'shots': 1000000, 'limit': None}
+gate_limit, no limit: {'rule': 'shots_times_gates', 'passed': True, 'reason': None, 'skip': []}
+gate_limit, not counted: {'rule': 'shots_times_gates', 'passed': True, 'reason': None, 'skip': [], 'limit': 3000000, 'note': 'the gate operations of the text cannot be counted, so its shots times gates is not checked against the 3,000,000 a job may hold (LRZ)'}
+gate_limit, at the limit: {'rule': 'shots_times_gates', 'passed': True, 'reason': None, 'skip': [], 'gate_count': 3, 'shots_times_gates': 3000000, 'limit': 3000000}
+gate_limit, above: {'rule': 'shots_times_gates', 'passed': False, 'reason': '1,000,001 shots times 3 gates is 3,000,003, above the 3,000,000 shots times gates a job may hold (LRZ)', 'skip': [], 'gate_count': 3, 'shots_times_gates': 3000003, 'limit': 3000000}
+budget, no budget_seconds: {'rule': 'budget', 'passed': False, 'reason': 'no budget_seconds in qdevices.toml for this site', 'skip': [], 'used_seconds': 0.0, 'job_seconds_limit': 300.0, 'budget_seconds': None}
+budget, within: {'rule': 'budget', 'passed': True, 'reason': None, 'skip': [], 'used_seconds': 899.5, 'job_seconds_limit': 100.0, 'budget_seconds': 1000}
+budget, above: {'rule': 'budget', 'passed': False, 'reason': '900.2 s used and 100 s for this job (the job time limit) exceed the budget of 1000 s', 'skip': [], 'used_seconds': 900.25, 'job_seconds_limit': 100.0, 'budget_seconds': 1000}
+token_time, another site: {'rule': 'token', 'passed': True, 'reason': None, 'skip': []}
+token_time, not read: {'rule': 'token', 'passed': False, 'reason': 'the time left on the token cannot be read', 'skip': [], 'minutes_left': None, 'minutes_needed': 30}
+token_time, too short: {'rule': 'token', 'passed': False, 'reason': 'the token has 29 minutes left, fewer than 30', 'skip': [], 'minutes_left': 29, 'minutes_needed': 30}
+token_time, enough: {'rule': 'token', 'passed': True, 'reason': None, 'skip': [], 'minutes_left': 30, 'minutes_needed': 30}
+token_time, twice the wait: {'rule': 'token', 'passed': False, 'reason': 'the token has 50 minutes left, fewer than 60', 'skip': [], 'minutes_left': 50, 'minutes_needed': 60}
+window, outside: {'rule': 'window', 'passed': False, 'reason': 'the time is outside the window of qdevices.toml', 'skip': [], 'in_window': False}
+window, inside: {'rule': 'window', 'passed': True, 'reason': None, 'skip': [], 'in_window': True}
+window, no window: {'rule': 'window', 'passed': True, 'reason': None, 'skip': [], 'in_window': None}
+all_shots, no counts: {'rule': 'all_shots', 'passed': False, 'reason': 'the result has no counts by bit string', 'skip': [], 'returned': None}
+all_shots, a key not of bits: {'rule': 'all_shots', 'passed': False, 'reason': 'the result has no counts by bit string', 'skip': [], 'returned': None}
+all_shots, a count that is a bool: {'rule': 'all_shots', 'passed': False, 'reason': 'the result has no counts by bit string', 'skip': [], 'returned': None}
+all_shots, fewer: {'rule': 'all_shots', 'passed': False, 'reason': '9 shots returned, 10 asked', 'skip': [], 'returned': 9}
+all_shots, all: {'rule': 'all_shots', 'passed': True, 'reason': None, 'skip': [], 'returned': 10}
+job_time, no seconds: {'rule': 'job_time', 'passed': False, 'reason': 'the job has no measured time', 'skip': [], 'seconds': None}
+job_time, below zero: {'rule': 'job_time', 'passed': False, 'reason': '-1.0 s, the job time limit is 100 s', 'skip': [], 'seconds': -1.0}
+job_time, above: {'rule': 'job_time', 'passed': False, 'reason': "500.0 s, the job time limit is 100 s. If that time is a wait at the site, not the run of the job, record your decision with: qdevices resolve 'a b/run.jsonl' 2 --over-limit", 'skip': [], 'seconds': 500.0}
+job_time, above, no record: {'rule': 'job_time', 'passed': False, 'reason': '500.0 s, the job time limit is 100 s. If that time is a wait at the site, not the run of the job, record your decision with: qdevices resolve RECORD 2 --over-limit', 'skip': [], 'seconds': 500}
+job_time, within: {'rule': 'job_time', 'passed': True, 'reason': None, 'skip': [], 'seconds': 1.5}
+stop_on_refusal: {'rule': 'refusal', 'passed': False, 'reason': 'order 1 (J1): refused: HTTP 400', 'skip': []}
+stop_on_refusal, no reason: {'rule': 'refusal', 'passed': False, 'reason': 'order 1 (J1): failed: no reason given', 'skip': []}

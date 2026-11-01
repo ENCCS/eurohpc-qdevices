@@ -1,0 +1,7 @@
+exit 1
+--- stdout
+--- stderr
+usage: qdevices send [-h] [--live] [--max-order N] [--resume FILE] [--new-run] [--new-rules]
+                     [--rules FILE]
+                     manifest
+qdevices send: error: argument --max-order: invalid int value: 'x'

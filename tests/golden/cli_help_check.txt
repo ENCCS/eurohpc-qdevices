@@ -1,0 +1,12 @@
+exit 0
+--- stdout
+usage: qdevices check [-h] [--live] [--manifest MANIFEST] {euroqexa,piastq,vlq}
+
+positional arguments:
+  {euroqexa,piastq,vlq}
+
+options:
+  -h, --help            show this help message and exit
+  --live                one read of the machine, stored as a file
+  --manifest MANIFEST   read the machine of this manifest (needed for vlq)
+--- stderr

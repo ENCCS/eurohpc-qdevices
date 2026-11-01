@@ -1,0 +1,6 @@
+exit 0
+made []
+--- stdout
+LEXIS_TOKEN: set (the token is never printed)
+LEXIS token: -2 minutes left
+--- stderr

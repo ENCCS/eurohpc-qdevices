@@ -1,0 +1,11 @@
+exit 0
+--- stdout
+usage: qdevices dry-run [-h] [--read READ] manifest
+
+positional arguments:
+  manifest
+
+options:
+  -h, --help   show this help message and exit
+  --read READ  a saved read (default: the newest of `check --live`)
+--- stderr

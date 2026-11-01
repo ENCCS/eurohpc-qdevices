@@ -1,0 +1,18 @@
+vlq 1: 0.9
+vlq 2250: 0.9
+vlq 2251: 0.9004000000000001
+vlq 10000: 4.0
+euroqexa 1: None
+euroqexa 2250: None
+euroqexa 2251: None
+euroqexa 10000: None
+piastq 1: None
+piastq 2250: None
+piastq 2251: None
+piastq 10000: None
+rule vlq: max(shots x 400 us, 0.9 s) per job (the guide's worst case), from the IT4I VLQ consumption guide (https://docs.it4i.cz/en/docs/clusters/vlq/vlq-consumption-guide). The device seconds a job reports can be below the 0.9 s floor; both are shown. Init jobs book classical node time only, shown apart
+rule euroqexa: EuroHPC time on Euro-Q-Exa is billed in wall-clock QPU seconds (LRZ); LRZ also defines a unit for its quantum systems, the equivalent qubit-second; the records give the seconds from scheduled to completed
+rule piastq: no public rule; the records give wall seconds only
+award {}: None
+award {'award_hours': 5}: 18000.0
+award {'award_hours': 0.5}: 1800.0

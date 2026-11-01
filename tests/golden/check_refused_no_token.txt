@@ -1,0 +1,6 @@
+exit 1
+made []
+--- stdout
+MQSS_TOKEN: not set (the token is never printed)
+REFUSED: a live check needs the token in MQSS_TOKEN
+--- stderr

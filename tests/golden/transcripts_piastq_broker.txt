@@ -1,0 +1,17 @@
+=== call 1: exit 0
+--- stdout
+Record: <TMP>/records/piastq/m/run_20260105T120000Z.jsonl
+[1/1] J1: sending
+  rule machine: pass
+  rule site_status: pass
+  rule shots: pass
+  rule shots_times_gates: pass
+  rule budget: pass
+  rule token: pass
+  rule window: pass
+  job p-1 sent
+  job p-1: result in the record, 0.000 s
+  rule all_shots: pass
+  rule job_time: pass
+End: every order is final. 1 results in the record. Record: <TMP>/records/piastq/m/run_20260105T120000Z.jsonl
+--- stderr

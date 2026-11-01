@@ -1,0 +1,9 @@
+{
+  "format": "qdevices/1",
+  "site": "piastq",
+  "machine": "AQT",
+  "project": "MY-PROJECT",
+  "jobs": [
+    {"order": 1, "name": "X", "file": "X.json", "sha256": "698d8f800496fa8c627fc3fe8b535bb4ea2d3c4e23743d6eb044bf4982042b5d", "shots": 100}
+  ]
+}
