@@ -16,9 +16,13 @@ QRISP = Path(__file__).resolve().parent.parent / "examples" / "qrisp"
 sys.path.insert(0, str(QRISP))
 from qasm2 import ExportError, to_qasm2  # noqa: E402
 
+sys.path.insert(0, str(QRISP.parent / "tools"))
+from example_folder import KEPT  # noqa: E402
+
 MANIFESTS = sorted(QRISP.glob("*/manifest.json"))
 QUBITS = {"bell": 2, "ghz3": 3, "qft3": 3, "abstract_parameter": 3, "qaoa_maxcut": 5, "tutorial_qpe": 5, "qubo": 6,
-          "constrained_mixer": 4, "qite1": 7, "ising": 6, "shor13": 6}
+          "constrained_mixer": 4, "qite1": 7, "ising": 6, "shor13": 6, "bv4": 5, "add_const": 3, "grover3": 3,
+          "hello": 25, "ising2": 2}
 QELIB1 = {"u3", "u2", "u1", "cx", "id", "x", "y", "z", "h", "s", "sdg", "t", "tdg", "rx", "ry", "rz", "cz", "cy",
           "ch", "ccx", "crz", "cu1", "cu3", "measure", "barrier", "reset"}
 
@@ -56,7 +60,7 @@ def test_the_writer_refuses_what_it_does_not_write(instruction):
         to_qasm2(circuit(instruction))
 
 
-def test_there_are_eleven_qrisp_examples():
+def test_there_is_a_folder_for_each_qrisp_example():
     assert {m.parent.name for m in MANIFESTS} == set(QUBITS)
 
 
@@ -90,7 +94,7 @@ def test_qrisp_makes_the_same_files_again_and_each_ideal_names_the_likeliest_out
     # A process of its own: the writer sets NumPy's CPU features before NumPy is imported.
     subprocess.run([sys.executable, QRISP / "write_manifests.py", "--out", tmp_path], check=True, capture_output=True)
     for manifest in MANIFESTS:
-        for file in manifest.parent.iterdir():
+        for file in (f for f in manifest.parent.iterdir() if f.name not in KEPT):
             assert (tmp_path / manifest.parent.name / file.name).read_bytes() == file.read_bytes(), file.name
     for program in PROGRAMS:
         made = program.build()

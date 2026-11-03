@@ -7,4 +7,8 @@ __pycache__/
 /_build
 .jupyter_cache
 jupyter_execute
-
+# a person's own copies of the examples, which hold their project name
+/my-runs/
+/my-chain/
+/examples/hamiltonian/live.json
+.ipynb_checkpoints/

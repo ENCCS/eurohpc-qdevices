@@ -6,6 +6,6 @@
   "made_with": "Qrisp, examples/qrisp/write_manifests.py",
   "ideal": "101 every time, the number 5",
   "jobs": [
-    {"order": 1, "name": "QFT3", "file": "QFT3.qasm", "sha256": "4ba3125dbd6549bbb09b443930b5f868a52a686fb957c85d6676fc4860d02fe7", "shots": 100}
+    {"order": 1, "name": "QFT3", "file": "QFT3.qasm", "sha256": "4ba3125dbd6549bbb09b443930b5f868a52a686fb957c85d6676fc4860d02fe7", "shots": 1000}
   ]
 }

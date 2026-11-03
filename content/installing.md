@@ -11,20 +11,18 @@ conda-forge in the project first:
 ```bash
 pixi init my-runs && cd my-runs
 pixi add "python=3.12"
-pixi add --pypi eurohpc-qdevices
+pixi add --pypi "eurohpc-qdevices @ git+https://github.com/ENCCS/eurohpc-qdevices"
 pixi run qdevices --help
 ```
 
-Before the app is on PyPI, give the git source in place of the name; while the repository is private,
-this needs read access to it. For a clone, give its absolute path with `--editable`:
+For a clone, give its absolute path with `--editable`:
 
 ```bash
-pixi add --pypi "eurohpc-qdevices @ git+https://github.com/ENCCS/eurohpc-qdevices"
 pixi add --pypi --editable "eurohpc-qdevices @ file:///absolute/path/to/eurohpc-qdevices"
 ```
 
 Once it is on PyPI, `pip install eurohpc-qdevices` in a virtual environment works too. Check the install
-with `qdevices --version`.
+with `pixi run qdevices --version`. Below, `qdevices` means `pixi run qdevices`, or `qdevices` inside `pixi shell`.
 
 ## Where the app keeps its files
 

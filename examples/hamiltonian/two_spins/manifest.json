@@ -1,0 +1,12 @@
+{
+  "format": "qdevices/1",
+  "site": "euroqexa",
+  "machine": "EQE1",
+  "project": "MY-PROJECT",
+  "made_with": "Qrisp, examples/hamiltonian/two_spins/write_two_spins.py",
+  "ideal": "11 at 0.866 for STEPS5 and 0.877 for STEPS16; a key reads q[1] q[0]",
+  "jobs": [
+    {"order": 1, "name": "STEPS5", "file": "STEPS5.qasm", "sha256": "f7e36d1c5aceea7625397335f388d74b8905162cb68c082800081f06b9f7be49", "shots": 1000, "steps": 5},
+    {"order": 2, "name": "STEPS16", "file": "STEPS16.qasm", "sha256": "558778961097b829170c129452894bb69d12048f3162c2de2e80a90baedd167c", "shots": 1000, "steps": 16}
+  ]
+}

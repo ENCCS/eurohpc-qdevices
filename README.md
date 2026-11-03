@@ -2,11 +2,42 @@
 
 A small app that sends a fixed list of circuits to a EuroHPC quantum computer, one job at a time, and
 keeps an exact record of what was sent and what came back. For **Euro-Q-Exa** (LRZ), **VLQ**
-(IT4Innovations) and **Piast-Q** (PCSS). It never cancels a job, never sends one twice, and never stores
-or prints a token.
+(IT4Innovations) and **Piast-Q** (PCSS).
 
 **To get onto the machines**, follow the ENCCS lesson
 [EuroHPC JU quantum devices and HPC-QC access in practice](https://enccs.github.io/eurohpc-quantum-devices-access-hpcqc/).
+
+## What it does
+
+![From you to the machine: dry-run, check and send on your computer, a record on disk, and the site that runs the shots](content/figs/app-flow.png)
+
+- **Checks** a manifest offline: the circuit files, their SHA-256, the shots and the project (`dry-run`).
+- **Reads** the machine once before a run, and sends no job (`check --live`).
+- **Sends** the jobs in order, one at a time, each text exactly as it is in its file (`send --live`).
+- **Does not write the circuits.** You bring each one as a text in the form its site takes: OpenQASM for
+  Euro-Q-Exa, which compiles it; OpenQASM 3 in the machine's own gates (`r`, `cz`, `move`) for VLQ, which
+  runs it as written; the broker's list of operations for Piast-Q. In [`examples/`](examples/README.md) the
+  texts are written by hand, or built as Qrisp programs and converted to OpenQASM 2 by
+  `examples/qrisp/qasm2.py`, a short converter of the examples, not of the app
+  ([how](content/qrisp.md#how-the-text-is-written)). The README of each folder says how its text was made.
+- **Records** a line on disk before each request, and the counts when they come. After a crash, `--resume`
+  collects the open jobs and never sends them again.
+- **Keeps to** your limits: the projects you name, the shots and the time of one job, and your budget of
+  seconds on the site.
+- **Shows** runs, jobs and usage from the records, offline.
+- **Never** cancels a job, sends one twice, or stores or prints a token.
+
+## Emulate the examples, with no account
+
+[![All the examples on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=doc/tree/examples/all_examples.ipynb) or on your own computer:
+
+```bash
+git clone --depth 1 https://github.com/ENCCS/eurohpc-qdevices
+cd eurohpc-qdevices/examples/qrisp/bell
+./emulate.sh
+```
+
+Each folder of [`examples/`](examples/README.md) explains itself, with its README and scripts. [`examples/hamiltonian/`](examples/hamiltonian/README.md) is a tutorial, from the Schrödinger equation to a job on a quantum computer, which you run on the machine and anyone can emulate.
 
 ## Install and first run
 
@@ -16,14 +47,13 @@ pixi add "python=3.12"
 pixi add --pypi "eurohpc-qdevices @ git+https://github.com/ENCCS/eurohpc-qdevices"
 ```
 
-Put your projects and limits in `~/.config/qdevices/qdevices.toml`; start from `examples/qdevices.toml`.
-`examples/` has a manifest for each site.
+In a clone, put your projects and limits in `~/.config/qdevices/qdevices.toml`; start from `examples/qdevices.toml`.
 
 ```bash
-qdevices dry-run MANIFEST                          # offline: the files, their SHA-256, shots, project
-qdevices login SITE                                # how to get the token
-qdevices check SITE --live --manifest MANIFEST     # one read of the machine, no job
-qdevices send MANIFEST --live --max-order 1        # the first job alone
+pixi run qdevices dry-run MANIFEST                          # offline: the files, their SHA-256, shots, project
+pixi run qdevices login SITE                                # how to get the token
+pixi run qdevices check SITE --live --manifest MANIFEST     # one read of the machine, no job
+pixi run qdevices send MANIFEST --live --max-order 1        # the first job alone
 ```
 
 ## Manual, tests and licence

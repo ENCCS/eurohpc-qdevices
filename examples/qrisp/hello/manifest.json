@@ -1,0 +1,11 @@
+{
+  "format": "qdevices/1",
+  "site": "euroqexa",
+  "machine": "EQE1",
+  "project": "MY-PROJECT",
+  "made_with": "Qrisp, examples/qrisp/write_manifests.py",
+  "ideal": "hello every time",
+  "jobs": [
+    {"order": 1, "name": "HELLO", "file": "HELLO.qasm", "sha256": "799ac79ce01a5b8de166f2cfe5fd32cbcc60fbcff736185d62f5f920b9334d5a", "shots": 1000}
+  ]
+}

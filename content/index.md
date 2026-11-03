@@ -28,7 +28,7 @@ stops on rules, and shows runs, jobs and usage from the records.
 
 ![The parts of the app: command line, offline checks, runner, sites and records](figs/parts.svg)
 
-It does not build, compile, simulate or change circuits: the text in the file is sent unchanged. It holds
+It does not build, compile, emulate or change circuits: the text in the file is sent unchanged. It holds
 no rule of an experiment: give those in a Python file. It never cancels a job, never sends a lost
 submission again, and never stores or prints a token.
 
@@ -52,6 +52,7 @@ rules
 live-runs
 examples
 qrisp
+hamiltonian
 billing-and-usage
 ```
 

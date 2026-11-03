@@ -1,0 +1,11 @@
+{
+  "format": "qdevices/1",
+  "site": "euroqexa",
+  "machine": "EQE1",
+  "project": "MY-PROJECT",
+  "made_with": "Qrisp, examples/qrisp/write_manifests.py",
+  "ideal": "1011 every time (the key of the site reads 01101)",
+  "jobs": [
+    {"order": 1, "name": "BV4", "file": "BV4.qasm", "sha256": "fa49b35b26b04cf071f13da69e1537aa87eb39e55d7bf1dc2053fd429a467e3c", "shots": 1000}
+  ]
+}

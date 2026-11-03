@@ -1,0 +1,6 @@
+numpy<2.5
+scipy
+matplotlib
+qutip==5.3.1
+qutip-qip==0.4.2
+qrisp==0.9.10

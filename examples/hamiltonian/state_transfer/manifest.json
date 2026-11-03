@@ -1,0 +1,21 @@
+{
+  "format": "qdevices/1",
+  "site": "euroqexa",
+  "machine": "EQE1",
+  "project": "MY-PROJECT",
+  "made_with": "Qrisp and a small function, examples/hamiltonian/write_chain.py",
+  "ideal": "keys read q[2] q[1] q[0]: 001 at the start, 100 on arrival",
+  "jobs": [
+    {"order": 1, "name": "CONTROL", "file": "CONTROL.qasm", "sha256": "8518462d11167d18c1e3156d3e5993b55af0c8081658955adf795b9174743dfd", "shots": 100, "time": "0", "steps": 0, "gates": 4, "two_qubit": 0, "key": "001", "excitations": 1, "exact_shares": {"001": 1.0}, "text_shares": {"001": 1.0}},
+    {"order": 2, "name": "MAIN", "file": "MAIN.qasm", "sha256": "13ac38c6ebe118b49769e417ca3934017c4937de16644aeaddecdc5e946a9f4f", "shots": 1000, "time": "T", "steps": 2, "gates": 30, "two_qubit": 10, "key": "100", "excitations": 1, "exact_shares": {"100": 1.0}, "text_shares": {"001": 0.026555, "010": 0.003037, "100": 0.970409}},
+    {"order": 3, "name": "QRISP", "file": "QRISP.qasm", "sha256": "00d9033a4d11b89f149d6326880baf164913cf7a3aa1a5c435512feaa8361be0", "shots": 1000, "time": "T", "steps": 2, "gates": 62, "two_qubit": 20, "key": "100", "excitations": 1, "exact_shares": {"100": 1.0}, "text_shares": {"001": 0.026555, "010": 0.003037, "100": 0.970409}},
+    {"order": 4, "name": "REPEAT", "file": "REPEAT.qasm", "sha256": "13ac38c6ebe118b49769e417ca3934017c4937de16644aeaddecdc5e946a9f4f", "shots": 1000, "time": "T", "steps": 2, "gates": 30, "two_qubit": 10, "key": "100", "excitations": 1, "exact_shares": {"100": 1.0}, "text_shares": {"001": 0.026555, "010": 0.003037, "100": 0.970409}},
+    {"order": 5, "name": "HALF", "file": "HALF.qasm", "sha256": "14a57a4a129ea97f94c9451fa4e17801b2e0b68bafa2e3cb06da9ee355e025af", "shots": 1000, "time": "T/2", "steps": 2, "gates": 30, "two_qubit": 10, "key": "010", "excitations": 1, "exact_shares": {"001": 0.25, "010": 0.5, "100": 0.25}, "text_shares": {"001": 0.275032, "010": 0.48043, "100": 0.244538}},
+    {"order": 6, "name": "BACK", "file": "BACK.qasm", "sha256": "c7371f6f78a0a8c1c61c75a81ad1381cb6b3d5702028e2ac49ee5bc99e019dcc", "shots": 1000, "time": "2T", "steps": 4, "gates": 46, "two_qubit": 18, "key": "001", "excitations": 1, "exact_shares": {"001": 1.0}, "text_shares": {"001": 0.98789, "010": 0.012059, "100": 5.1e-05}},
+    {"order": 7, "name": "ZERO", "file": "ZERO.qasm", "sha256": "39e0479e9d2a92ae1d124da84118714fc3b10aeb96ebbb672302e6e231c08315", "shots": 1000, "time": "T", "steps": 2, "gates": 29, "two_qubit": 10, "key": "000", "excitations": 0, "exact_shares": {"000": 1.0}, "text_shares": {"000": 1.0}},
+    {"order": 8, "name": "STEPS1", "file": "STEPS1.qasm", "sha256": "2857edff3e626bc665244ad7a910a9a37e7cd1497403e227a244bc8f252dbb3c", "shots": 1000, "time": "T", "steps": 1, "gates": 22, "two_qubit": 6, "key": "100", "excitations": 1, "exact_shares": {"100": 1.0}, "text_shares": {"001": 0.467085, "010": 0.024609, "100": 0.508307}},
+    {"order": 9, "name": "STEPS4", "file": "STEPS4.qasm", "sha256": "4bca60366bc04bafa2b6196c817342678b4e660663d882cf63b69c694a6774e3", "shots": 1000, "time": "T", "steps": 4, "gates": 46, "two_qubit": 18, "key": "100", "excitations": 1, "exact_shares": {"100": 1.0}, "text_shares": {"001": 0.001532, "010": 0.000201, "100": 0.998267}},
+    {"order": 10, "name": "STEPS8", "file": "STEPS8.qasm", "sha256": "b950e7a5e0c8a8b8a10be40499ac027997d928ed9773a9042b8b95e067a61d7d", "shots": 1000, "time": "T", "steps": 8, "gates": 78, "two_qubit": 34, "key": "100", "excitations": 1, "exact_shares": {"100": 1.0}, "text_shares": {"001": 9.4e-05, "010": 1.3e-05, "100": 0.999894}},
+    {"order": 11, "name": "ORDER1", "file": "ORDER1.qasm", "sha256": "9700d47a25634c5d50cbd1e7e1fd66afccf4bd03ded123fdedf2805676c6d19d", "shots": 1000, "time": "T", "steps": 2, "gates": 26, "two_qubit": 8, "key": "100", "excitations": 1, "exact_shares": {"100": 1.0}, "text_shares": {"001": 0.025385, "010": 0.215559, "100": 0.759056}}
+  ]
+}

@@ -1,19 +1,20 @@
 """Small Qrisp programs, each with the outcome a perfect machine would give, in Qrisp's labels."""
 
+import os
+import platform
 from collections.abc import Callable
 from dataclasses import dataclass
 from math import pi
 from typing import Final
 
-import networkx as nx
-import numpy as np
-from qrisp import QFT, PGate, QuantumBool, QuantumCircuit, QuantumFloat, QuantumModulus, QuantumVariable, auto_uncompute
-from qrisp.core import cx, h, mcp, p, rx, rz, rzz
-from qrisp.environments import conjugate, control, invert
-from qrisp.grover import grovers_alg
+# NumPy's AVX-512 code puts some angles of Qrisp one bit apart; without it every x86 machine writes the same text.
+if platform.machine().lower() in ("x86_64", "amd64"):
+    os.environ.setdefault("NPY_DISABLE_CPU_FEATURES", "X86_V4 AVX512_ICL AVX512_SPR")
+from pages import abstract_parameter, constrained_mixer, ising, qaoa_maxcut, qite1, qubo, shor13, tutorial_qpe
+from qrisp import QFT, QuantumBool, QuantumCircuit, QuantumFloat, QuantumString, QuantumVariable
+from qrisp.core import cx, h, p, x
+from qrisp.grover import grovers_alg, tag_state
 from qrisp.operators import X, Z
-from qrisp.qite import QITE
-from sympy import Symbol
 
 __all__ = ["PROGRAMS", "Program"]
 
@@ -63,120 +64,61 @@ def qft3(k: int = 5) -> QuantumFloat:
     return qf
 
 
-# The eight below follow pages of the Qrisp documentation, under
-# https://github.com/eclipse-qrisp/Qrisp/blob/main/documentation/source/ ; a page's loop of angles is one fixed choice.
-GRAPH: Final = nx.Graph([(0, 3), (0, 4), (1, 3), (1, 4), (2, 3), (2, 4)])
-
-
-def abstract_parameter() -> QuantumCircuit:
-    """reference/Examples/AbstractParameter.rst: H, then a phase gate controlled on 00, with phi bound to pi/2."""
-    phi = Symbol("phi")
-    qc = QuantumCircuit(3)
-    qc.h(-1)
-    qc.append(PGate(phi).control(2, ctrl_state="00"), qc.qubits)
-    return qc.bind_parameters({phi: pi / 2})
-
-
-def qaoa_maxcut(g: float = 0.3, b: float = 1.0999999999999999) -> QuantumVariable:
-    """general/tutorial/QAOAtutorial/MaxCut.ipynb: one QAOA layer, the angles of a coarse grid on the simulator."""
-    qv = QuantumVariable(5)
-    h(qv)
-    for i, j in GRAPH.edges():
-        cx(qv[i], qv[j])
-        rz(2 * g, qv[j])
-        cx(qv[i], qv[j])
-    for i in range(5):
-        rx(2 * b, qv[i])
-    return qv
-
-
-def tutorial_qpe() -> QuantumVariable:
-    """general/tutorial/tutorial.ipynb: QPE of two phase gates on psi, with three bits of precision."""
-    psi = QuantumVariable(2)
-    h(psi)
-    res = QuantumFloat(3, -3)
-    h(res)
-    for i in range(3):
-        with control(res[i]):
-            for _ in range(2**i):
-                p(0.5 * 2 * np.pi, psi[0])
-                p(0.125 * 2 * np.pi, psi[1])
-    QFT(res, inv=True)
-    return psi
-
-
-def qubo(g: float = 2.6, b: float = 0.5) -> QuantumVariable:
-    """general/tutorial/QAOAtutorial/QUBO.ipynb: one QAOA layer for its matrix, the angles of a coarse grid."""
-    q = np.array([[-17, 10, 10, 10, 0, 20], [10, -18, 10, 10, 10, 20], [10, 10, -29, 10, 20, 20],
-                  [10, 10, 10, -19, 10, 10], [0, 10, 20, 10, -17, 10], [20, 20, 20, 10, 10, -28]])
-    g = g / np.sqrt(np.linalg.norm(q))
-    qv = QuantumVariable(6)
-    h(qv)
-    for i in range(6):
-        rz(-g / 2 * (sum(q[i]) + sum(q[:, i])), qv[i])
-        for j in range(6):
-            if i != j and q[i][j] != 0:
-                rzz(g / 2 * q[i][j], qv[i], qv[j])
-    for i in range(6):
-        rx(2 * b, qv[i])
-    return qv
-
-
-@auto_uncompute
-def _parity_oracle(qv, phase):
+def bv4(secret: str = "1011") -> QuantumVariable:
+    """Bernstein-Vazirani: one query of the oracle finds the hidden string."""
+    qv = QuantumVariable(len(secret))
     flag = QuantumBool()
-    cx(qv[0], flag)
-    cx(qv[-1], flag)
-    p(phase, flag)
-
-
-def _prepare(qv):
-    with invert():
-        grovers_alg(qv, _parity_oracle, exact=True, winner_state_amount=2 ** (len(qv) - 1))
-
-
-def constrained_mixer() -> QuantumVariable:
-    """general/tutorial/QAOAtutorial/ConstrainedMixers.ipynb: the mixer on the allowed state 011, beta = pi."""
-    qv = QuantumVariable(3)
-    qv[:] = "011"
-    with conjugate(_prepare)(qv):
-        mcp(np.pi, qv, ctrl_state=0)
+    x(flag)
+    h(flag)
+    h(qv)
+    for i, bit in enumerate(secret):
+        if bit == "1":
+            cx(qv[i], flag)
+    h(qv)
+    h(flag)
+    x(flag)
     return qv
 
 
-def qite1(s: float = 0.1388888888888889) -> QuantumVariable:
-    """reference/Examples/MaxCutQITE.rst: one QITE step of MaxCut, its evolution time fixed."""
-    def exp_h(qv, gamma):
-        for i, j in GRAPH.edges():
-            rzz(2 * gamma, qv[i], qv[j])
-    qv = QuantumVariable(5)
-    QITE(qv, h, exp_h, [s], 1)
+def add_const(a: int = 3, b: int = 3) -> QuantumFloat:
+    """Qrisp's arithmetic on three bits: a + b, with no modulus."""
+    qf = QuantumFloat(3)
+    qf[:] = a
+    qf += b
+    return qf
+
+
+def grover3(winner: int = 6) -> QuantumFloat:
+    """reference/Examples/ExactGrover.rst, cut to three qubits and one winner: one sharp answer."""
+    def oracle(qf, phase=pi):
+        tag_state({qf: winner}, phase=phase)
+    qf = QuantumFloat(3)
+    grovers_alg(qf, oracle, exact=True, winner_state_amount=1)
+    return qf
+
+
+def hello(word: str = "hello") -> QuantumString:
+    """reference/Examples/HelloWorld.rst, cut to one word: five bits a letter, and no two-qubit gate."""
+    q_str = QuantumString(size=len(word))
+    q_str[:] = word
+    return q_str
+
+
+def ising2(t: float = 2 * pi / 2.6, steps: int = 5) -> QuantumVariable:
+    """Two spins of the Ising model in a field, J = 1, field 1.2, first order, by Qrisp's trotterization."""
+    ham = -1.0 * Z(0) * Z(1) - 1.2 * (X(0) + X(1))
+    qv = QuantumVariable(2)
+    ham.trotterization()(qv, t=t, steps=steps)
     return qv
-
-
-def ising(t: float = 1.0) -> QuantumVariable:
-    """reference/Examples/IsingModel.rst: five Trotter steps of a chain of six spins, to the time t."""
-    ham = sum(-1.0 * Z(k) * Z(k + 1) for k in range(5)) + sum(1.0 * X(k) for k in range(6))
-    qv = QuantumVariable(6)
-    ham.trotterization()(qv, t=t, steps=5)
-    return qv
-
-
-def shor13() -> QuantumModulus:
-    """general/tutorial/Shor.ipynb: 8 + 8 modulo 13."""
-    qg = QuantumModulus(13)
-    qg[:] = 8
-    qg += 8
-    return qg
 
 
 PROGRAMS: Final = (
     Program("BELL", "a Bell pair: H, CX", "00 and 11, about half each", bell),
     Program("GHZ3", "a three-qubit GHZ state: H, two CX", "000 and 111, about half each", ghz),
     Program("QFT3", "the Fourier state of 5 on three qubits, then the inverse QFT",
-            "101 every time, the number 5", qft3),
+            "101 every time, the number 5", qft3, 1000),
     Program("ABSTRACT_PARAMETER", "H, then a phase gate controlled on 00 (phi = pi/2)",
-            "000 and 100, about half each (a circuit's label: q[2] leftmost)", abstract_parameter, 1000),
+            "000 and 100, about half each: q[2] reads 0 or 1, and the others read 0", abstract_parameter, 1000),
     Program("QAOA_MAXCUT", "one QAOA layer of MaxCut on five nodes", "11100 and 00011, about 0.2 each",
             qaoa_maxcut, 1000),
     Program("TUTORIAL_QPE", "QPE of two phase gates, three bits", "(psi, phase) (00, 0), (10, 0.5), (01, 0.125), "
@@ -188,4 +130,11 @@ PROGRAMS: Final = (
             qite1, 1000),
     Program("ISING", "five Trotter steps of a six-spin Ising chain", "000000 most often, about 0.13", ising, 1000),
     Program("SHOR13", "8 + 8 modulo 13", "3 every time", shor13, 1000),
+    Program("BV4", "Bernstein-Vazirani with the hidden string 1011",
+            "1011 every time (the key of the site reads 01101)", bv4, 1000),
+    Program("ADD_CONST", "3 + 3 on three bits", "6 every time (the key of the site reads 110)", add_const, 1000),
+    Program("GROVER3", "exact Grover on three qubits, one winner", "6 every time (the key of the site reads 110)",
+            grover3, 1000),
+    Program("HELLO", "the word hello on 25 qubits, no two-qubit gate", "hello every time", hello, 1000),
+    Program("ISING2", "five Trotter steps of two spins", "11 most often, about 0.87", ising2, 1000),
 )

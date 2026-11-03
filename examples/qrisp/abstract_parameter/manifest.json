@@ -4,7 +4,7 @@
   "machine": "EQE1",
   "project": "MY-PROJECT",
   "made_with": "Qrisp, examples/qrisp/write_manifests.py",
-  "ideal": "000 and 100, about half each (a circuit's label: q[2] leftmost)",
+  "ideal": "000 and 100, about half each: q[2] reads 0 or 1, and the others read 0",
   "jobs": [
     {"order": 1, "name": "ABSTRACT_PARAMETER", "file": "ABSTRACT_PARAMETER.qasm", "sha256": "17ea0d6aa05d531d4ab3d95126f590cb21124d9ce29bf6b49d46c62e360b3723", "shots": 1000}
   ]

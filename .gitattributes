@@ -1,2 +1,6 @@
 # SCM syntax highlighting & preventing 3-way merges
 pixi.lock merge=binary linguist-language=YAML linguist-generated=true -diff
+# the scripts must run, and a text must keep its SHA-256, on any platform
+*.sh text eol=lf
+*.qasm -text
+examples/**/*.json -text

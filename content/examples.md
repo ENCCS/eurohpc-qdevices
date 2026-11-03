@@ -1,9 +1,14 @@
 # Examples
 
-Check an example with `qdevices dry-run examples/FOLDER/manifest.json`: no network call, no token. Put
-your own project in the manifest and in `qdevices.toml` in place of the placeholders. Then follow the steps
-of {doc}`installing`; they work for every folder. `examples/` also holds an example config (`qdevices.toml`)
-and rules file (`rules_bell.py`, {doc}`rules`).
+Each folder of `examples/` explains itself, with a README that says what it does and how to run it, and a block
+diagram. **Anyone can emulate them, with no account and no token:** `./emulate.sh` in a folder, or
+[all the examples on Binder](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=doc/tree/examples/all_examples.ipynb).
+{doc}`hamiltonian` is a full tutorial.
+
+To send one, `./run.sh` in its folder checks it offline, with no network call and no token. Put your own project in
+the manifest and in `~/.config/qdevices/qdevices.toml` in place of the placeholders, then run `./submit.sh`
+({doc}`installing`). `examples/` also holds an example config (`qdevices.toml`) and rules file (`rules_bell.py`,
+{doc}`rules`).
 
 | Folder | Site | What it sends | What a perfect machine would give |
 |---|---|---|---|
@@ -21,7 +26,7 @@ and rules file (`rules_bell.py`, {doc}`rules`).
   `piastq-bell` (at 400 shots, then at 200) were sent with this app. The one-qubit jobs came back the same
   day; {doc}`euroqexa` and {doc}`piastq` say what became of the Bell jobs. `euroqexa-one-qubit`,
   `euroqexa-three-jobs` and `vlq-bell` have not run on hardware with this app.
-- `examples/qrisp/` has a Bell pair, a GHZ state and a QFT for Euro-Q-Exa, written with Qrisp ({doc}`qrisp`).
+- `examples/qrisp/` has 16 programs for Euro-Q-Exa, written with Qrisp ({doc}`qrisp`).
 
 ## Starter examples from the sites' own material
 

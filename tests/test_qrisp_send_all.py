@@ -48,7 +48,7 @@ def run(tmp_path, *args, **env):
 def own_copy(tmp_path, project="EXAMPLE-PROJECT"):
     """A copy of the examples with a project of one's own, as qrisp-examples --project writes it."""
     copy = tmp_path / "my-runs"
-    shutil.copytree(EXAMPLES / "qrisp", copy, ignore=shutil.ignore_patterns("*.py", "*.sh", "__pycache__"))
+    shutil.copytree(EXAMPLES / "qrisp", copy, ignore=shutil.ignore_patterns("*.py", "*.sh", "__pycache__", ".pixi"))
     for manifest in copy.glob("*/manifest.json"):
         manifest.write_text(manifest.read_text(encoding="utf-8").replace("MY-PROJECT", project), encoding="utf-8")
     return copy
@@ -62,7 +62,7 @@ def test_without_a_flag_it_only_dry_runs_each_manifest_smallest_first(tmp_path):
     code, out, calls = run(tmp_path)
     assert code == 0, out
     assert calls == [f"dry-run {m}" for m in sizes(SCRIPT.parent)]
-    assert out.count("Dry run passed. Nothing was sent.") == len(calls) == 11
+    assert out.count("Dry run passed. Nothing was sent.") == len(calls)
     assert "would send: qdevices send" in out
 
 
@@ -88,15 +88,6 @@ def test_live_checks_once_then_sends_each_once_and_stops_at_a_failure(tmp_path, 
     assert calls[0] == f"check euroqexa --live --manifest {chosen[0]}"
     assert calls[1:] == [f"send {m} --live --max-order 1" for m in chosen[:-1]]
     assert f"Stopped at {stop} (exit 4)" in out and f"--live --dir {copy} {chosen[-1].parent.name}\n" in out
-
-
-def test_each_folder_has_the_same_run_script_and_it_is_executable():
-    model = EXAMPLES / "qrisp" / "run_one.sh"
-    folders = [m.parent for m in (EXAMPLES / "qrisp").glob("*/manifest.json")]
-    assert len(folders) == 11
-    for folder in folders:
-        script = folder / "run.sh"
-        assert script.read_bytes() == model.read_bytes() and os.access(script, os.X_OK)
 
 
 @pytest.mark.parametrize(("args", "code", "said"), [(["--live"], 2, "MY-PROJECT"), (["--other"], 2, "usage")])

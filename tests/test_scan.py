@@ -4,6 +4,7 @@ The banned strings are held as SHA-256 digests, so that this file holds none of 
 """
 
 import hashlib
+import json
 import re
 from pathlib import Path
 
@@ -34,11 +35,13 @@ BANNED = [  # each banned string in lower case: the digest of its head, of all o
      "579cfa474ba435d396c61ad63894a48f28f95624738201d9e49ffaa061194d4e", 11),
 ]
 FIRST_NAME = BANNED[8][1]
-SUFFIXES = {".py", ".md", ".toml", ".json", ".qasm", ".txt", ".html", ".css", ".yml", ".bat", ".svg"}
+SUFFIXES = {".py", ".md", ".toml", ".json", ".qasm", ".txt", ".html", ".css", ".yml", ".bat", ".svg", ".sh", ".drawio",
+            ".ipynb"}
 
 AUTHOR_FIELDS = {"pyproject.toml", "CITATION.cff"}          # they name the author on purpose
 
-PUBLIC = {"content", "README.md", "src", "examples"}        # first path parts of public text; tests need time stamps
+# First path parts of public text; tests need time stamps.
+PUBLIC = {"content", "README.md", "src", "examples", ".binder"}
 MONTHS = ("January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
           "November", "December")
 NAMES = "|".join(MONTHS + tuple(month[:3] for month in MONTHS if month != "May") + ("Sept",))
@@ -52,12 +55,24 @@ COPYRIGHT = re.compile(r"^Copyright\b.*", re.MULTILINE)     # a line of a licenc
 
 
 def files():
-    for top in ("src", "tests", "content", "examples", ".github"):
+    for top in ("src", "tests", "content", "examples", ".github", ".binder"):
         yield from (p for p in (ROOT / top).rglob("*") if p.suffix in SUFFIXES and p.is_file())
     for name in ("README.md", "pyproject.toml", "LICENSE", "LICENSE.code", "CITATION.cff", ".gitignore",
                  ".gitattributes"):
         if (ROOT / name).exists():
             yield ROOT / name
+
+
+def text_of(path: Path) -> str:
+    """The text of a file; a notebook decoded and without its images, so its metadata and outputs count as text."""
+    text = path.read_text(encoding="utf-8")
+    if path.suffix != ".ipynb":
+        return text
+    book = json.loads(text)
+    for cell in book["cells"]:
+        for out in cell.get("outputs", []):
+            out["data"] = {k: v for k, v in out.get("data", {}).items() if not k.startswith("image/")}
+    return json.dumps(book, ensure_ascii=False)
 
 
 def allowed(path: Path) -> set:
@@ -89,7 +104,7 @@ def dates(text: str) -> list[str]:
 
 
 def test_no_banned_text():
-    texts = {path: path.read_text(encoding="utf-8").lower() for path in files()}
+    texts = {path: text_of(path).lower() for path in files()}
     found = heads(texts.values())
     assert sorted((str(path.relative_to(ROOT)), word) for path, text in texts.items()
                   for word in banned(text, found) - allowed(path)) == []
@@ -105,7 +120,7 @@ def test_no_date_in_public_text():
     """No date a page was read, no date of a site's answer, no release date of a version, no dated observation."""
     public = [p for p in files() if p.relative_to(ROOT).parts[0] in PUBLIC]
     assert {p.relative_to(ROOT).parts[0] for p in public} == PUBLIC
-    found = [(str(p.relative_to(ROOT)), date) for p in public for date in dates(p.read_text(encoding="utf-8"))]
+    found = [(str(p.relative_to(ROOT)), date) for p in public for date in dates(text_of(p))]
     assert found == []
 
 

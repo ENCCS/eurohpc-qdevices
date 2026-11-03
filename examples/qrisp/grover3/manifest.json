@@ -1,0 +1,11 @@
+{
+  "format": "qdevices/1",
+  "site": "euroqexa",
+  "machine": "EQE1",
+  "project": "MY-PROJECT",
+  "made_with": "Qrisp, examples/qrisp/write_manifests.py",
+  "ideal": "6 every time (the key of the site reads 110)",
+  "jobs": [
+    {"order": 1, "name": "GROVER3", "file": "GROVER3.qasm", "sha256": "aa68627f24e853ca0401b075b5be1e34e96c8f59bdc316a859f5733554b39daa", "shots": 1000}
+  ]
+}

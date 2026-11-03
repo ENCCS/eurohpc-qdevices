@@ -1,11 +1,12 @@
-# An example config. Copy it to ~/.config/qdevices/qdevices.toml and put in your own project names.
+# The example config. `./run.sh` in an example folder checks against it while the manifest says MY-PROJECT.
+# For a live run, copy it to ~/.config/qdevices/qdevices.toml, where the app reads it, and put your own names in it.
 # No token goes in this file: an unknown key is refused.
 
 [euroqexa]
-projects = ["MY-PROJECT"]
-award_hours = 5
-budget_seconds = 600          # the seconds the app may use on the site, as its records count them
-job_seconds_limit = 300       # the most one job may take; a lost or open order counts at this value
+projects = ["MY-PROJECT"]     # the projects a manifest may name
+award_hours = 5               # your award on this machine, for `qdevices usage`
+budget_seconds = 3000         # the most the app may use on the site, as its records count them
+job_seconds_limit = 500       # the most one job may take; a lost or open order counts at this value
 wait_seconds = 900            # the longest wait for one job; the job then stays open
 
 [vlq]

@@ -1,4 +1,5 @@
-# The Qrisp examples and the tests with Qrisp, in a workspace of their own, so the app's pixi.lock holds no Qrisp.
+# The workspace of the Qrisp examples and of Qrisp's and QuTiP's emulators, and of the tests with them, apart from the
+# app, so the app's pixi.lock holds neither.
 # From the top of the repository: `pixi run --manifest-path examples/qrisp/pixi.toml test` or `qrisp-examples`.
 [workspace]
 name = "qdevices-qrisp"
@@ -14,8 +15,16 @@ cryptography = "*"
 eurohpc-qdevices = { path = "../..", editable = true }
 qrisp = "*"
 pytest = ">=8"
+qutip = "==5.3.1"
+qutip-qip = "==0.4.2"
+matplotlib = ">=3.11.2, <4"
 
-# Both run at the top of the repository, as before.
+# All run at the top of the repository, as before.
 [tasks]
 test = { cmd = "pytest -q", cwd = "../.." }
 qrisp-examples = { cmd = "python examples/qrisp/write_manifests.py", cwd = "../..", description = "Write the Qrisp examples and their manifests; no network" }
+hamiltonian = { cmd = "python examples/hamiltonian/write_chain.py", cwd = "../..", description = "Write the chain of examples/hamiltonian and its manifest; no network" }
+qrisp-emulated = { cmd = "python examples/tools/write_qrisp_emulated.py", cwd = "../..", description = "Write qrisp_emulated.json in each example folder, by Qrisp's emulator; no network" }
+two-spins = { cmd = "python examples/hamiltonian/two_spins/write_two_spins.py", cwd = "../..", description = "Write examples/hamiltonian/two_spins: two texts by Qrisp, the manifest and the README; no network" }
+qutip-emulated = { cmd = "python examples/tools/write_qutip_emulated.py", cwd = "../..", description = "Write qutip_emulated.json in each example folder, by QuTiP with no noise; no network" }
+pictures = { cmd = "python examples/tools/write_pictures.py", cwd = "../..", description = "Draw circuit.png and outcomes.png in each example folder, by qutip-qip and matplotlib; no network" }

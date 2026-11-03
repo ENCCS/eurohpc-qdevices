@@ -16,34 +16,26 @@ and refuses any other.
 
 ## The examples
 
-`examples/qrisp/` has a folder for each program, each with its own `run.sh`, the script that wrote them, and `send_all.sh` for several at once. Each
+`examples/qrisp/` has a folder for each program, each with its own README, `emulate.sh`, `run.sh` and `submit.sh`, the script that wrote them, and `send_all.sh` for several at once. Each
 manifest has two keys of its own, `made_with` and `ideal`, which the app copies to the start line of the
-record. The first three are small checks; the other eight follow pages of the Qrisp documentation, each with
-its angles fixed. The ideal answers are in Qrisp's labels.
+record. Some are small checks; eight follow pages of the Qrisp documentation (`pages.py`), each with its angles fixed. The ideal
+answers are in Qrisp's labels.
 
-| Folder | What it sends | What a perfect machine would give | On the machine |
-|---|---|---|---|
-| `bell` | a Bell pair: H, CX; the same text as `euroqexa-bell` | `00` and `11`, about half each | readable |
-| `ghz3` | a three-qubit GHZ state: H, two CX | `000` and `111`, about half each | readable |
-| `qft3` | the Fourier state of 5, then Qrisp's inverse QFT | `101` every time, the number 5 | readable |
-| `abstract_parameter` | H, then a phase gate controlled on `00` | `000` and `100`, about half each (a circuit's label, q[2] leftmost) | readable |
-| `qaoa_maxcut` | one QAOA layer of MaxCut on five nodes | `11100` and `00011` most often | readable |
-| `tutorial_qpe` | QPE of two phase gates, three bits | phases 0, 0.5, 0.125, 0.625, a quarter each | readable |
-| `qubo` | one QAOA layer of a six-variable QUBO | `001001` most often | readable |
-| `constrained_mixer` | a constrained QAOA mixer on `011` | `100`, `110`, `001`, `011`, a quarter each | readable |
-| `qite1` | one QITE step of MaxCut on five nodes | `11100` and `00011` most often, of 32 | lost in the noise |
-| `ising` | five Trotter steps of a six-spin Ising chain | `000000` most often, of 64 | lost in the noise |
-| `shor13` | 8 + 8 modulo 13 | `3` every time | lost in the noise |
+The [table in `examples/qrisp/`](https://github.com/ENCCS/eurohpc-qdevices/blob/main/examples/qrisp/README.md) lists
+them, with what stayed readable. `bell` and `ghz3` take 100 shots, the others 1000. One run each, on one day: it shows how
+much of each answer survived that day, not how good the machine is. The site's compile can very likely merge gates, so
+the size of a text is not always the cost of a job: `ising2` read the same at 5 steps and at 16.
 
-The first three take 100 shots, the other eight 1000, as they ran. One run each, on one day, so this says
-what stayed readable, not how good the machine is.
+To emulate any of them with no account: `./emulate.sh` in its folder, or the page
+[all_examples.ipynb](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=doc/tree/examples/all_examples.ipynb) on Binder.
+{doc}`hamiltonian` is the tutorial on `trotterization`.
 
 On Euro-Q-Exa a key of `counts` reads q[n-1] ... q[0], while Qrisp's label of a variable reads q[0] first:
 reverse a key to compare it with `get_measurement` ({doc}`rules`).
 
 ```bash
 examples/qrisp/ising/run.sh                    # one example: a dry run, offline, no token
-examples/qrisp/send_all.sh                     # a dry run of each, offline, no token
+examples/qrisp/send_all.sh                     # inside pixi shell, with your config: a dry run of each
 pixi run --manifest-path examples/qrisp/pixi.toml qrisp-examples --project YOURS --out my-runs
 my-runs/ising/run.sh --live                    # your own copy of one example: one read, then one job
 examples/qrisp/send_all.sh --live --dir my-runs             # all, smallest first, one job each
@@ -65,7 +57,8 @@ pixi run --manifest-path examples/qrisp/pixi.toml qrisp-examples                
 pixi run --manifest-path examples/qrisp/pixi.toml qrisp-examples --project YOURS --shots 200 --out my-runs
 ```
 
-1. Add a function that returns a Qrisp variable to `examples/qrisp/programs.py`, and a line to `PROGRAMS`.
+1. Add a function that returns a Qrisp variable to `examples/qrisp/programs.py`, a line to `PROGRAMS`, and a note
+   to `examples/qrisp/notes.py`, which its README takes.
 2. Run the script again. It writes one folder for each program, with the text and a manifest of one job
    for Euro-Q-Exa, with its SHA-256.
 3. To collect several programs in one run, copy their job lines into one manifest, with the orders 1 to N
@@ -74,7 +67,7 @@ pixi run --manifest-path examples/qrisp/pixi.toml qrisp-examples --project YOURS
 ## How the text is written
 
 `examples/qrisp/qasm2.py` reads Qrisp's own circuit data and writes one line per instruction. It does not
-use Qrisp's text export (`to_qasm2`, `qasm`, `to_qasm3` of `QuantumCircuit`), as in Qrisp 0.9.9 that export
+use Qrisp's text export (`to_qasm2`, `qasm`, `to_qasm3` of `QuantumCircuit`), as in Qrisp 0.9.10 that export
 hands the circuit to a package of another framework.
 
 ```python
@@ -98,5 +91,5 @@ or an angle that is still a symbol, stops the writer with its name, and nothing 
 | `measure`, `barrier`, `reset` | the same statement |
 | `gphase`, `qb_alloc`, `qb_dealloc` | left out: a global phase, and Qrisp's marks of allocation |
 
-**Sources:** the Qrisp documentation <https://qrisp.eu> and the source of Qrisp 0.9.9 on PyPI; the gate list
+**Sources:** the Qrisp documentation <https://qrisp.eu> and the source of Qrisp 0.9.10 on PyPI; the gate list
 of the original `qelib1.inc`, <https://github.com/openqasm/openqasm/blob/OpenQASM2.x/examples/qelib1.inc>.

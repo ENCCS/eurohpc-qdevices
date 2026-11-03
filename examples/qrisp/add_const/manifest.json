@@ -1,0 +1,11 @@
+{
+  "format": "qdevices/1",
+  "site": "euroqexa",
+  "machine": "EQE1",
+  "project": "MY-PROJECT",
+  "made_with": "Qrisp, examples/qrisp/write_manifests.py",
+  "ideal": "6 every time (the key of the site reads 110)",
+  "jobs": [
+    {"order": 1, "name": "ADD_CONST", "file": "ADD_CONST.qasm", "sha256": "d46eea6f362e48acb0acd2adbd49c1b580fb30c9ebb4ebbf088a0b8be09906bc", "shots": 1000}
+  ]
+}
