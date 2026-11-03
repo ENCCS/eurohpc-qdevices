@@ -6,6 +6,7 @@ marks, and the test of the path through QuTiP leaves that job out too.
 """
 
 import ast
+import json
 import os
 import runpy
 import shutil
@@ -28,6 +29,11 @@ TOOLS = {path.stem for path in (EXAMPLES / "tools").glob("*.py")}
 HELPERS = ["shares_of", "top"]
 WIDE = 20                        # a folder with a job on this many qubits or more runs only with QUTIP_WIDE=1
 APART = 1e-8                     # the stored file holds 8 places
+
+
+def for_qasm(folder: Path) -> bool:
+    """A folder for Euro-Q-Exa: its script also writes OpenQASM 2."""
+    return json.loads((folder / "manifest.json").read_text(encoding="utf-8"))["site"] == "euroqexa"
 
 
 def tree(folder: Path) -> ast.Module:
@@ -58,7 +64,7 @@ def run(folder: Path) -> dict:
 @pytest.mark.parametrize("folder", FOLDERS, ids=IDS)
 def test_a_script_imports_only_numpy_qutip_and_qutip_qip_and_nothing_from_tools(folder):
     found = imported(tree(folder))
-    assert found == {"numpy", "qutip", "qutip_qip"}
+    assert found == {"numpy", "qutip", "qutip_qip"} | ({"re", "sys"} if for_qasm(folder) else set())
     assert found <= {"numpy", "qutip", "qutip_qip"} | set(sys.stdlib_module_names) and not found & TOOLS
 
 
@@ -66,7 +72,8 @@ def test_a_script_imports_only_numpy_qutip_and_qutip_qip_and_nothing_from_tools(
 def test_a_script_has_one_function_per_job_and_one_line_per_gate_of_its_text(folder):
     jobs = jobs_of(folder)
     functions = {node.name: node for node in tree(folder).body if isinstance(node, ast.FunctionDef)}
-    assert list(functions) == [job["name"].lower() for job in jobs] + HELPERS
+    assert list(functions) == [job["name"].lower() for job in jobs] + HELPERS + (
+        ["to_qasm"] if for_qasm(folder) else [])
     table = next(node.value for node in tree(folder).body if isinstance(node, ast.Assign)
                  and node.targets[0].id == "JOBS")
     assert [key.value for key in table.keys] == [job["name"] for job in jobs]

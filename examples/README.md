@@ -72,6 +72,21 @@ On Windows, with Python and no bash: `python examples\tools\emulate.py examples\
 
 `./emulate.sh` runs our emulator, in Python's standard library alone, and prints the stored results of Qrisp's emulator and of QuTiP beside it, so it needs neither. The emulator Qrisp runs by default has no model of noise: `--noise` and `--readout` are ours alone. The code is `tools/qrisp_emulator.py`. To make the stored files again, from the top of the clone: `pixi run --manifest-path examples/qrisp/pixi.toml qrisp-emulated`. The third emulator is QuTiP, through its quantum information processing package qutip-qip, gate by gate on a state vector with no noise (`tools/qutip_emulator.py`), and `pixi run --manifest-path examples/qrisp/pixi.toml qutip-emulated` makes its stored files again. The same gates, written out as code, are each folder's `emulate_qutip.py` and `emulate_qrisp.py` (`tools/write_qutip_scripts.py`, `tools/write_qrisp_scripts.py`), and `pixi run --manifest-path examples/qrisp/pixi.toml qutip-scripts`, or `qrisp-scripts`, writes them again. Each of these four tasks takes folders too, to make the files of those alone again: `pixi run --manifest-path examples/qrisp/pixi.toml qutip-emulated examples/qrisp/bell`, and the same with `qrisp-emulated`, `qutip-scripts` and `qrisp-scripts`. `pixi run --manifest-path examples/qrisp/pixi.toml pictures` draws the two pictures of each folder again (`tools/write_pictures.py`).
 
+## Write a circuit without writing OpenQASM
+
+Write it in Python, in QuTiP or in Qrisp, as each folder's `emulate_qutip.py` and `emulate_qrisp.py` do, and let code
+write the OpenQASM 2 text. In a folder for Euro-Q-Exa, which compiles the text it gets:
+
+```bash
+python emulate_qutip.py --qasm              # the text that qutip-qip writes from each circuit
+python emulate_qrisp.py --qasm BELL > mine.qasm   # one job's text, as examples/qrisp/qasm2.py writes it from Qrisp
+```
+
+Put the text in a file, and its name and SHA-256 in `manifest.json`, and `./run.sh` checks it before a send. qutip-qip
+0.4.2 writes no H or CZ and drops the semicolon after each measurement; `to_qasm` in each script works round that, as
+its docstring says. The Qrisp examples were written this way: `--qasm` in `qrisp/bell` gives the bytes of its
+`BELL.qasm`. VLQ takes OpenQASM 3 in its own gates and Piast-Q the broker's list, so their folders have no `--qasm`.
+
 ## What happens
 
 ```mermaid

@@ -16,6 +16,7 @@ from circuit import circuit_of
 from emulate import jobs_of
 from overview import write_stored
 from qrisp_emulator import WHY, Call, measures, qrisp_calls
+from script_qasm import QRISP_EXTRA_IMPORT, QRISP_HELP, QRISP_IMPORTS, QRISP_MAIN, QRISP_TO_QASM, SITE
 from write_qutip_scripts import KEYS, angle_text
 
 EXAMPLES: Final = Path(__file__).resolve().parent.parent
@@ -50,7 +51,7 @@ def call_line(call: Call) -> str:
     return f"qc.{call.method}({args})" + (f"  # {call.ours}" if call.ours in WHY else "")
 
 
-def head(path: str, keys: str, made: str) -> str:
+def head(path: str, keys: str, made: str, qasm: bool) -> str:
     """The module docstring of a script."""
     return '"""' + "\n\n".join([
         f"The example {path} in Qrisp code: each job gate by gate, on Qrisp's own emulator, with no noise.",
@@ -62,8 +63,10 @@ def head(path: str, keys: str, made: str) -> str:
              "that qrisp_emulated.json stores, to 8 places, on the kind of computer that made it; Qrisp rounds its "
              "own shares to 5 or 6 places, so another kind of computer can differ by about 0.00001.", 120),
         *([fill(made, 120)] if made else []),
+        *([fill(QRISP_HELP[0], 120), QRISP_HELP[1]] if qasm else []),
         fill("examples/tools/write_qrisp_scripts.py writes this file from the text of each job, with the same calls "
-             "as the emulator of the examples. It needs nothing else from the clone, so you can copy it anywhere.",
+             "as the emulator of the examples. It needs nothing else from the clone"
+             + (", but --qasm, which uses examples/qrisp/qasm2.py." if qasm else ", so you can copy it anywhere."),
              120)]) + '\n"""\n\n'
 
 
@@ -106,11 +109,14 @@ class Script:
         jobs = jobs_of(self.folder)
         keys = KEYS["broker" if all(job["file"].endswith(".json") for job in jobs) else "text"]
         body = "".join(f"\n{self.job(job['name'], job['file'])}\n" for job in jobs)
-        imports = IMPORTS + ("from math import pi\n" if re.search(r"\bpi\b", body) else "")
-        imports += "\nfrom qrisp import QuantumCircuit\n"
+        qasm = json.loads((self.folder / "manifest.json").read_text(encoding="utf-8"))["site"] == SITE
+        uses_pi = re.search(r"\bpi\b", body)
+        imports = (QRISP_IMPORTS if qasm else "") + IMPORTS + ("from math import pi\n" if uses_pi else "")
+        imports += (QRISP_EXTRA_IMPORT if qasm else "") + "\nfrom qrisp import QuantumCircuit\n"
+        tail = TAIL.split("\n\nif __name__")[0] + QRISP_TO_QASM + QRISP_MAIN if qasm else TAIL
         rows = "".join(f'    "{job["name"]}": {job["name"].lower()},\n' for job in jobs)
-        return (head(self.path, keys, self._made()) + imports + "\n" + body
-                + "\n# Each job and the function that builds its circuit.\nJOBS = {\n" + rows + "}\n" + TAIL)
+        return (head(self.path, keys, self._made(), qasm) + imports + "\n" + body
+                + "\n# Each job and the function that builds its circuit.\nJOBS = {\n" + rows + "}\n" + tail)
 
 
 def script_text(folder: Path, root: Path = EXAMPLES) -> str:

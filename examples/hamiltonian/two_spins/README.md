@@ -37,6 +37,8 @@ It prints what a perfect machine gives, then the stored results of Qrisp's emula
 
 `emulate_qutip.py` and `emulate_qrisp.py` are this example in QuTiP code and in Qrisp code, one line per gate, to read. Running one prints what that emulator gives, with no noise. In a terminal on Binder: `cd examples/hamiltonian/two_spins && python emulate_qutip.py`, or `cd examples/hamiltonian/two_spins && python emulate_qrisp.py`. From the top of a clone of your own: `pixi run --manifest-path examples/qrisp/pixi.toml python examples/hamiltonian/two_spins/emulate_qutip.py`, and the same with `emulate_qrisp.py`.
 
+No need to write OpenQASM yourself: write the circuit in QuTiP or in Qrisp, as these two files do, and `--qasm` prints the OpenQASM 2 text for Euro-Q-Exa, which compiles it. In a terminal on Binder: `cd examples/hamiltonian/two_spins && python emulate_qutip.py --qasm`, or `python emulate_qrisp.py --qasm`. Put the text in a file, and its name and SHA-256 in `manifest.json`, to send it.
+
 Or in your browser, with nothing to install: [![Run on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/hamiltonian/two_spins/two_spins.ipynb), the notebook of this folder. The first start can take some minutes. [`all_examples.ipynb`](../../all_examples.ipynb) holds all the examples: put `hamiltonian/two_spins` in `NAME` under Choose one. It opens in JupyterLab, where File > New > Terminal gives a terminal: `cd examples/hamiltonian/two_spins && ./emulate.sh` runs this example there as on your own computer.
 
 ## Send it to the machine

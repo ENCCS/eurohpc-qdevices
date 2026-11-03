@@ -15,13 +15,21 @@ computer that made it; Qrisp rounds its own shares to 5 or 6 places, so another 
 
 Its text was made with Qrisp, examples/qrisp/write_manifests.py. Its Qrisp program is in examples/qrisp/programs.py.
 
+To send a circuit of your own without writing OpenQASM, write it in Qrisp as below. The first line prints the OpenQASM 2
+text of each circuit, as examples/qrisp/qasm2.py of the clone writes it, and the second keeps that of one job:
+
+    python emulate_qrisp.py --qasm
+    python emulate_qrisp.py --qasm JOB > mine.qasm
+
 examples/tools/write_qrisp_scripts.py writes this file from the text of each job, with the same calls as the emulator of
-the examples. It needs nothing else from the clone, so you can copy it anywhere.
+the examples. It needs nothing else from the clone, but --qasm, which uses examples/qrisp/qasm2.py.
 """
 
+import sys
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 from math import pi
+from pathlib import Path
 
 from qrisp import QuantumCircuit
 
@@ -92,7 +100,24 @@ def top(shares, most=6):
     return "  ".join(f"{key}: {value:.3f}" for key, value in rows) + more
 
 
+def to_qasm(qc):
+    """The OpenQASM 2 text of a circuit, by examples/qrisp/qasm2.py of the clone, which writes the Qrisp examples.
+
+    Qrisp 0.9.10 writes OpenQASM through a package of another framework, so the examples use their own short converter.
+    """
+    examples = next(p for p in Path(__file__).resolve().parents if (p / "qrisp" / "qasm2.py").exists())
+    sys.path.insert(0, str(examples / "qrisp"))
+    from qasm2 import to_qasm2
+
+    return to_qasm2(qc)
+
+
 if __name__ == "__main__":
-    for name, build in JOBS.items():
-        print(f"{name}: Qrisp's emulator, run now, no noise  {top(shares_of(build()))}")
-    print("Emulated on this computer: nothing was sent.")
+    if sys.argv[1:2] == ["--qasm"]:
+        names = sys.argv[2:] or list(JOBS)
+        for name in names:
+            print(("" if len(names) == 1 else f"// {name}\n") + to_qasm(JOBS[name]()), end="")
+    else:
+        for name, build in JOBS.items():
+            print(f"{name}: Qrisp's emulator, run now, no noise  {top(shares_of(build()))}")
+        print("Emulated on this computer: nothing was sent.")

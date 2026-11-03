@@ -11,13 +11,23 @@ From the top of a clone of your own, with pixi:
 It prints the share of each key of each job in the form of emulate.sh: the first character of a key is the highest
 classical bit, as on the site. The shares are those that qutip_emulated.json stores, to 8 places.
 
+To send a circuit of your own without writing OpenQASM, write it in QuTiP as below. The first line prints the OpenQASM 2
+text that qutip-qip writes from each circuit, and the second keeps that of one job:
+
+    python emulate_qutip.py --qasm
+    python emulate_qutip.py --qasm JOB > mine.qasm
+
 examples/tools/write_qutip_scripts.py writes this file from the text of each job. It needs nothing else from the clone,
 so you can copy it anywhere.
 """
 
+import re
+import sys
+
 import numpy as np
 from qutip import basis
 from qutip_qip.circuit import QubitCircuit
+from qutip_qip.qasm import circuit_to_qasm_str
 
 
 def bv4():
@@ -61,7 +71,33 @@ def top(shares, most=6):
     return "  ".join(f"{key}: {value:.3f}" for key, value in rows) + more
 
 
+def to_qasm(qc, read):
+    """The OpenQASM 2 text that qutip-qip writes for a circuit, with its measurements; Euro-Q-Exa compiles it.
+
+    qutip-qip 0.4.2 writes no H and no CZ, so H goes under its older name SNOT, and CZ as H, CX, H on the target.
+    It also leaves the semicolon off each measure line, and the last line puts it back.
+    """
+    out = QubitCircuit(qc.N, num_cbits=len(read))
+    for gate in qc.gates:
+        if gate.name == "CZ":
+            out.add_gate("SNOT", targets=gate.targets)
+            out.add_gate("CNOT", controls=gate.controls, targets=gate.targets)
+            out.add_gate("SNOT", targets=gate.targets)
+        else:
+            name = "SNOT" if gate.name == "H" else gate.name
+            out.add_gate(name, targets=gate.targets, controls=gate.controls, arg_value=gate.arg_value)
+    for clbit, qubit in enumerate(reversed(read)):
+        out.add_measurement("M", targets=[qubit], classical_store=clbit)
+    return re.sub(r"^(measure [^;\n]*)$", r"\1;", circuit_to_qasm_str(out), flags=re.M)
+
+
 if __name__ == "__main__":
-    for name, (build, read) in JOBS.items():
-        print(f"{name}: QuTiP, run now, no noise  {top(shares_of(build(), read))}")
-    print("Emulated on this computer: nothing was sent.")
+    if sys.argv[1:2] == ["--qasm"]:
+        names = sys.argv[2:] or list(JOBS)
+        for name in names:
+            build, read = JOBS[name]
+            print(("" if len(names) == 1 else f"// {name}\n") + to_qasm(build(), read), end="")
+    else:
+        for name, (build, read) in JOBS.items():
+            print(f"{name}: QuTiP, run now, no noise  {top(shares_of(build(), read))}")
+        print("Emulated on this computer: nothing was sent.")

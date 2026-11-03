@@ -4,6 +4,7 @@ The first tests read the scripts and need no Qrisp. Those that run a script need
 """
 
 import ast
+import json
 import platform
 import runpy
 import sys
@@ -24,6 +25,11 @@ TOOLS = {path.stem for path in (EXAMPLES / "tools").glob("*.py")}
 APART = 1e-8 if (sys.platform, platform.machine()) == ("darwin", "arm64") else 0.0001
 
 
+def for_qasm(folder: Path) -> bool:
+    """A folder for Euro-Q-Exa: its script also writes OpenQASM 2."""
+    return json.loads((folder / "manifest.json").read_text(encoding="utf-8"))["site"] == "euroqexa"
+
+
 def tree(folder: Path) -> ast.Module:
     """The script of a folder, parsed."""
     return ast.parse((folder / SCRIPT).read_text(encoding="utf-8"))
@@ -39,14 +45,16 @@ def imported(module: ast.Module) -> set:
 @pytest.mark.parametrize("folder", FOLDERS, ids=IDS)
 def test_a_script_imports_only_qrisp_and_the_standard_library_and_nothing_from_tools(folder):
     found = imported(tree(folder))
-    assert found <= {"qrisp", "contextlib", "io", "math"}, found
+    assert found <= {"qrisp", "contextlib", "io", "math", "sys", "pathlib", "qasm2"}, found
+    assert ("qasm2" in found) == for_qasm(folder)
     assert not found & TOOLS
 
 
 @pytest.mark.parametrize("folder", FOLDERS, ids=IDS)
 def test_a_script_has_one_function_for_each_job_of_its_manifest(folder):
     functions = {node.name for node in tree(folder).body if isinstance(node, ast.FunctionDef)}
-    assert {job["name"].lower() for job in jobs_of(folder)} | {"shares_of", "top"} == functions
+    helpers = {"shares_of", "top"} | ({"to_qasm"} if for_qasm(folder) else set())
+    assert {job["name"].lower() for job in jobs_of(folder)} | helpers == functions
 
 
 @pytest.mark.parametrize("folder", FOLDERS, ids=IDS)

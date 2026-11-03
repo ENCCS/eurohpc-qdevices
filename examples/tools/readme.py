@@ -65,7 +65,7 @@ def _browser(path: str, notebook: str) -> str:
             f"`{path}` in `NAME` under Choose one.{terminal}\n")
 
 
-def _emulate(path: str, notebook: str = "") -> str:
+def _emulate(path: str, notebook: str = "", site: str = "") -> str:
     return (
         f"## Emulate it\n\nYour computer computes what the machine would do: no account, no token, and nothing is "
         f"sent. On your own computer:\n\n```bash\n"
@@ -74,7 +74,15 @@ def _emulate(path: str, notebook: str = "") -> str:
         f"and of QuTiP, with no noise, then what the machine gave if this example has run. Add a simple model of "
         f"noise, which is ours and not a model of any machine, with `./emulate.sh --noise 0.03 "
         f"--readout 0.03`. It needs Python 3.8 or later, or [pixi](https://pixi.sh).\n\n{_qutip_code(path)}"
+        f"{_to_qasm(path) if site == 'euroqexa' else ''}"
         f"{_browser(path, notebook)}")
+
+
+def _to_qasm(path: str) -> str:
+    return (f"No need to write OpenQASM yourself: write the circuit in QuTiP or in Qrisp, as these two files do, and "
+            f"`--qasm` prints the OpenQASM 2 text for Euro-Q-Exa, which compiles it. In a terminal on Binder: "
+            f"`cd examples/{path} && python emulate_qutip.py --qasm`, or `python emulate_qrisp.py --qasm`. Put the "
+            f"text in a file, and its name and SHA-256 in `manifest.json`, to send it.\n\n")
 
 
 def _qutip_code(path: str) -> str:
@@ -105,7 +113,8 @@ class Readme:
         """The whole page, as Markdown; `path` is the folder under examples/."""
         back = f"{self.back} {ONE_RUN}" if self.back else NOT_SENT
         return (f"# {self.title}\n\n{self.about}\n\n{flow(self.steps)}\n{self._pictures(path)}\n**What a perfect "
-                f"machine gives:** {self.perfect}\n\n**What came back:** {back}\n\n{_emulate(path, self.notebook)}\n"
+                f"machine gives:** {self.perfect}\n\n**What came back:** {back}\n\n"
+                f"{_emulate(path, self.notebook, self.site)}\n"
                 f"{self._send()}\n{self._files()}\nMore: the [{SITES[self.site].title} page]"
                 f"({MANUAL}{SITES[self.site].page}/) of the manual.\n")
 

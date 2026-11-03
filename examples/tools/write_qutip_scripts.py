@@ -4,6 +4,7 @@ The gates come from `gate_steps` of qutip_emulator.py, as the emulator runs them
 qutip_emulated.json stores. It makes no network call and runs no circuit.
 """
 
+import json
 import keyword
 import sys
 from dataclasses import dataclass, field
@@ -16,6 +17,7 @@ from circuit import circuit_of
 from emulate import jobs_of
 from overview import write_stored
 from qutip_emulator import WHY, Step, gate_steps
+from script_qasm import QUTIP_EXTRA_IMPORT, QUTIP_HELP, QUTIP_IMPORTS, QUTIP_MAIN, QUTIP_TO_QASM, SITE
 
 EXAMPLES: Final = Path(__file__).resolve().parent.parent
 SCRIPT: Final = "emulate_qutip.py"
@@ -88,7 +90,7 @@ def renumbered(qubits: tuple) -> str:
             f"{_and([f'q[{old}]' for _, old in moved])} of the text")
 
 
-def head(path: str, keys: str, wide: str) -> str:
+def head(path: str, keys: str, wide: str, qasm: bool) -> str:
     """The module docstring and the imports of a script."""
     return '"""' + "\n\n".join([
         f"The example {path} in QuTiP code: each job gate by gate in qutip-qip, run with no noise.",
@@ -99,8 +101,10 @@ def head(path: str, keys: str, wide: str) -> str:
         f"    pixi run --manifest-path examples/qrisp/pixi.toml python examples/{path}/emulate_qutip.py",
         fill(f"It prints the share of each key of each job in the form of emulate.sh: {keys}. The shares are those "
              f"that qutip_emulated.json stores, to 8 places.{wide}", 120),
+        *([fill(QUTIP_HELP[0], 120), QUTIP_HELP[1]] if qasm else []),
         fill("examples/tools/write_qutip_scripts.py writes this file from the text of each job. It needs nothing else "
-             "from the clone, so you can copy it anywhere.", 120)]) + '\n"""\n\n' + IMPORTS
+             "from the clone, so you can copy it anywhere.", 120)]) + '\n"""\n\n' + (
+        (QUTIP_IMPORTS + IMPORTS + QUTIP_EXTRA_IMPORT) if qasm else IMPORTS)
 
 
 @dataclass
@@ -141,10 +145,12 @@ class Script:
         keys = KEYS["broker" if all(job["file"].endswith(".json") for job in jobs) else "text"]
         rows = "".join(f'    "{job["name"]}": ({job["name"].lower()}, '
                        f"{list(circuit_of(self.folder / job['file']).renumbered().bits)}),\n" for job in jobs)
-        return (head(self.path, keys, self._wide(jobs)) + "\n"
+        qasm = json.loads((self.folder / "manifest.json").read_text(encoding="utf-8"))["site"] == SITE
+        tail = TAIL.split("\n\nif __name__")[0] + QUTIP_TO_QASM + QUTIP_MAIN if qasm else TAIL
+        return (head(self.path, keys, self._wide(jobs), qasm) + "\n"
                 + "".join(f"\n{self.job(job['name'], job['file'])}\n" for job in jobs)
                 + "\n# Each job: the function that builds its circuit, and the qubit that each character of a key "
-                  "reads, in order.\nJOBS = {\n" + rows + "}\n" + TAIL)
+                  "reads, in order.\nJOBS = {\n" + rows + "}\n" + tail)
 
 
 def script_text(folder: Path, root: Path = EXAMPLES) -> str:
