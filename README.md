@@ -29,7 +29,15 @@ keeps an exact record of what was sent and what came back. For **Euro-Q-Exa** (L
 
 ## Emulate the examples, with no account
 
-[![All the examples on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=doc/tree/examples/all_examples.ipynb) or on your own computer:
+In your browser, with nothing to install:
+
+[![All the examples on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=doc/tree/examples/all_examples.ipynb) all the examples, side by side with what the machines gave
+
+[![The tutorial on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=doc/tree/examples/hamiltonian/tutorial.ipynb) the Hamiltonian simulation tutorial
+
+[![Two spins on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=doc/tree/examples/hamiltonian/two_spins/two_spins.ipynb) two spins in a field: the short start to Hamiltonian simulation
+
+Or on your own computer:
 
 ```bash
 git clone --depth 1 https://github.com/ENCCS/eurohpc-qdevices
