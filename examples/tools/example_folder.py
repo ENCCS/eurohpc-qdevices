@@ -11,7 +11,8 @@ from readme import Readme
 
 TOOLS = Path(__file__).resolve().parent
 SCRIPT_MODELS = {"emulate_one.sh": "emulate.sh", "run_one.sh": "run.sh", "submit_one.sh": "submit.sh"}
-KEPT = ("results.json", "qrisp_emulated.json", "qutip_emulated.json", "circuit.png", "outcomes.png")  # not by a writer
+KEPT = ("results.json", "qrisp_emulated.json", "qutip_emulated.json", "circuit.png", "outcomes.png",  # not by a writer
+        "emulate_qutip.py", "emulate_qrisp.py")
 
 
 def manifest_text(head: dict, jobs: list) -> str:

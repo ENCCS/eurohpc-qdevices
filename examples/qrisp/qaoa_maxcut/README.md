@@ -31,6 +31,8 @@ cd eurohpc-qdevices/examples/qrisp/qaoa_maxcut
 
 It prints what a perfect machine gives, then the stored results of Qrisp's emulator and of QuTiP, with no noise, then what the machine gave if this example has run. Add a simple model of noise, which is ours and not a model of any machine, with `./emulate.sh --noise 0.03 --readout 0.03`. It needs Python 3.8 or later, or [pixi](https://pixi.sh).
 
+`emulate_qutip.py` and `emulate_qrisp.py` are this example in QuTiP code and in Qrisp code, one line per gate, to read. Running one prints what that emulator gives, with no noise. In a terminal on Binder: `cd examples/qrisp/qaoa_maxcut && python emulate_qutip.py`, or `cd examples/qrisp/qaoa_maxcut && python emulate_qrisp.py`. From the top of a clone of your own: `pixi run --manifest-path examples/qrisp/pixi.toml python examples/qrisp/qaoa_maxcut/emulate_qutip.py`, and the same with `emulate_qrisp.py`.
+
 Or in your browser, with nothing to install: [![Run on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/all_examples.ipynb). The first start can take some minutes. That page holds all the examples: put `qrisp/qaoa_maxcut` in `NAME` under Choose one. It opens in JupyterLab, where File > New > Terminal gives a terminal: `cd examples/qrisp/qaoa_maxcut && ./emulate.sh` runs this example there as on your own computer.
 
 ## Send it to the machine
@@ -57,6 +59,8 @@ flowchart LR
 | `emulate.sh` | emulates the example; nothing is sent |
 | `qrisp_emulated.json` | the share of each key on Qrisp's emulator, stored, so `./emulate.sh` needs no Qrisp |
 | `qutip_emulated.json` | the share of each key on QuTiP, with no noise, stored, so `./emulate.sh` needs no QuTiP |
+| `emulate_qutip.py` | this example in QuTiP code, one line per gate; running it prints what QuTiP gives |
+| `emulate_qrisp.py` | this example in Qrisp code, one line per gate; running it prints what Qrisp's emulator gives |
 | `circuit.png` | the picture of the circuit above, drawn by qutip-qip |
 | `outcomes.png` | the chart of the outcomes above; from the top of the clone, `pixi run --manifest-path examples/qrisp/pixi.toml pictures` draws both again |
 | `run.sh` | checks the example offline for a real send; also `--login` and `--counts` |

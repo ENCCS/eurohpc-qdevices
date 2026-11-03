@@ -1,7 +1,8 @@
-"""Write qutip_emulated.json in each example folder, by QuTiP with no noise: `qutip-emulated` in qrisp/pixi.toml."""
+"""Write qutip_emulated.json by QuTiP with no noise, in each example folder or in those named: `qutip-emulated`."""
 
 # It makes no network call and sends nothing. Each job runs on the qubits it uses, so the 25-qubit job takes the most.
 import json
+import sys
 from importlib.metadata import version
 from pathlib import Path
 from typing import Final
@@ -26,4 +27,4 @@ def stored_text(folder: Path) -> str:
 
 
 if __name__ == "__main__":
-    write_stored(EXAMPLES, QUTIP_FILE, stored_text)
+    write_stored(EXAMPLES, QUTIP_FILE, stored_text, [Path(a).resolve() for a in sys.argv[1:]])

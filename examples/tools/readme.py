@@ -14,6 +14,9 @@ FILES: Final = (
     "| `qrisp_emulated.json` | the share of each key on Qrisp's emulator, stored, so `./emulate.sh` needs no Qrisp |\n"
     "| `qutip_emulated.json` | the share of each key on QuTiP, with no noise, stored, so `./emulate.sh` needs no "
     "QuTiP |\n"
+    "| `emulate_qutip.py` | this example in QuTiP code, one line per gate; running it prints what QuTiP gives |\n"
+    "| `emulate_qrisp.py` | this example in Qrisp code, one line per gate; running it prints what Qrisp's emulator "
+    "gives |\n"
     "| `circuit.png` | the picture of the circuit above, drawn by qutip-qip |\n"
     "| `outcomes.png` | the chart of the outcomes above; from the top of the clone, `pixi run --manifest-path "
     "examples/qrisp/pixi.toml pictures` draws both again |\n"
@@ -70,7 +73,16 @@ def _emulate(path: str, notebook: str = "") -> str:
         f"./emulate.sh\n```\n\nIt prints what a perfect machine gives, then the stored results of Qrisp's emulator "
         f"and of QuTiP, with no noise, then what the machine gave if this example has run. Add a simple model of "
         f"noise, which is ours and not a model of any machine, with `./emulate.sh --noise 0.03 "
-        f"--readout 0.03`. It needs Python 3.8 or later, or [pixi](https://pixi.sh).\n\n{_browser(path, notebook)}")
+        f"--readout 0.03`. It needs Python 3.8 or later, or [pixi](https://pixi.sh).\n\n{_qutip_code(path)}"
+        f"{_browser(path, notebook)}")
+
+
+def _qutip_code(path: str) -> str:
+    return (f"`emulate_qutip.py` and `emulate_qrisp.py` are this example in QuTiP code and in Qrisp code, one line "
+            f"per gate, to read. Running one prints what that emulator gives, with no noise. In a terminal on Binder: "
+            f"`cd examples/{path} && python emulate_qutip.py`, or `cd examples/{path} && python emulate_qrisp.py`. "
+            f"From the top of a clone of your own: `pixi run --manifest-path examples/qrisp/pixi.toml python "
+            f"examples/{path}/emulate_qutip.py`, and the same with `emulate_qrisp.py`.\n\n")
 
 
 @dataclass(frozen=True, slots=True)

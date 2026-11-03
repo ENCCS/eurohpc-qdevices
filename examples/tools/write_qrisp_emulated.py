@@ -1,7 +1,8 @@
-"""Write qrisp_emulated.json in each example folder, by Qrisp's emulator: `qrisp-emulated` in qrisp/pixi.toml."""
+"""Write qrisp_emulated.json by Qrisp's emulator, in each example folder or in those named: `qrisp-emulated`."""
 
 # It makes no network call and sends nothing.
 import json
+import sys
 from importlib.metadata import version
 from pathlib import Path
 from typing import Final
@@ -20,4 +21,4 @@ def stored_text(folder: Path) -> str:
 
 
 if __name__ == "__main__":
-    write_stored(EXAMPLES, QRISP_FILE, stored_text)
+    write_stored(EXAMPLES, QRISP_FILE, stored_text, [Path(a).resolve() for a in sys.argv[1:]])

@@ -65,9 +65,9 @@ def example_folders(root: Path) -> tuple:
     return tuple(sorted(p.parent for p in root.rglob("manifest.json") if ".pixi" not in p.parts))
 
 
-def write_stored(root: Path, name: str, text_of) -> None:
-    """Write the file `name` in each example folder below `root`, as `text_of(folder)` gives it, and print where."""
-    for folder in example_folders(root):
+def write_stored(root: Path, name: str, text_of, folders: list | None = None) -> None:
+    """Write the file `name` in each of `folders`, or in every example folder below `root`, and print where."""
+    for folder in folders or example_folders(root):
         (folder / name).write_bytes(text_of(folder).encode("utf-8"))
         print(folder.relative_to(root) / name)
 

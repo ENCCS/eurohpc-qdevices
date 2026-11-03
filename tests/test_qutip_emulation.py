@@ -136,3 +136,15 @@ def test_the_pages_above_say_how_to_make_the_files_again():
         assert task in page.read_text(encoding="utf-8"), page.name
     assert re.search(r"^qutip-emulated = .*write_qutip_emulated\.py", (EXAMPLES / "qrisp" / "pixi.toml").read_text(
         encoding="utf-8"), re.MULTILINE)
+
+
+def test_a_writer_given_folders_writes_only_those(tmp_path):
+    """`qutip-emulated examples/qrisp/bell` writes that folder alone; with no folder, every one."""
+    from overview import write_stored
+
+    one, other = tmp_path / "one", tmp_path / "other"
+    one.mkdir()
+    other.mkdir()
+    write_stored(tmp_path, "made.json", lambda folder: folder.name, [one])
+    assert (one / "made.json").read_text(encoding="utf-8") == "one"
+    assert not (other / "made.json").exists()
