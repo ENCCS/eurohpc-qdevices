@@ -119,7 +119,7 @@ def test_the_notebook_is_public_text_and_needs_no_app_and_no_token():
     for word in ("getpass", "import qdevices", "from qdevices", "advantage", "safety"):
         assert word not in sources, word
     assert chr(0x2014) not in sources and chr(0x2013) not in sources
-    assert "urlpath=doc/tree/examples/hamiltonian/two_spins/two_spins.ipynb" in sources
+    assert "urlpath=lab/tree/examples/hamiltonian/two_spins/two_spins.ipynb" in sources
 
 
 def links(path: Path) -> list:

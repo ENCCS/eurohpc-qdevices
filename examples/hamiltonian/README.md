@@ -1,6 +1,6 @@
 # Hamiltonian simulation, step by step
 
-[![Run on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=doc/tree/examples/hamiltonian/tutorial.ipynb)
+[![Run on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/hamiltonian/tutorial.ipynb)
 
 A worked example from the Schrödinger equation to a quantum computer. One excitation crosses three qubits under `H = (1/2) sum (XX + YY)`. We compute the exact answer, write the evolution as a circuit, run it on Euro-Q-Exa, compare the counts with the exact answer, follow the same path to the hydrogen molecule, and compare its whole dissociation curve with FCI in several bases and the published exact values.
 

@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Final
 
 MANUAL: Final = "https://enccs.github.io/eurohpc-qdevices/"
-BINDER: Final = "https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=doc/tree/examples/all_examples.ipynb"
+BINDER: Final = "https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/all_examples.ipynb"
 NOT_SENT: Final = "Not sent yet with this app."
 DRAWN: Final = {"hamiltonian/state_transfer": "MAIN", "euroqexa-three-jobs": "BELL"}   # circuit.png; else the first job
 ONE_RUN: Final = "One run, on one day: it shows how much of the answer survived that day, not how good the machine is."
@@ -52,12 +52,14 @@ def flow(steps: tuple[str, ...]) -> str:
 
 def _browser(path: str, notebook: str) -> str:
     badge = "Or in your browser, with nothing to install: [![Run on Binder](https://mybinder.org/badge_logo.svg)]"
+    terminal = (f" It opens in JupyterLab, where File > New > Terminal gives a terminal: `cd examples/{path} && "
+                "./emulate.sh` runs this example there as on your own computer.")
     if not notebook:
         return (f"{badge}({BINDER}). The first start can take some minutes. That page holds all the examples: put "
-                f"`{path}` in `NAME` under Choose one.\n")
+                f"`{path}` in `NAME` under Choose one.{terminal}\n")
     return (f"{badge}({notebook}), the notebook of this folder. The first start can take some minutes. "
             f"[`all_examples.ipynb`]({'../' * (path.count('/') + 1)}all_examples.ipynb) holds all the examples: put "
-            f"`{path}` in `NAME` under Choose one.\n")
+            f"`{path}` in `NAME` under Choose one.{terminal}\n")
 
 
 def _emulate(path: str, notebook: str = "") -> str:

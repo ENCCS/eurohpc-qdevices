@@ -27,7 +27,7 @@ much of each answer survived that day, not how good the machine is. The site's c
 the size of a text is not always the cost of a job: `ising2` read the same at 5 steps and at 16.
 
 To emulate any of them with no account: `./emulate.sh` in its folder, or the page
-[all_examples.ipynb](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=doc/tree/examples/all_examples.ipynb) on Binder.
+[all_examples.ipynb](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/all_examples.ipynb) on Binder.
 {doc}`hamiltonian` is the tutorial on `trotterization`.
 
 On Euro-Q-Exa a key of `counts` reads q[n-1] ... q[0], while Qrisp's label of a variable reads q[0] first:

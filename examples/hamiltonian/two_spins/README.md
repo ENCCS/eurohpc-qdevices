@@ -1,6 +1,6 @@
 # Two spins in a field: the short start
 
-[![Run on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=doc/tree/examples/hamiltonian/two_spins/two_spins.ipynb)
+[![Run on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/hamiltonian/two_spins/two_spins.ipynb)
 
 The short start to Hamiltonian simulation: one short notebook, [`two_spins.ipynb`](two_spins.ipynb). Two spins of the Ising model in a transverse field, `H = -Z0 Z1 - 1.2 (X0 + X1)`, start in `00` and evolve to `t = 2 pi/2.6`, a time at which `01` and `10` are zero and `11` holds 0.874. The notebook solves the model exactly in QuTiP, writes the evolution as Trotter steps of CX, RZ and H, builds the same circuit in Qrisp, and reads two runs on Euro-Q-Exa: 5 steps, and 16.
 
@@ -35,7 +35,7 @@ cd eurohpc-qdevices/examples/hamiltonian/two_spins
 
 It prints what a perfect machine gives, then the stored results of Qrisp's emulator and of QuTiP, with no noise, then what the machine gave if this example has run. Add a simple model of noise, which is ours and not a model of any machine, with `./emulate.sh --noise 0.03 --readout 0.03`. It needs Python 3.8 or later, or [pixi](https://pixi.sh).
 
-Or in your browser, with nothing to install: [![Run on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=doc/tree/examples/hamiltonian/two_spins/two_spins.ipynb), the notebook of this folder. The first start can take some minutes. [`all_examples.ipynb`](../../all_examples.ipynb) holds all the examples: put `hamiltonian/two_spins` in `NAME` under Choose one.
+Or in your browser, with nothing to install: [![Run on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/hamiltonian/two_spins/two_spins.ipynb), the notebook of this folder. The first start can take some minutes. [`all_examples.ipynb`](../../all_examples.ipynb) holds all the examples: put `hamiltonian/two_spins` in `NAME` under Choose one. It opens in JupyterLab, where File > New > Terminal gives a terminal: `cd examples/hamiltonian/two_spins && ./emulate.sh` runs this example there as on your own computer.
 
 ## Send it to the machine
 

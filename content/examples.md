@@ -2,7 +2,7 @@
 
 Each folder of `examples/` explains itself, with a README that says what it does and how to run it, and a block
 diagram. **Anyone can emulate them, with no account and no token:** `./emulate.sh` in a folder, or
-[all the examples on Binder](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=doc/tree/examples/all_examples.ipynb).
+[all the examples on Binder](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/all_examples.ipynb).
 {doc}`hamiltonian` is a full tutorial.
 
 To send one, `./run.sh` in its folder checks it offline, with no network call and no token. Put your own project in

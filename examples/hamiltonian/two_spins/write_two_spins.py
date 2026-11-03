@@ -20,7 +20,7 @@ from qdevices.values import sha256_hex
 
 HERE: Final = Path(__file__).resolve().parent
 STEPS: Final = (5, 16)
-NOTEBOOK: Final = ("https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=doc/tree/examples/hamiltonian/"
+NOTEBOOK: Final = ("https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/hamiltonian/"
                    "two_spins/two_spins.ipynb")
 ABOUT: Final = (
     f"[![Run on Binder](https://mybinder.org/badge_logo.svg)]({NOTEBOOK})\n\n"
