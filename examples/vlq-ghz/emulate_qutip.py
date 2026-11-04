@@ -1,6 +1,7 @@
 """The example vlq-ghz in QuTiP code: each job gate by gate in qutip-qip, run with no noise.
 
-Run it where QuTiP and qutip-qip are installed. In a terminal on Binder, which starts at the top of the clone:
+Run it where QuTiP and qutip-qip are installed. In a terminal on Binder, from File > New > Terminal, which starts at the
+top of the clone:
 
     cd examples/vlq-ghz && python emulate_qutip.py
 
@@ -24,7 +25,7 @@ def ghz():
     """The job GHZ: GHZ.qasm, on 6 qubits; qubit 5 here is q[24] of the text."""
     qc = QubitCircuit(6)
     qc.add_gate("R", targets=[0], arg_value=[np.pi / 2, np.pi / 2])
-    # move: a swap here, as in emulate.sh; the phases of the machine's MOVE cancel in a pair, as the texts use it.
+    # move: a swap with the resonator here (examples/tools/gates.py); the texts pair it, so MOVE's phases cancel.
     qc.add_gate("SWAP", targets=[0, 5])  # move
     qc.add_gate("R", targets=[1], arg_value=[np.pi / 2, -np.pi / 2])
     qc.add_gate("CZ", controls=[1], targets=[5])

@@ -18,6 +18,7 @@ from typing import Final
 import numpy as np
 from circuit import Circuit, circuit_of
 from emulate import jobs_of
+from gates import MOVE_WHY
 from qutip import basis
 from qutip_qip.circuit import QubitCircuit
 
@@ -30,8 +31,8 @@ TWO_QUBIT: Final = {"move": "SWAP"}                                   # our `mov
 WHY: Final = {                                    # how a qutip-qip gate stands for a gate of ours of another name
     "sdg": "qutip-qip has no S dagger: RZ(-pi/2) is S dagger times exp(i pi/4), a global phase no share shows.",
     "tdg": "qutip-qip has no T dagger: RZ(-pi/4) is T dagger times exp(i pi/8), a global phase no share shows.",
-    "rxx": "MS with its axis at phi = 0 is RXX, exp(-i theta/2 XX).",
-    "move": "a swap here, as in emulate.sh; the phases of the machine's MOVE cancel in a pair, as the texts use it.",
+    "rxx": "MS, the Mølmer-Sørensen gate, with its axis at phi = 0 is RXX, exp(-i theta/2 XX).",
+    "move": MOVE_WHY + ".",
     "u3": "QASMU is RZ(phi) RY(theta) RZ(lambda), the u3 of the text up to a global phase.",
 }
 

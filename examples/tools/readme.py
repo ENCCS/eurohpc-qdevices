@@ -7,19 +7,21 @@ MANUAL: Final = "https://enccs.github.io/eurohpc-qdevices/"
 BINDER: Final = "https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/all_examples.ipynb"
 NOT_SENT: Final = "Not sent yet with this app."
 DRAWN: Final = {"hamiltonian/state_transfer": "MAIN", "euroqexa-three-jobs": "BELL"}   # circuit.png; else the first job
+# What emulate_qutip.py takes for a job on so many qubits, as its docstring and the README say.
+WIDE: Final = {25: "about 25 seconds and 1.5 GB of memory on a laptop"}  # measured: 22 s, a peak footprint of 1.53 GB
 ONE_RUN: Final = "One run, on one day: it shows how much of the answer survived that day, not how good the machine is."
+AFTER: Final = ("After a change, the stored results, the two scripts and the pictures here still show the old "
+                "circuit: [After a change]({up}README.md#after-a-change) says how to make them again.")
 FILES: Final = (
     "| `manifest.json` | what to send: the site, your project, and for each job its file, its SHA-256 and its shots |\n"
     "| `emulate.sh` | emulates the example; nothing is sent |\n"
     "| `qrisp_emulated.json` | the share of each key on Qrisp's emulator, stored, so `./emulate.sh` needs no Qrisp |\n"
     "| `qutip_emulated.json` | the share of each key on QuTiP, with no noise, stored, so `./emulate.sh` needs no "
     "QuTiP |\n"
-    "| `emulate_qutip.py` | this example in QuTiP code, one line per gate; running it prints what QuTiP gives |\n"
-    "| `emulate_qrisp.py` | this example in Qrisp code, one line per gate; running it prints what Qrisp's emulator "
-    "gives |\n"
+    "| `emulate_qutip.py` | this example in QuTiP code, gate by gate; running it prints what QuTiP gives |\n"
+    "| `emulate_qrisp.py` | this example in Qrisp code, gate by gate; running it prints what Qrisp's emulator gives |\n"
     "| `circuit.png` | the picture of the circuit above, drawn by qutip-qip |\n"
-    "| `outcomes.png` | the chart of the outcomes above; from the top of the clone, `pixi run --manifest-path "
-    "examples/qrisp/pixi.toml pictures` draws both again |\n"
+    "| `outcomes.png` | the chart of the outcomes above |\n"
     "| `run.sh` | checks the example offline for a real send; also `--login` and `--counts` |\n"
     "| `submit.sh` | sends the example to the machine |\n")
 
@@ -39,11 +41,12 @@ class Site:
 SITES: Final = {
     "euroqexa": Site("Euro-Q-Exa", "euroqexa", "MQSS_TOKEN", "the circuit in OpenQASM 2; the site compiles it",
                      "The site compiles the text and runs the shots", "`MY-PROJECT`"),
-    "vlq": Site("VLQ", "vlq", "LEXIS_TOKEN", "the circuit in OpenQASM 3, in the machine's own gates; the site does not "
-                "compile it", "The machine runs the text as written", "`MY-PROJECT`, `MY-LEXIS-PROJECT` and "
-                "`MY-VLQ-RESOURCE`"),
-    "piastq": Site("Piast-Q", "piastq", "PCSS_API_KEY", "the circuit as the broker's list of operations",
-                   "The broker passes it on and the machine runs the shots", "`MY-PROJECT`"),
+    "vlq": Site("VLQ", "vlq", "LEXIS_TOKEN", "the circuit in OpenQASM 3, in the machine's own gates `r`, `cz` and "
+                "`move`; the site does not compile it", "The machine runs the text as written", "`MY-PROJECT`, "
+                "`MY-LEXIS-PROJECT` and `MY-VLQ-RESOURCE`"),
+    "piastq": Site("Piast-Q", "piastq", "PCSS_API_KEY", "the circuit as the broker's list of operations RZ, R and "
+                   "RXX, with angles in units of pi", "The broker passes it on and the machine runs the shots",
+                   "`MY-PROJECT`"),
 }
 
 
@@ -53,44 +56,57 @@ def flow(steps: tuple[str, ...]) -> str:
     return f"```mermaid\nflowchart {'TD' if len(steps) > 6 else 'LR'}\n    {nodes}\n```\n"
 
 
+def _up(path: str) -> str:
+    """The "../" that reach examples/ from the folder `path` under it."""
+    return "../" * (path.count("/") + 1)
+
+
 def _browser(path: str, notebook: str) -> str:
     badge = "Or in your browser, with nothing to install: [![Run on Binder](https://mybinder.org/badge_logo.svg)]"
-    terminal = (f" It opens in JupyterLab, where File > New > Terminal gives a terminal: `cd examples/{path} && "
-                "./emulate.sh` runs this example there as on your own computer.")
+    terminal = (" Binder opens JupyterLab, where File > New > Terminal gives a terminal at the top of the clone: "
+                f"`cd examples/{path} && ./emulate.sh` runs this example there as on your own computer.")
     if not notebook:
         return (f"{badge}({BINDER}). The first start can take some minutes. That page holds all the examples: put "
-                f"`{path}` in `NAME` under Choose one.{terminal}\n")
+                f"`{path}` in `NAME` under Choose one.{terminal}")
     return (f"{badge}({notebook}), the notebook of this folder. The first start can take some minutes. "
-            f"[`all_examples.ipynb`]({'../' * (path.count('/') + 1)}all_examples.ipynb) holds all the examples: put "
-            f"`{path}` in `NAME` under Choose one.{terminal}\n")
+            f"[`all_examples.ipynb`]({_up(path)}all_examples.ipynb) holds all the examples: put "
+            f"`{path}` in `NAME` under Choose one.{terminal}")
 
 
-def _emulate(path: str, notebook: str = "", site: str = "") -> str:
-    return (
-        f"## Emulate it\n\nYour computer computes what the machine would do: no account, no token, and nothing is "
-        f"sent. On your own computer:\n\n```bash\n"
-        f"git clone --depth 1 https://github.com/ENCCS/eurohpc-qdevices\ncd eurohpc-qdevices/examples/{path}\n"
-        f"./emulate.sh\n```\n\nIt prints what a perfect machine gives, then the stored results of Qrisp's emulator "
-        f"and of QuTiP, with no noise, then what the machine gave if this example has run. Add a simple model of "
-        f"noise, which is ours and not a model of any machine, with `./emulate.sh --noise 0.03 "
-        f"--readout 0.03`. It needs Python 3.8 or later, or [pixi](https://pixi.sh).\n\n{_qutip_code(path)}"
-        f"{_to_qasm(path) if site == 'euroqexa' else ''}"
-        f"{_browser(path, notebook)}")
+def _emulate(path: str, notebook: str, qasm: str, qubits: int) -> str:
+    own = (f"## Emulate it\n\nYour computer computes what the machine would do: no account, no token, and nothing is "
+           f"sent. On your own computer:\n\n```bash\n"
+           f"git clone --depth 1 https://github.com/ENCCS/eurohpc-qdevices\ncd eurohpc-qdevices/examples/{path}\n"
+           f"./emulate.sh\n```\n\nIt prints what a perfect machine gives, then the stored results of Qrisp's emulator "
+           f"and of QuTiP, with no noise, then what the machine gave if this example has run. Add a simple model of "
+           f"noise, which is ours and not a model of any machine, with `./emulate.sh --noise 0.03 "
+           f"--readout 0.03`. It needs Python 3.8 or later, or [pixi](https://pixi.sh).")
+    return "\n\n".join(part for part in (own, _browser(path, notebook), _qutip_code(path, qubits), qasm) if part) + "\n"
 
 
-def _to_qasm(path: str) -> str:
-    return (f"No need to write OpenQASM yourself: write the circuit in QuTiP or in Qrisp, as these two files do, and "
-            f"`--qasm` prints the OpenQASM 2 text for Euro-Q-Exa, which compiles it. In a terminal on Binder: "
-            f"`cd examples/{path} && python emulate_qutip.py --qasm`, or `python emulate_qrisp.py --qasm`. Put the "
-            f"text in a file, and its name and SHA-256 in `manifest.json`, to send it.\n\n")
+def _to_qasm(path: str, job: str, jobs: int) -> str:
+    several = jobs > 1
+    each = ("; with no job name, `--qasm` prints the text of each job, after a line `// NAME`, to read: a file to "
+            "send holds one job") if several else ""
+    same = ", and of each other job that names the same file" if several else ""
+    pixi = (f"`pixi run --manifest-path examples/qrisp/pixi.toml python examples/{path}/emulate_qutip.py --qasm {job} "
+            f"> examples/{path}/mine.qasm`")
+    return ("No need to write OpenQASM yourself: write the circuit in QuTiP or in Qrisp, as these two files do, and "
+            "`--qasm` prints its OpenQASM 2 text for Euro-Q-Exa, which compiles it. In this folder, `python "
+            f"emulate_qutip.py --qasm {job} > mine.qasm`, or the same with `emulate_qrisp.py`, puts the text of the "
+            f"job {job} in `mine.qasm`{each}. With pixi, run {pixi} from the top of the clone, then come back here. "
+            "To send it, put `mine.qasm` and its SHA-256 in `manifest.json` in place of the file and the SHA-256 of "
+            f"that job{same} (`shasum -a 256 mine.qasm` on a Mac, `sha256sum mine.qasm` on Linux).")
 
 
-def _qutip_code(path: str) -> str:
-    return (f"`emulate_qutip.py` and `emulate_qrisp.py` are this example in QuTiP code and in Qrisp code, one line "
-            f"per gate, to read. Running one prints what that emulator gives, with no noise. In a terminal on Binder: "
-            f"`cd examples/{path} && python emulate_qutip.py`, or `cd examples/{path} && python emulate_qrisp.py`. "
-            f"From the top of a clone of your own: `pixi run --manifest-path examples/qrisp/pixi.toml python "
-            f"examples/{path}/emulate_qutip.py`, and the same with `emulate_qrisp.py`.\n\n")
+def _qutip_code(path: str, qubits: int) -> str:
+    wide = f" Here `emulate_qutip.py` runs a job on {qubits} qubits: it takes {WIDE[qubits]}." if qubits in WIDE else ""
+    return ("`emulate_qutip.py` and `emulate_qrisp.py` are this example in QuTiP code and in Qrisp code, gate by gate, "
+            "to read. Run in this folder, each prints what its emulator gives, with no noise: `python "
+            "emulate_qutip.py` where QuTiP and qutip-qip are installed, `python emulate_qrisp.py` where Qrisp is, as "
+            "on Binder. From the top of a clone of your own, on Linux x86-64 or an Apple Silicon Mac: `pixi run "
+            f"--manifest-path examples/qrisp/pixi.toml python examples/{path}/emulate_qutip.py`, and the same with "
+            "`emulate_qrisp.py`; the first run installs QuTiP and Qrisp, about 1 GB." + wide)
 
 
 @dataclass(frozen=True, slots=True)
@@ -108,15 +124,22 @@ class Readme:
     made_by: str = ""
     more: tuple[tuple[str, str], ...] = ()   # more rows of the files table: a file and what it is
     notebook: str = ""                       # the Binder link of the folder's own notebook, if it has one
+    qubits: int = 0                          # the most qubits a job uses: for so many, WIDE says what QuTiP takes
 
     def text(self, path: str) -> str:
         """The whole page, as Markdown; `path` is the folder under examples/."""
         back = f"{self.back} {ONE_RUN}" if self.back else NOT_SENT
         return (f"# {self.title}\n\n{self.about}\n\n{flow(self.steps)}\n{self._pictures(path)}\n**What a perfect "
                 f"machine gives:** {self.perfect}\n\n**What came back:** {back}\n\n"
-                f"{_emulate(path, self.notebook, self.site)}\n"
-                f"{self._send()}\n{self._files()}\nMore: the [{SITES[self.site].title} page]"
+                f"{_emulate(path, self.notebook, self._qasm(path), self.qubits)}\n"
+                f"{self._send()}\n{self._files(path)}\nMore: the [{SITES[self.site].title} page]"
                 f"({MANUAL}{SITES[self.site].page}/) of the manual.\n")
+
+    def _qasm(self, path: str) -> str:
+        """The paragraph on --qasm, for Euro-Q-Exa alone; its job is the one drawn, else that of the first file."""
+        if self.site != "euroqexa":
+            return ""
+        return _to_qasm(path, DRAWN.get(path) or self.files[0].removesuffix(".qasm"), self.jobs)
 
     def _pictures(self, path: str) -> str:
         job = f"the job {DRAWN[path]}" if path in DRAWN else "the first job" if self.jobs > 1 else "the job"
@@ -154,10 +177,11 @@ class Readme:
                 f"never hand it to anyone else.\n"
                 f"4. Run `./submit.sh`. {self._sent()}\n5. Run `./run.sh --counts` to see what came back.\n")
 
-    def _files(self) -> str:
+    def _files(self, path: str) -> str:
         rows = [f"| `{name}` | {SITES[self.site].form} |" for name in self.files]
-        made = f"\n{self.made_by}\n" if self.made_by else ""
+        after = AFTER.format(up=_up(path))
+        made = f"{self.made_by} {after}" if self.made_by else after
         ran = "| `results.json` | the counts of one run on the machine, with no job id and no date |\n"
         more = "".join(f"| `{name}` | {what} |\n" for name, what in self.more)
         return ("## The files\n\n| File | What it is |\n|---|---|\n" + "\n".join(rows) + "\n" + FILES
-                + (ran if self.back else "") + more + made)
+                + (ran if self.back else "") + more + f"\n{made}\n")

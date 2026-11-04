@@ -2,6 +2,7 @@
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -94,6 +95,14 @@ def test_each_folder_has_a_readme_that_says_how_to_run_it_and_names_its_files(fo
         assert words in text, words
     for job in json.loads((folder / "manifest.json").read_text(encoding="utf-8"))["jobs"]:
         assert f"`{job['file']}`" in text or "`*.qasm`" in text, job["file"]
+
+
+@pytest.mark.parametrize("folder", FOLDERS, ids=NAMES)
+def test_each_readme_links_to_after_a_change_on_the_page_above_the_folders(folder):
+    ups = re.findall(r"\[After a change\]\(((?:\.\./)+)README\.md#after-a-change\)",
+                     (folder / "README.md").read_text(encoding="utf-8"))
+    assert len(ups) == 1 and (folder / ups[0] / "README.md").resolve() == EXAMPLES / "README.md", ups
+    assert "\n## After a change\n" in (EXAMPLES / "README.md").read_text(encoding="utf-8")
 
 
 def test_the_hand_written_folders_hold_what_folders_py_writes():
@@ -194,6 +203,22 @@ def test_emulate_needs_python_and_a_clone_and_nothing_else(tmp_path):
                           check=False, env=env)
     assert done.returncode == 0, done.stderr
     assert "a perfect machine" in done.stdout and "nothing was sent" in done.stdout
+
+
+def test_emulate_runs_once_through_pixi_and_takes_python3_when_pixi_cannot(tmp_path):
+    """A stand-in pixi runs the Python of the tests: a wrong option is said once, not again by python3."""
+    pixi = tmp_path / "pixi"
+    pixi.write_text(f'#!/bin/sh\nwhile [ "$1" != -- ]; do shift; done\nshift 2\nexec {sys.executable} "$@"\n',
+                    encoding="utf-8")
+    pixi.chmod(0o755)
+    env = {"PATH": f"{tmp_path}{os.pathsep}{Path(sys.executable).parent}{os.pathsep}/usr/bin:/bin"}
+    script = str(EXAMPLES / "euroqexa-bell" / "emulate.sh")
+    done = subprocess.run(["bash", script, "--noise", "2"], capture_output=True, text=True, check=False, env=env)
+    assert done.returncode == 2 and done.stderr.count("chances from 0 to 1") == 1, done.stderr
+    pixi.write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
+    done = subprocess.run(["bash", script], capture_output=True, text=True, check=False, env=env)
+    assert done.returncode == 0 and "a perfect machine" in done.stdout, done.stderr
+    assert "pixi could not get Python 3.12; trying python3." in done.stderr
 
 
 # ------------------------------------------------------------ the emulator

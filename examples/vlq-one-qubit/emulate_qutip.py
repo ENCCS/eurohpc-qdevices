@@ -1,6 +1,7 @@
 """The example vlq-one-qubit in QuTiP code: each job gate by gate in qutip-qip, run with no noise.
 
-Run it where QuTiP and qutip-qip are installed. In a terminal on Binder, which starts at the top of the clone:
+Run it where QuTiP and qutip-qip are installed. In a terminal on Binder, from File > New > Terminal, which starts at the
+top of the clone:
 
     cd examples/vlq-one-qubit && python emulate_qutip.py
 

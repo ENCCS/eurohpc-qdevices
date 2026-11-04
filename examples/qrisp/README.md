@@ -42,6 +42,7 @@ examples/qrisp/send_all.sh --live --dir my-runs qft3 qubo  # only these, each on
 
 1. Add a function that returns a Qrisp variable to `programs.py`, a line to `PROGRAMS`, and a note to `notes.py`.
 2. Run `pixi run --manifest-path examples/qrisp/pixi.toml qrisp-examples`. It writes one folder for each program, with its text, its manifest, its README and its `run.sh`.
+3. Make the stored results, the two scripts and the pictures of the new folder as [After a change](../README.md#after-a-change) says.
 
 ## The files here
 

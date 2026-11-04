@@ -1,6 +1,7 @@
 """The example qrisp/ising2 in QuTiP code: each job gate by gate in qutip-qip, run with no noise.
 
-Run it where QuTiP and qutip-qip are installed. In a terminal on Binder, which starts at the top of the clone:
+Run it where QuTiP and qutip-qip are installed. In a terminal on Binder, from File > New > Terminal, which starts at the
+top of the clone:
 
     cd examples/qrisp/ising2 && python emulate_qutip.py
 
@@ -107,10 +108,15 @@ def to_qasm(qc, read):
     """The OpenQASM 2 text that qutip-qip writes for a circuit, with its measurements; Euro-Q-Exa compiles it.
 
     qutip-qip 0.4.2 writes no H and no CZ, so H goes under its older name SNOT, and CZ as H, CX, H on the target.
-    It also leaves the semicolon off each measure line, and the last line puts it back.
+    It also leaves the semicolon off each measure line and writes a small angle as 1e-05, where OpenQASM 2 needs
+    1.0e-05: the last two lines put both right.
+    qutip-qip refuses some other gates, CY and CPHASE among them, and writes some as a gate that the text defines,
+    SWAP among them: build those from the gates above.
     """
     out = QubitCircuit(qc.N, num_cbits=len(read))
     for gate in qc.gates:
+        if getattr(gate, "classical_controls", True):  # a measurement, or a gate under a classical bit
+            raise ValueError(f"to_qasm writes gates only, and adds the measurements of read: not {gate}")
         if gate.name == "CZ":
             out.add_gate("SNOT", targets=gate.targets)
             out.add_gate("CNOT", controls=gate.controls, targets=gate.targets)
@@ -120,12 +126,15 @@ def to_qasm(qc, read):
             out.add_gate(name, targets=gate.targets, controls=gate.controls, arg_value=gate.arg_value)
     for clbit, qubit in enumerate(reversed(read)):
         out.add_measurement("M", targets=[qubit], classical_store=clbit)
-    return re.sub(r"^(measure [^;\n]*)$", r"\1;", circuit_to_qasm_str(out), flags=re.M)
+    text = re.sub(r"^(measure [^;\n]*)$", r"\1;", circuit_to_qasm_str(out), flags=re.M)
+    return re.sub(r"(?<![\w.])(\d+)(e[-+]?\d+)", r"\1.0\2", text)
 
 
 if __name__ == "__main__":
     if sys.argv[1:2] == ["--qasm"]:
         names = sys.argv[2:] or list(JOBS)
+        if unknown := [name for name in names if name not in JOBS]:
+            sys.exit(f"no job {', '.join(unknown)} here; the jobs: {', '.join(JOBS)}")
         for name in names:
             build, read = JOBS[name]
             print(("" if len(names) == 1 else f"// {name}\n") + to_qasm(build(), read), end="")

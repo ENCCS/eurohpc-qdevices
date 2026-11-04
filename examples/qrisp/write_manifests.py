@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Final
 
 from notes import NOTES
-from programs import PROGRAMS, Program
+from programs import PROGRAMS, Program, source_of
 from qasm2 import to_qasm2
 
 from qdevices.manifest import FORMAT
@@ -23,19 +23,25 @@ from example_folder import ExampleFolder
 from readme import Readme
 
 HERE: Final = Path(__file__).resolve().parent
-MADE_BY: Final = ("Written by `examples/qrisp/write_manifests.py` from `programs.py`. To change the circuit, change "
-                  "the function, and from the top of the clone run `pixi run --manifest-path examples/qrisp/pixi.toml "
-                  "qrisp-examples`: a text changed by hand no longer matches its SHA-256.")
+MADE_BY: Final = ("Written by `examples/qrisp/write_manifests.py` from the function `{function}` of `{file}`{listed}. "
+                  "To change the circuit, change that function, and from the top of the clone run `pixi run "
+                  "--manifest-path examples/qrisp/pixi.toml qrisp-examples`: a text changed by hand no longer matches "
+                  "its SHA-256.")
 PERFECT: Final = ("{ideal}. `./emulate.sh` and the site print keys, with the highest qubit on the left: {keys}. "
                   "Qrisp's own labels, as a Qrisp program prints them, read q[0] first, so a label and its key can "
-                  "look reversed. The line of Qrisp's emulator in `./emulate.sh` is in keys.")
+                  "look reversed. The line of Qrisp's emulator in `./emulate.sh`, and what `emulate_qrisp.py` prints, "
+                  "are in keys.")
 
 
 def page_of(program: Program, file: str, text: str) -> Readme:
     """The README of one program, with the keys its text gives."""
-    note = NOTES[program.name]
-    perfect = PERFECT.format(ideal=program.ideal, keys=top(Circuit.of_text(text).shares(), 4))
-    return Readme("euroqexa", note.title, note.about, note.steps, perfect, note.back, (file,), made_by=MADE_BY)
+    note, circuit = NOTES[program.name], Circuit.of_text(text)
+    perfect = PERFECT.format(ideal=program.ideal, keys=top(circuit.shares(), 4))
+    function, source = source_of(program.name.lower())
+    listed = "" if source == "programs.py" else ", listed in `programs.py`"
+    made = MADE_BY.format(function=function, file=source, listed=listed)
+    return Readme("euroqexa", note.title, note.about, note.steps, perfect, note.back, (file,), made_by=made,
+                  qubits=len(circuit.qubits))
 
 
 @dataclass(frozen=True, slots=True)

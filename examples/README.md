@@ -64,13 +64,37 @@ On Windows, with Python and no bash: `python examples\tools\emulate.py examples\
 | a `.qasm` or `.json` file | the circuit, in the form the site takes |
 | `qrisp_emulated.json` | the share of each key on Qrisp's emulator, stored, with the version of Qrisp |
 | `qutip_emulated.json` | the share of each key on QuTiP, with no noise, stored, with the versions of QuTiP and qutip-qip |
-| `emulate_qutip.py` | the example in QuTiP code, one line per gate, to read; `python emulate_qutip.py` prints what QuTiP gives, where QuTiP and qutip-qip are installed |
-| `emulate_qrisp.py` | the example in Qrisp code, one line per gate, to read; `python emulate_qrisp.py` prints what Qrisp's emulator gives, where Qrisp is installed |
+| `emulate_qutip.py` | the example in QuTiP code, gate by gate, to read; `python emulate_qutip.py` prints what QuTiP gives, where QuTiP and qutip-qip are installed |
+| `emulate_qrisp.py` | the example in Qrisp code, gate by gate, to read; `python emulate_qrisp.py` prints what Qrisp's emulator gives, where Qrisp is installed |
 | `circuit.png` | the circuit of one job, drawn by qutip-qip: the first, or the one the README names; the README shows it |
 | `outcomes.png` | the share of each key from each source, as bars; the README shows it |
 | `results.json` | the counts of one run on the machine, if it has run |
 
-`./emulate.sh` runs our emulator, in Python's standard library alone, and prints the stored results of Qrisp's emulator and of QuTiP beside it, so it needs neither. The emulator Qrisp runs by default has no model of noise: `--noise` and `--readout` are ours alone. The code is `tools/qrisp_emulator.py`. To make the stored files again, from the top of the clone: `pixi run --manifest-path examples/qrisp/pixi.toml qrisp-emulated`. The third emulator is QuTiP, through its quantum information processing package qutip-qip, gate by gate on a state vector with no noise (`tools/qutip_emulator.py`), and `pixi run --manifest-path examples/qrisp/pixi.toml qutip-emulated` makes its stored files again. The same gates, written out as code, are each folder's `emulate_qutip.py` and `emulate_qrisp.py` (`tools/write_qutip_scripts.py`, `tools/write_qrisp_scripts.py`), and `pixi run --manifest-path examples/qrisp/pixi.toml qutip-scripts`, or `qrisp-scripts`, writes them again. Each of these four tasks takes folders too, to make the files of those alone again: `pixi run --manifest-path examples/qrisp/pixi.toml qutip-emulated examples/qrisp/bell`, and the same with `qrisp-emulated`, `qutip-scripts` and `qrisp-scripts`. `pixi run --manifest-path examples/qrisp/pixi.toml pictures` draws the two pictures of each folder again (`tools/write_pictures.py`).
+`./emulate.sh` runs our emulator (`tools/emulate.py`), in Python's standard library alone, and prints beside it the
+stored results of Qrisp's emulator (`tools/qrisp_emulator.py`) and of QuTiP through its quantum information processing
+package qutip-qip, gate by gate on a state vector (`tools/qutip_emulator.py`), so it needs neither. Neither is run
+with noise here, and `--noise` and `--readout` are ours alone (`tools/circuit.py`). All three take the gates as
+`tools/texts.py` reads the text; QuTiP and Qrisp do not read the text themselves. The same gates, written out as code,
+are each folder's `emulate_qutip.py` and `emulate_qrisp.py` (`tools/write_qutip_scripts.py`,
+`tools/write_qrisp_scripts.py`).
+
+## After a change
+
+After a change to a text, the stored results, the two scripts and the pictures of its folder still show the old
+circuit. Where code writes the text, run that code first, as the folder's README says. Then, from the top of the
+clone, make the files again, in this order, with the folder, or with none for every folder:
+
+```bash
+pixi run --manifest-path examples/qrisp/pixi.toml qutip-emulated examples/qrisp/bell
+pixi run --manifest-path examples/qrisp/pixi.toml qrisp-emulated examples/qrisp/bell
+pixi run --manifest-path examples/qrisp/pixi.toml qutip-scripts examples/qrisp/bell
+pixi run --manifest-path examples/qrisp/pixi.toml qrisp-scripts examples/qrisp/bell
+pixi run --manifest-path examples/qrisp/pixi.toml pictures examples/qrisp/bell
+```
+
+`pictures` comes last: it draws from the stored files. `results.json` stays the run of the old text. If you have sent
+a job of the folder, give `manifest.json` a `"run"` name of its own before you send the changed text: without
+`--new-run`, the app starts no new record of a run that has sent a job, and `./submit.sh` takes no `--new-run`.
 
 ## Write a circuit without writing OpenQASM
 
@@ -82,10 +106,11 @@ python emulate_qutip.py --qasm              # the text that qutip-qip writes fro
 python emulate_qrisp.py --qasm BELL > mine.qasm   # one job's text, as examples/qrisp/qasm2.py writes it from Qrisp
 ```
 
-Put the text in a file, and its name and SHA-256 in `manifest.json`, and `./run.sh` checks it before a send. qutip-qip
-0.4.2 writes no H or CZ and drops the semicolon after each measurement; `to_qasm` in each script works round that, as
-its docstring says. The Qrisp examples were written this way: `--qasm` in `qrisp/bell` gives the bytes of its
-`BELL.qasm`. VLQ takes OpenQASM 3 in its own gates and Piast-Q the broker's list, so their folders have no `--qasm`.
+Keep one job in a file, as the second line does, put its name and SHA-256 in `manifest.json`, and `./run.sh` checks it
+before a send. qutip-qip 0.4.2 writes no H or CZ and drops the semicolon after each measurement; `to_qasm` in each
+script works round that, and its docstring names other gates that qutip-qip refuses. The Qrisp examples were written
+this way: in `qrisp/bell`, `python emulate_qrisp.py --qasm` gives the bytes of its `BELL.qasm`. VLQ takes OpenQASM 3
+in its own gates and Piast-Q the broker's list, so their folders have no `--qasm`.
 
 ## What happens
 
@@ -105,6 +130,11 @@ Only the first step is for everyone. The others need an account at the site, whi
 - **key:** the bit string of one shot. In an OpenQASM text the highest classical bit is on the left, so `011` means classical bits 0 and 1 read 1. On Piast-Q, qubit 0 is on the left.
 - **share:** the fraction of shots with a key.
 - **text:** the circuit file that is sent.
+- **OpenQASM:** a plain text that lists a circuit's gates, one per line; Euro-Q-Exa takes version 2, VLQ version 3.
+- **SHA-256:** a fingerprint of a file, 64 characters long; `manifest.json` holds it, and the app sends a file only if the two agree.
+- **shot error:** the spread that a finite number of shots gives: about sqrt(p(1 - p)/N) for a share p of N shots.
+- **CX:** the controlled NOT: it flips its second qubit when the first is 1. QuTiP calls it CNOT.
+- **broker:** the PCSS service in front of Piast-Q, which takes its jobs.
 - **site:** the centre that runs the machine (LRZ, IT4Innovations, PCSS).
 - **order:** the place of a job in `manifest.json`.
 - **read of the machine:** asking the site for its state, with no job.

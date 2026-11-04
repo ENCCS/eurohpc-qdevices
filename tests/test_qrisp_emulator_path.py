@@ -109,3 +109,12 @@ def test_the_path_through_qrisp_calls_nothing_on_the_scan_list():
             emulator.folder_shares(folder)
     assert hashlib.sha256(b"qrisp").hexdigest() in called.heads()          # the watch does see what runs
     assert not called.heads() & {head for head, _, _ in BANNED}
+
+
+def test_qrisp_s_own_r_is_our_r_a_quarter_turn_back():
+    emulator = qrisp_module()
+    np = pytest.importorskip("numpy")
+    qc = emulator.QuantumCircuit(1)
+    qc.r(0.7, 0.3, 0)
+    theirs, ours = qc.get_unitary(), np.array(ONE["r"](0.7, 0.3 - np.pi / 2)).reshape(2, 2)
+    assert abs(np.trace(ours.conj().T @ theirs) / 2) == pytest.approx(1, abs=1e-6)

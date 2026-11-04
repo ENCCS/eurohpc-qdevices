@@ -1,7 +1,8 @@
 """Write a compiled Qrisp circuit as an OpenQASM 2 text, from Qrisp's own circuit data.
 
 It changes no gate and chooses no layout: the site compiles the text. It writes only the gates of the original
-`qelib1.inc` and refuses any other by name, so break a circuit down first with Qrisp's `qc.transpile()`.
+`qelib1.inc` and refuses any other by name, so break a circuit down first with Qrisp's `qc.transpile()`, and write
+`r`, which it keeps, as `rz`, `rx` and `rz`.
 """
 
 from dataclasses import dataclass
@@ -16,17 +17,21 @@ HEADER: Final = 'OPENQASM 2.0;\ninclude "qelib1.inc";\n'
 
 @dataclass(frozen=True, slots=True)
 class Gate:
-    """How one Qrisp operation is written: its OpenQASM 2 name, its number of angles and any fixed angle."""
+    """How one Qrisp operation is written: its OpenQASM 2 name, its number of angles and any fixed angle.
+
+    Qrisp's id holds three angles of zero, and the id of qelib1.inc takes none: `with_angles=False` leaves them out.
+    """
 
     name: str
     angles: int = 0
     fixed: tuple[float, ...] = ()
+    with_angles: bool = True
 
 
 # Qrisp name -> OpenQASM 2, each a gate of the original qelib1.inc; `p` as `rz` and `sx` as `rx(pi/2)` differ by a
 # global phase only.
 GATES: Final = MappingProxyType({
-    "x": Gate("x"), "y": Gate("y"), "z": Gate("z"), "h": Gate("h"),
+    "x": Gate("x"), "y": Gate("y"), "z": Gate("z"), "id": Gate("id", 3, with_angles=False), "h": Gate("h"),
     "s": Gate("s"), "s_dg": Gate("sdg"), "t": Gate("t"), "t_dg": Gate("tdg"),
     "rx": Gate("rx", 1), "ry": Gate("ry", 1), "rz": Gate("rz", 1), "p": Gate("rz", 1),
     "u3": Gate("u3", 3), "cx": Gate("cx"), "cy": Gate("cy"), "cz": Gate("cz"),
@@ -43,7 +48,8 @@ class ExportError(ValueError):
 
 def _angle(value) -> str:
     try:
-        return repr(float(value))
+        text = repr(float(value))
+        return text.replace("e", ".0e") if "e" in text and "." not in text else text  # 1e-05 is not OpenQASM 2
     except (TypeError, ValueError):
         raise ExportError(f"the angle {value!r} is not a number; bind every parameter first") from None
 
@@ -59,11 +65,12 @@ def _line(instr, qubit: dict, clbit: dict) -> str | None:
     gate = GATES.get(name)
     if gate is None:
         raise ExportError(f"the gate {name!r} is not written by this writer; break the circuit down with "
-                          f"qc.transpile() first (written: {', '.join(sorted(GATES))})")
+                          "qc.transpile() first, and write r, which it keeps, as rz, rx and rz "
+                          f"(written: {', '.join(sorted(GATES))})")
     params = list(instr.op.params)
     if len(params) != gate.angles:
         raise ExportError(f"the gate {name!r} has {len(params)} angles, {gate.angles} expected")
-    params = [*gate.fixed, *params]
+    params = [*gate.fixed, *(params if gate.with_angles else [])]
     angles = f"({','.join(_angle(p) for p in params)})" if params else ""
     return f"{gate.name}{angles} {','.join(qs)};"
 

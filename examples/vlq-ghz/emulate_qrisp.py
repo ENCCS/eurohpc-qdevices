@@ -1,6 +1,7 @@
 """The example vlq-ghz in Qrisp code: each job gate by gate, on Qrisp's own emulator, with no noise.
 
-Run it where Qrisp is installed. In a terminal on Binder, which starts at the top of the clone:
+Run it where Qrisp is installed. In a terminal on Binder, from File > New > Terminal, which starts at the top of the
+clone:
 
     cd examples/vlq-ghz && python emulate_qrisp.py
 
@@ -27,11 +28,11 @@ from qrisp import QuantumCircuit
 def ghz():
     """The job GHZ: GHZ.qasm, on 25 qubits."""
     qc = QuantumCircuit(25, 5)
-    # r: Qrisp has no r: turn the axis to X, rotate about X, and turn it back
+    # r: Qrisp's own r(theta, phi) is our r(theta, phi - pi/2): turn the axis to X, rotate about X, and turn it back
     qc.rz(-pi / 2, 0)  # r
     qc.rx(pi / 2, 0)  # r
     qc.rz(pi / 2, 0)  # r
-    # move: our move is a swap of a qubit and the resonator, see examples/tools/gates.py
+    # move: a swap with the resonator here (examples/tools/gates.py); the texts pair it, so MOVE's phases cancel
     qc.swap(0, 24)  # move
     qc.rz(pi / 2, 1)  # r
     qc.rx(pi / 2, 1)  # r

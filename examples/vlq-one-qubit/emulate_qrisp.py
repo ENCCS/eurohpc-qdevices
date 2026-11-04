@@ -1,6 +1,7 @@
 """The example vlq-one-qubit in Qrisp code: each job gate by gate, on Qrisp's own emulator, with no noise.
 
-Run it where Qrisp is installed. In a terminal on Binder, which starts at the top of the clone:
+Run it where Qrisp is installed. In a terminal on Binder, from File > New > Terminal, which starts at the top of the
+clone:
 
     cd examples/vlq-one-qubit && python emulate_qrisp.py
 
@@ -27,7 +28,7 @@ from qrisp import QuantumCircuit
 def x():
     """The job X: X.qasm, on 1 qubit."""
     qc = QuantumCircuit(1, 1)
-    # r: Qrisp has no r: turn the axis to X, rotate about X, and turn it back
+    # r: Qrisp's own r(theta, phi) is our r(theta, phi - pi/2): turn the axis to X, rotate about X, and turn it back
     qc.rz(-0.0, 0)  # r
     qc.rx(pi, 0)  # r
     qc.rz(0.0, 0)  # r

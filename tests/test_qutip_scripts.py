@@ -1,12 +1,11 @@
 """Each folder's emulate_qutip.py: the example in QuTiP code, to read and to run, and the stored shares it gives.
 
 The first tests read the scripts and need no QuTiP. Those that run a script need qutip-qip. A job on 25 qubits takes
-about 25 seconds and 1.1 GB, so it runs only with QUTIP_WIDE=1 in the environment: the repository registers no pytest
+about 25 seconds and 1.5 GB, so it runs only with QUTIP_WIDE=1 in the environment: the repository registers no pytest
 marks, and the test of the path through QuTiP leaves that job out too.
 """
 
 import ast
-import json
 import os
 import runpy
 import shutil
@@ -21,19 +20,15 @@ sys.path.insert(0, str(EXAMPLES / "tools"))
 from circuit import circuit_of  # noqa: E402
 from emulate import jobs_of, qutip_stored, top  # noqa: E402
 from overview import example_folders, largest_apart  # noqa: E402
+from script_parts import angle_text, function_of  # noqa: E402
+from script_qasm import for_qasm  # noqa: E402
+from scripts_shown import WIDE, widest  # noqa: E402
 
 SCRIPT = "emulate_qutip.py"
 FOLDERS = example_folders(EXAMPLES)
 IDS = [folder.relative_to(EXAMPLES).as_posix() for folder in FOLDERS]
-TOOLS = {path.stem for path in (EXAMPLES / "tools").glob("*.py")}
 HELPERS = ["shares_of", "top"]
-WIDE = 20                        # a folder with a job on this many qubits or more runs only with QUTIP_WIDE=1
 APART = 1e-8                     # the stored file holds 8 places
-
-
-def for_qasm(folder: Path) -> bool:
-    """A folder for Euro-Q-Exa: its script also writes OpenQASM 2."""
-    return json.loads((folder / "manifest.json").read_text(encoding="utf-8"))["site"] == "euroqexa"
 
 
 def tree(folder: Path) -> ast.Module:
@@ -48,16 +43,11 @@ def imported(module: ast.Module) -> set:
     return {name.split(".")[0] for name in names}
 
 
-def widest(folder: Path) -> int:
-    """The most qubits a job of the folder runs on."""
-    return max(len(circuit_of(folder / job["file"]).qubits) for job in jobs_of(folder))
-
-
 def run(folder: Path) -> dict:
     """The script of a folder run as a module, with no main, when its jobs are not too wide for this run."""
     pytest.importorskip("qutip_qip")
     if widest(folder) >= WIDE and not os.environ.get("QUTIP_WIDE"):
-        pytest.skip("a job on 25 qubits: about 25 seconds and 1.1 GB; set QUTIP_WIDE=1 to run it")
+        pytest.skip("a job on 25 qubits: about 25 seconds and 1.5 GB; set QUTIP_WIDE=1 to run it")
     return runpy.run_path(str(folder / SCRIPT))
 
 
@@ -65,7 +55,6 @@ def run(folder: Path) -> dict:
 def test_a_script_imports_only_numpy_qutip_and_qutip_qip_and_nothing_from_tools(folder):
     found = imported(tree(folder))
     assert found == {"numpy", "qutip", "qutip_qip"} | ({"re", "sys"} if for_qasm(folder) else set())
-    assert found <= {"numpy", "qutip", "qutip_qip"} | set(sys.stdlib_module_names) and not found & TOOLS
 
 
 @pytest.mark.parametrize("folder", FOLDERS, ids=IDS)
@@ -87,18 +76,26 @@ def test_a_script_has_one_function_per_job_and_one_line_per_gate_of_its_text(fol
 @pytest.mark.parametrize("folder", FOLDERS, ids=IDS)
 def test_each_readme_names_the_script_with_the_path_of_its_folder(folder):
     path, page = folder.relative_to(EXAMPLES).as_posix(), (folder / "README.md").read_text(encoding="utf-8")
-    assert f"`cd examples/{path} && python {SCRIPT}`" in page
+    assert "Run in this folder, each prints what its emulator gives" in page
+    assert f"`python {SCRIPT}` where QuTiP and qutip-qip are installed" in page
     assert f"`pixi run --manifest-path examples/qrisp/pixi.toml python examples/{path}/{SCRIPT}`" in page
     assert f"| `{SCRIPT}` |" in page
+
+
+@pytest.mark.parametrize("folder", FOLDERS, ids=IDS)
+def test_a_readme_names_no_qrisp_writer_on_the_qutip_line(folder):
+    page = (folder / "README.md").read_text(encoding="utf-8")
     assert "write_qrisp_emulated.py" not in page and "qrisp-emulated" not in page
 
 
 def test_the_page_above_says_how_to_make_the_files_of_one_folder_again():
-    page = (EXAMPLES / "README.md").read_text(encoding="utf-8")
-    assert ("qutip-emulated examples/qrisp/bell`, and the same with `qrisp-emulated`, `qutip-scripts` and "
-            "`qrisp-scripts`") in page
+    """The five tasks, in their order: the pictures last, as they draw from the stored files."""
+    page, tasks = (EXAMPLES / "README.md").read_text("utf-8"), (EXAMPLES / "qrisp" / "pixi.toml").read_text("utf-8")
+    order = ("qutip-emulated", "qrisp-emulated", "qutip-scripts", "qrisp-scripts", "pictures")
+    run = "pixi run --manifest-path examples/qrisp/pixi.toml"
+    assert "".join(f"{run} {task} examples/qrisp/bell\n" for task in order) in page
+    assert all(f'\n{task} = {{ cmd = "python examples/tools/write_' in tasks for task in order)
     assert f"| `{SCRIPT}` |" in page and "qutip-scripts" in (EXAMPLES / "tools" / "README.md").read_text("utf-8")
-    tasks = (EXAMPLES / "qrisp" / "pixi.toml").read_text(encoding="utf-8")
     assert 'qutip-scripts = { cmd = "python examples/tools/write_qutip_scripts.py"' in tasks
 
 
@@ -115,7 +112,21 @@ def test_beside_the_gate_lines_a_script_keeps_the_size_limits_of_the_code(folder
 
 def test_only_the_job_on_25_qubits_is_wide():
     assert [folder.relative_to(EXAMPLES).as_posix() for folder in FOLDERS if widest(folder) >= WIDE] == ["qrisp/hello"]
-    assert "about 25 seconds and 1.1 GB" in (EXAMPLES / "qrisp" / "hello" / SCRIPT).read_text(encoding="utf-8")
+    assert "about 25 seconds and 1.5 GB" in (EXAMPLES / "qrisp" / "hello" / SCRIPT).read_text(encoding="utf-8")
+    assert f"Here `{SCRIPT}` runs a job on 25 qubits: it takes about 25 seconds and 1.5 GB" in (
+        EXAMPLES / "qrisp" / "hello" / "README.md").read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize(("names", "taken"), [(["CLASS"], set()), (["PRINT"], set()), (["1BELL"], set()),
+                                              (["__FILE__"], set()), (["TOP"], {"top"}), (["BELL", "Bell"], set())],
+                         ids=["keyword", "builtin", "not-a-name", "two-underscores", "taken", "twice"])
+def test_a_job_name_that_is_not_a_free_python_name_stops_the_writers(names, taken):
+    """Only the last name is refused: in "twice", BELL is the function bell, which Bell would take again."""
+    defined = {}
+    for name in names[:-1]:
+        function_of(name, taken, defined)
+    with pytest.raises(ValueError, match="not a free Python name"):
+        function_of(names[-1], taken, defined)
 
 
 # ------------------------------------------------------------ with qutip-qip
@@ -160,9 +171,7 @@ def test_the_writer_gives_the_same_bytes_again(tmp_path):
 
 def test_an_angle_is_written_as_the_same_float():
     """Read back by the reader of the texts, which takes pi and the same operations in the same order."""
-    pytest.importorskip("qutip_qip")
     from texts import angle
-    from write_qutip_scripts import angle_text
 
     written = {value: angle_text(value) for value in (pi / 2, -pi / 4, 3 * pi / 4, -3 * pi / 8, 2 * pi, pi, 0.0,
                                                       0.7, -1.2345678901234567, 0.1 + 0.2)}
@@ -170,13 +179,43 @@ def test_an_angle_is_written_as_the_same_float():
     assert all(angle(text.replace("np.pi", "pi")) == value for value, text in written.items())
 
 
-def test_the_emulator_and_the_scripts_take_the_gates_from_one_place():
+def test_a_script_cuts_the_shares_where_the_emulator_does():
     pytest.importorskip("qutip_qip")
-    import qutip_emulator
+    from qutip_emulator import SMALLEST
+    from write_qutip_scripts import SHARES
 
-    circuit = circuit_of(EXAMPLES / "vlq-bell" / "BELL.qasm")
-    steps = qutip_emulator.gate_steps(circuit)
-    assert [(gate.name, gate.targets, gate.controls or [], gate.arg_value)
-            for gate in qutip_emulator.qutip_circuit(circuit).gates] == [
-        (step.gate, list(step.targets), list(step.controls), step.arg) for step in steps]
+    assert SHARES.count(f"> {SMALLEST:g}") == 1 and f"above {SMALLEST:g}" in SHARES
+
+
+@pytest.mark.parametrize("folder", FOLDERS, ids=IDS)
+def test_the_emulator_and_the_scripts_take_the_gates_from_one_place(folder):
+    """Each job of a script has the emulator's gates, one for one, and reads the same qubits; no circuit is run."""
+    pytest.importorskip("qutip_qip")
+    from qutip_emulator import qutip_circuit
+
+    def gates(qc):
+        return [(gate.name, gate.targets, gate.controls or [], gate.arg_value) for gate in qc.gates]
+
+    script = runpy.run_path(str(folder / SCRIPT))
+    for job in jobs_of(folder):
+        circuit, (build, read) = circuit_of(folder / job["file"]), script["JOBS"][job["name"]]
+        assert gates(build()) == gates(qutip_circuit(circuit)), job["name"]
+        assert read == list(circuit.renumbered().bits), job["name"]
+
+
+def test_each_step_keeps_the_gate_of_the_text():
+    pytest.importorskip("qutip_qip")
+    from qutip_emulator import gate_steps
+
+    steps = gate_steps(circuit_of(EXAMPLES / "vlq-bell" / "BELL.qasm"))
     assert [step.ours for step in steps] == ["r", "r", "move", "cz", "move", "r"]
+
+
+def test_a_script_of_every_gate_gives_our_shares(tmp_path):
+    pytest.importorskip("qutip_qip")
+    from test_qrisp_scripts import every_gate_script
+    from write_qutip_scripts import script_text
+
+    script, ours = every_gate_script(tmp_path, script_text)
+    build, read = script["JOBS"]["EVERY"]
+    assert largest_apart(script["shares_of"](build(), read), ours) <= 1e-12

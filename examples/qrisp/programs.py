@@ -1,10 +1,12 @@
 """Small Qrisp programs, each with the outcome a perfect machine would give, in Qrisp's labels."""
 
+import inspect
 import os
 import platform
 from collections.abc import Callable
 from dataclasses import dataclass
 from math import pi
+from pathlib import Path
 from typing import Final
 
 # NumPy's AVX-512 code puts some angles of Qrisp one bit apart; without it every x86 machine writes the same text.
@@ -16,7 +18,7 @@ from qrisp.core import cx, h, p, x
 from qrisp.grover import grovers_alg, tag_state
 from qrisp.operators import X, Z
 
-__all__ = ["PROGRAMS", "Program"]
+__all__ = ["PROGRAMS", "Program", "source_of"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -138,3 +140,9 @@ PROGRAMS: Final = (
     Program("HELLO", "the word hello on 25 qubits, no two-qubit gate", "hello every time", hello, 1000),
     Program("ISING2", "five Trotter steps of two spins", "11 most often, about 0.87", ising2, 1000),
 )
+
+
+def source_of(folder: str) -> tuple[str, str]:
+    """The function that builds the program of examples/qrisp/<folder>, and the file here that defines it."""
+    build = {program.name.lower(): program.build for program in PROGRAMS}[folder]
+    return build.__name__, Path(inspect.getfile(build)).name

@@ -72,6 +72,10 @@ def _crz(state: dict, a: int, b: int, theta: float) -> dict:
     return {i: v * exp((0.5j if i & b else -0.5j) * theta) if i & a else v for i, v in state.items()}
 
 
+# Why `move` is a swap, as the comment of the scripts gives it.
+MOVE_WHY = "a swap with the resonator here (examples/tools/gates.py); the texts pair it, so MOVE's phases cancel"
+
+
 def _move(state: dict, a: int, b: int) -> dict:
     """A swap: the phases of the real MOVE cancel in a pair, as the texts use it."""
     return {i ^ (a | b) if bool(i & a) != bool(i & b) else i: v for i, v in state.items()}

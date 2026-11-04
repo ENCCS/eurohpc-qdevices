@@ -71,8 +71,8 @@ def figures(folder: Path) -> tuple:
 
 def write(folder: Path, out: Path) -> tuple:
     """Write the two pictures of one folder into `out`; their sizes in bytes."""
-    out.mkdir(parents=True, exist_ok=True)
     circuit, outcomes = figures(folder)
+    out.mkdir(parents=True, exist_ok=True)
     return _save(circuit, out / CIRCUIT), _save(outcomes, out / OUTCOMES)
 
 

@@ -138,7 +138,7 @@ def test_the_pages_above_say_how_to_make_the_files_again():
         encoding="utf-8"), re.MULTILINE)
 
 
-def test_a_writer_given_folders_writes_only_those(tmp_path):
+def test_a_writer_given_folders_writes_only_those(tmp_path, capsys):
     """`qutip-emulated examples/qrisp/bell` writes that folder alone; with no folder, every one."""
     from overview import write_stored
 
@@ -148,3 +148,6 @@ def test_a_writer_given_folders_writes_only_those(tmp_path):
     write_stored(tmp_path, "made.json", lambda folder: folder.name, [one])
     assert (one / "made.json").read_text(encoding="utf-8") == "one"
     assert not (other / "made.json").exists()
+    write_stored(tmp_path / "root", "made.json", lambda folder: folder.name, [other])   # a folder outside the root
+    assert (other / "made.json").read_text(encoding="utf-8") == "other"
+    assert capsys.readouterr().out.splitlines() == ["one/made.json", str(other / "made.json")]

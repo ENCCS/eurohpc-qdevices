@@ -24,9 +24,9 @@ matplotlib = ">=3.11.2, <4"
 test = { cmd = "pytest -q", cwd = "../.." }
 qrisp-examples = { cmd = "python examples/qrisp/write_manifests.py", cwd = "../..", description = "Write the Qrisp examples and their manifests; no network" }
 hamiltonian = { cmd = "python examples/hamiltonian/write_chain.py", cwd = "../..", description = "Write the chain of examples/hamiltonian and its manifest; no network" }
-qrisp-emulated = { cmd = "python examples/tools/write_qrisp_emulated.py", cwd = "../..", description = "Write qrisp_emulated.json in each example folder, by Qrisp's emulator; no network" }
+qrisp-emulated = { cmd = "python examples/tools/write_qrisp_emulated.py", cwd = "../..", description = "Write qrisp_emulated.json in each example folder, or in those named, by Qrisp's emulator; no network" }
 two-spins = { cmd = "python examples/hamiltonian/two_spins/write_two_spins.py", cwd = "../..", description = "Write examples/hamiltonian/two_spins: two texts by Qrisp, the manifest and the README; no network" }
-qutip-emulated = { cmd = "python examples/tools/write_qutip_emulated.py", cwd = "../..", description = "Write qutip_emulated.json in each example folder, by QuTiP with no noise; no network" }
-qutip-scripts = { cmd = "python examples/tools/write_qutip_scripts.py", cwd = "../..", description = "Write emulate_qutip.py in each example folder: the example in QuTiP code, to read and run; no network" }
+qutip-emulated = { cmd = "python examples/tools/write_qutip_emulated.py", cwd = "../..", description = "Write qutip_emulated.json in each example folder, or in those named, by QuTiP with no noise; no network" }
+qutip-scripts = { cmd = "python examples/tools/write_qutip_scripts.py", cwd = "../..", description = "Write emulate_qutip.py in each example folder, or in those named: the example in QuTiP code, to read and run; no network" }
 qrisp-scripts = { cmd = "python examples/tools/write_qrisp_scripts.py", cwd = "../..", description = "Write emulate_qrisp.py in each example folder, or in those named: the example in Qrisp code; no network" }
-pictures = { cmd = "python examples/tools/write_pictures.py", cwd = "../..", description = "Draw circuit.png and outcomes.png in each example folder, by qutip-qip and matplotlib; no network" }
+pictures = { cmd = "python examples/tools/write_pictures.py", cwd = "../..", description = "Draw circuit.png and outcomes.png in each example folder, or in those named, by qutip-qip and matplotlib; no network" }

@@ -11,6 +11,7 @@ from typing import Final
 
 from circuit import Circuit, circuit_of
 from emulate import jobs_of
+from gates import MOVE_WHY
 from qrisp import QuantumCircuit
 
 PLACES: Final = 8                                                     # Qrisp itself rounds to 5 or 6 places
@@ -19,10 +20,10 @@ OTHER_NAME: Final = {"sdg": "s_dg", "tdg": "t_dg", "move": "swap"}   # our `move
 
 
 WHY: Final = {
-    "r": "Qrisp has no r: turn the axis to X, rotate about X, and turn it back",
+    "r": "Qrisp's own r(theta, phi) is our r(theta, phi - pi/2): turn the axis to X, rotate about X, and turn it back",
     "crz": "Qrisp has no crz method: half the angle on the target, then two CX flip the sign of the other half",
     "sdg": "Qrisp names it s_dg", "tdg": "Qrisp names it t_dg",
-    "move": "our move is a swap of a qubit and the resonator, see examples/tools/gates.py"}
+    "move": MOVE_WHY}
 
 
 @dataclass(frozen=True)

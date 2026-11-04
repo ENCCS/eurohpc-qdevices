@@ -11,6 +11,8 @@ from qdevices.paths import Places
 
 TOKEN = "tok-" + "A1b2C3d4" * 6           # synthetic, never a real token
 QASM = b'OPENQASM 2.0;\ninclude "qelib1.inc";\nqreg q[1];\ncreg c[1];\nx q[0];\nmeasure q -> c;\n'
+QELIB1 = frozenset({"u3", "u2", "u1", "cx", "id", "x", "y", "z", "h", "s", "sdg", "t", "tdg", "rx", "ry", "rz", "cz",
+                    "cy", "ch", "ccx", "crz", "cu1", "cu3"})        # the gates of the original qelib1.inc
 CONFIG = """
 [euroqexa]
 projects = ["TEST-PROJECT"]

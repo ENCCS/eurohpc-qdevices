@@ -1,8 +1,8 @@
 """The size ratchet: no file of src/ or examples/ over 200 lines, and no function or method over 25 lines.
 
 Offenders are listed in tests/golden/sizes.txt; a listed line no longer needed fails, so the list only shrinks.
-Each folder's emulate_qutip.py and emulate_qrisp.py are left out: their writers, which are counted, give one line per
-gate of a text, as the text has it; tests/test_qutip_scripts.py and test_qrisp_scripts.py hold the rest to these limits.
+Each folder's emulate_qutip.py and emulate_qrisp.py are left out: their writers, which are counted, write a text out
+gate by gate, as the text has it; tests/test_qutip_scripts.py and test_qrisp_scripts.py hold the rest to these limits.
 """
 
 import ast
@@ -14,7 +14,7 @@ LISTED = ROOT / "tests" / "golden" / "sizes.txt"
 FILE_LINES, FUNCTION_LINES = 200, 25
 ROW = re.compile(r"(\S+::\S+) ([0-9]+)")
 DEFS = (ast.FunctionDef, ast.AsyncFunctionDef)
-WRITTEN = ("emulate_qutip.py", "emulate_qrisp.py")   # a circuit written out as code, one line per gate
+WRITTEN = ("emulate_qutip.py", "emulate_qrisp.py")   # a circuit written out as code, gate by gate
 
 
 def length(node: ast.FunctionDef | ast.AsyncFunctionDef) -> int:

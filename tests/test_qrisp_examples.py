@@ -1,12 +1,14 @@
 """The Qrisp examples: the writer, its files and each site's offline check; only the last test needs Qrisp."""
 
+import ast
+import re
 import subprocess
 import sys
 from pathlib import Path
 from types import SimpleNamespace as Space
 
 import pytest
-from fakes import places_in
+from fakes import QELIB1, places_in
 
 from qdevices import config, dryrun
 from qdevices.qasm import Qasm
@@ -23,8 +25,7 @@ MANIFESTS = sorted(QRISP.glob("*/manifest.json"))
 QUBITS = {"bell": 2, "ghz3": 3, "qft3": 3, "abstract_parameter": 3, "qaoa_maxcut": 5, "tutorial_qpe": 5, "qubo": 6,
           "constrained_mixer": 4, "qite1": 7, "ising": 6, "shor13": 6, "bv4": 5, "add_const": 3, "grover3": 3,
           "hello": 25, "ising2": 2}
-QELIB1 = {"u3", "u2", "u1", "cx", "id", "x", "y", "z", "h", "s", "sdg", "t", "tdg", "rx", "ry", "rz", "cz", "cy",
-          "ch", "ccx", "crz", "cu1", "cu3", "measure", "barrier", "reset"}
+ALLOWED = QELIB1 | {"measure", "barrier", "reset"}
 
 
 def bit(name):
@@ -46,6 +47,11 @@ def test_the_writer_writes_qelib1_gates_and_measures_in_order():
                  ("measure", [], [0], [0]), ("measure", [], [1], [1]))
     assert to_qasm2(qc) == ('OPENQASM 2.0;\ninclude "qelib1.inc";\nqreg q[2];\ncreg c[2];\nh q[0];\n'
                             "rz(0.5) q[1];\ncx q[0],q[1];\nmeasure q[0] -> c[0];\nmeasure q[1] -> c[1];\n")
+
+
+def test_the_writer_writes_id_and_puts_a_point_before_an_exponent():
+    qc = circuit(("id", [0, 0, 0], [0], []), ("rz", [1e-05], [0], []), clbits=0)
+    assert to_qasm2(qc).endswith("id q[0];\nrz(1.0e-05) q[0];\n")
 
 
 def test_the_writer_writes_sx_as_rx_of_a_quarter_turn():
@@ -74,7 +80,7 @@ def test_each_qrisp_example_passes_the_euroqexa_dry_run(tmp_path, manifest):
 @pytest.mark.parametrize("name,text", texts(), ids=lambda v: v if isinstance(v, str) else "")
 def test_each_text_uses_only_qelib1_gates(name, text):
     parsed = Qasm.parse(text.decode())
-    assert parsed.gate_names <= QELIB1
+    assert parsed.gate_names <= ALLOWED
     assert parsed.qubits == QUBITS[name]
 
 
@@ -84,6 +90,30 @@ def test_vlq_and_piastq_refuse_the_texts_offline(name, text):
     vlq = SITES["vlq"].validate(job, None)
     assert any("not an OpenQASM 3 text" in p for p in vlq) and any("not native on VLQ" in p for p in vlq)
     assert any("not an operation list of the broker" in p for p in SITES["piastq"].validate(job, None))
+
+
+def defined_in(file: str) -> set:
+    """The functions at the top of a file of examples/qrisp/, read without Qrisp."""
+    tree = ast.parse((QRISP / file).read_text(encoding="utf-8"))
+    return {node.name for node in tree.body if isinstance(node, ast.FunctionDef)}
+
+
+def listed() -> dict:
+    """Each folder and the function of its program, as PROGRAMS of programs.py lists them."""
+    tree = ast.parse((QRISP / "programs.py").read_text(encoding="utf-8"))
+    table = next(node.value for node in tree.body if isinstance(node, ast.AnnAssign) and node.target.id == "PROGRAMS")
+    return {call.args[0].value.lower(): call.args[3].id for call in table.elts}
+
+
+@pytest.mark.parametrize("manifest", MANIFESTS, ids=lambda p: p.parent.name)
+def test_the_readme_and_the_script_name_the_function_of_the_program_and_the_file_that_defines_it(manifest):
+    folder = manifest.parent
+    doc = " ".join(ast.get_docstring(ast.parse((folder / "emulate_qrisp.py").read_text(encoding="utf-8"))).split())
+    named = (re.findall(r"from the function `(\w+)` of `(\w+\.py)`", (folder / "README.md").read_text(encoding="utf-8"))
+             + re.findall(r"Its Qrisp program is the function (\w+) of examples/qrisp/(\w+\.py)\.", doc))
+    assert len(named) == 2 and named[0] == named[1], named
+    function, file = named[0]
+    assert function in defined_in(file) and listed()[folder.name] == function
 
 
 def test_qrisp_makes_the_same_files_again_and_each_ideal_names_the_likeliest_outcome(tmp_path):

@@ -3,8 +3,21 @@
 The fake services of the three sites are the modules eqe, vlq and piastq; the records of another runner are older.
 """
 
-from .core import CONFIG, QASM, TOKEN, FakeClock, cfg, events, lines_of, places_in, records_of, send, write_manifest
+from .core import (
+    CONFIG,
+    QASM,
+    QELIB1,
+    TOKEN,
+    FakeClock,
+    cfg,
+    events,
+    lines_of,
+    places_in,
+    records_of,
+    send,
+    write_manifest,
+)
 from .scripted import STATE, FakeSite
 
-__all__ = ["CONFIG", "QASM", "STATE", "TOKEN", "FakeClock", "FakeSite", "cfg", "events", "lines_of", "places_in",
-           "records_of", "send", "write_manifest"]
+__all__ = ["CONFIG", "QASM", "QELIB1", "STATE", "TOKEN", "FakeClock", "FakeSite", "cfg", "events", "lines_of",
+           "places_in", "records_of", "send", "write_manifest"]

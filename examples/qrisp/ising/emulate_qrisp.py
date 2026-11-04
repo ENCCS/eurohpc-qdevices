@@ -1,6 +1,7 @@
 """The example qrisp/ising in Qrisp code: each job gate by gate, on Qrisp's own emulator, with no noise.
 
-Run it where Qrisp is installed. In a terminal on Binder, which starts at the top of the clone:
+Run it where Qrisp is installed. In a terminal on Binder, from File > New > Terminal, which starts at the top of the
+clone:
 
     cd examples/qrisp/ising && python emulate_qrisp.py
 
@@ -13,7 +14,8 @@ classical bit, as on the site. The shares are those that qrisp_emulated.json sto
 computer that made it; Qrisp rounds its own shares to 5 or 6 places, so another kind of computer can differ by about
 0.00001.
 
-Its text was made with Qrisp, examples/qrisp/write_manifests.py. Its Qrisp program is in examples/qrisp/programs.py.
+Its text was made with Qrisp, examples/qrisp/write_manifests.py. Its Qrisp program is the function ising of
+examples/qrisp/pages.py.
 
 To send a circuit of your own without writing OpenQASM, write it in Qrisp as below. The first line prints the OpenQASM 2
 text of each circuit, as examples/qrisp/qasm2.py of the clone writes it, and the second keeps that of one job:
@@ -235,7 +237,9 @@ def to_qasm(qc):
 
     Qrisp 0.9.10 writes OpenQASM through a package of another framework, so the examples use their own short converter.
     """
-    examples = next(p for p in Path(__file__).resolve().parents if (p / "qrisp" / "qasm2.py").exists())
+    examples = next((p for p in Path(__file__).resolve().parents if (p / "qrisp" / "qasm2.py").exists()), None)
+    if examples is None:
+        sys.exit("--qasm needs examples/qrisp/qasm2.py: run this file in its folder of a clone")
     sys.path.insert(0, str(examples / "qrisp"))
     from qasm2 import to_qasm2
 
@@ -245,6 +249,8 @@ def to_qasm(qc):
 if __name__ == "__main__":
     if sys.argv[1:2] == ["--qasm"]:
         names = sys.argv[2:] or list(JOBS)
+        if unknown := [name for name in names if name not in JOBS]:
+            sys.exit(f"no job {', '.join(unknown)} here; the jobs: {', '.join(JOBS)}")
         for name in names:
             print(("" if len(names) == 1 else f"// {name}\n") + to_qasm(JOBS[name]()), end="")
     else:

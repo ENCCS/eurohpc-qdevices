@@ -1,6 +1,7 @@
 """The example piastq-one-qubit in QuTiP code: each job gate by gate in qutip-qip, run with no noise.
 
-Run it where QuTiP and qutip-qip are installed. In a terminal on Binder, which starts at the top of the clone:
+Run it where QuTiP and qutip-qip are installed. In a terminal on Binder, from File > New > Terminal, which starts at the
+top of the clone:
 
     cd examples/piastq-one-qubit && python emulate_qutip.py
 
@@ -9,7 +10,8 @@ From the top of a clone of your own, with pixi:
     pixi run --manifest-path examples/qrisp/pixi.toml python examples/piastq-one-qubit/emulate_qutip.py
 
 It prints the share of each key of each job in the form of emulate.sh: a key reads qubit 0 first, as the broker gives
-it. The shares are those that qutip_emulated.json stores, to 8 places.
+it, and the angles of its list, in units of pi, are in radians here. The shares are those that qutip_emulated.json
+stores, to 8 places.
 
 examples/tools/write_qutip_scripts.py writes this file from the text of each job. It needs nothing else from the clone,
 so you can copy it anywhere.

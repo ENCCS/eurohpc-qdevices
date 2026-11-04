@@ -68,8 +68,10 @@ def example_folders(root: Path) -> tuple:
 def write_stored(root: Path, name: str, text_of, folders: list | None = None) -> None:
     """Write the file `name` in each of `folders`, or in every example folder below `root`, and print where."""
     for folder in folders or example_folders(root):
-        (folder / name).write_bytes(text_of(folder).encode("utf-8"))
-        print(folder.relative_to(root) / name)
+        text = text_of(folder).encode("utf-8")
+        where = folder.relative_to(root) if folder.is_relative_to(root) else folder
+        (folder / name).write_bytes(text)
+        print(where / name)
 
 
 @dataclass(frozen=True)
