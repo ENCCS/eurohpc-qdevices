@@ -1,0 +1,634 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex/"><link rel="search" title="Search" href="../search/"><link rel="next" title="Examples" href="../examples/"><link rel="prev" title="Rules" href="../rules/">
+        <link rel="prefetch" href="../_static/ENCCS_logo_light.png" as="image">
+        <link rel="prefetch" href="../_static/ENCCS_logo_dark.png" as="image">
+
+    <link rel="shortcut icon" href="../_static/favicon.ico"><!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
+        <title>Live runs - eurohpc-qdevices user manual</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_lesson.css?v=e9df6548" />
+    <link rel="stylesheet" type="text/css" href="../_static/term_role_formatting.css?v=4194e21c" />
+    <link rel="stylesheet" type="text/css" href="../_static/furo_ext_lesson.css?v=6c0cde2e" />
+    <link rel="stylesheet" type="text/css" href="../_static/EN_Co-funded.css?v=bf081b0b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../_static/overrides.css?v=5eba887c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../"><div class="brand">eurohpc-qdevices user manual</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../_static/ENCCS_logo_light.png" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../_static/ENCCS_logo_dark.png" alt="Dark Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">eurohpc-qdevices user manual</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search/" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Using the app</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installing/">Install and first run</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manifests-and-records/">Manifests and records</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Live runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../qrisp/">Circuits written in Qrisp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hamiltonian/">Hamiltonian simulation on a quantum computer, step by step</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../billing-and-usage/">Billing and usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">The sites</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../euroqexa/">Euro-Q-Exa (LRZ)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vlq/">VLQ (IT4Innovations)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../piastq/">Piast-Q (PCSS)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references/">References</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/ENCCS/eurohpc-qdevices/blob/main//content/live-runs.md?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/ENCCS/eurohpc-qdevices/edit/main//content/live-runs.md" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section class="tex2jax_ignore mathjax_ignore" id="live-runs">
+<h1>Live runs<a class="headerlink" href="#live-runs" title="Link to this heading">¶</a></h1>
+<p>Read this page before a live run. It says how a job is never sent twice, never cancelled, and always in a
+record.</p>
+<section id="the-record">
+<h2>The record<a class="headerlink" href="#the-record" title="Link to this heading">¶</a></h2>
+<p>Each event is one JSON line, written, flushed and synced to disk (<code class="docutils literal notranslate"><span class="pre">fsync</span></code>, and <code class="docutils literal notranslate"><span class="pre">F_FULLFSYNC</span></code> on macOS)
+before the next request (<a class="reference internal" href="../manifests-and-records/#records"><span class="std std-ref">The records</span></a>). A <strong>“submitting”</strong> line is on disk before the first request of a
+job. Each step of a VLQ job (created, uploaded) is on disk before the next request. The job id is on disk
+as soon as the answer is read.</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Order</p></th>
+<th class="head"><p>In the record</p></th>
+<th class="head"><p>What the app does</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>lost</strong></p></td>
+<td><p>a “submitting” line, no job id: the request may have reached the site</p></td>
+<td><p>never sends it again; blocks a new run until you resolve it (below)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>open</strong></p></td>
+<td><p>a job id, no result</p></td>
+<td><p>a resume collects it and never sends it again; blocks a new run on its site until then</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Never edit or move a record.</strong> The budget and the open-order check read every record where it is. A copy
+in another place sends nothing: a resume that sends takes only the newest record of its run folder, from
+the host, path, device and inode in its start line. Read a record with <code class="docutils literal notranslate"><span class="pre">qdevices</span> <span class="pre">jobs</span> <span class="pre">RECORD</span></code> or any JSON tool.</p>
+<p>A resume never submits a VLQ job that has no “submitted” line. It reads the state of the job:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>State at the site</p></th>
+<th class="head"><p>In the record</p></th>
+<th class="head"><p>Result</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>past Configuring</p></td>
+<td><p>any</p></td>
+<td><p>collected</p></td>
+</tr>
+<tr class="row-odd"><td><p>cannot be read</p></td>
+<td><p>any</p></td>
+<td><p>the order stays open; exit code 1</p></td>
+</tr>
+<tr class="row-even"><td><p>Configuring</p></td>
+<td><p>the “created” line, no “uploaded” line</p></td>
+<td><p>SubmitJob was never sent: a final “not submitted” line, no device time</p></td>
+</tr>
+<tr class="row-odd"><td><p>Configuring</p></td>
+<td><p>the “uploaded” line (written just before SubmitJob), or no “created” line</p></td>
+<td><p>SubmitJob may have reached the site: the order stays open, nothing is cancelled or sent again; a stop <code class="docutils literal notranslate"><span class="pre">submit_unknown</span></code>, exit code 1. Check the job at the site. When it has left Configuring, a resume collects it. When the site shows it never ran: <code class="docutils literal notranslate"><span class="pre">qdevices</span> <span class="pre">resolve</span> <span class="pre">RECORD</span> <span class="pre">ORDER</span> <span class="pre">--none</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="the-answer-to-a-job-request">
+<h2>The answer to a job request<a class="headerlink" href="#the-answer-to-a-job-request" title="Link to this heading">¶</a></h2>
+<p>For VLQ, a job request is any request of the metered job. Each site page says which answer is a refusal.</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Answer</p></th>
+<th class="head"><p>Result</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>a refusal: no job ran</p></td>
+<td><p>the order is final, with a “refused” line; the rule <code class="docutils literal notranslate"><span class="pre">refusal</span></code> stops the run unless your <code class="docutils literal notranslate"><span class="pre">on_refusal</span></code> rule lets it go on</p></td>
+</tr>
+<tr class="row-odd"><td><p>any other answer that is not a success: a redirect, 500 or more, a 4xx that is not a refusal at that site, no answer, no job id</p></td>
+<td><p>a job may exist: a stop <code class="docutils literal notranslate"><span class="pre">unknown</span></code>, exit code 2; the order is never sent again. It is lost, or open when its job id is known (a VLQ job that was created)</p></td>
+</tr>
+<tr class="row-even"><td><p>a failure of the VLQ init job</p></td>
+<td><p>a stop <code class="docutils literal notranslate"><span class="pre">prepare</span></code>, exit code 1; the order stays unsent</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul class="simple">
+<li><p>No transport retry. A request that makes a job is never sent twice: a network loss inside it leaves a
+lost order.</p></li>
+<li><p>In the wait, a failed read of the state or result (no answer, 500 or more, or the Piast-Q answer of too
+many connections) is a missed poll, asked again at the next poll until <code class="docutils literal notranslate"><span class="pre">wait_seconds</span></code>. When the wait ends
+with no good answer, or an answer ends it at once, the call stops (<code class="docutils literal notranslate"><span class="pre">status_error</span></code> or <code class="docutils literal notranslate"><span class="pre">result_error</span></code>). Its
+stop line holds <code class="docutils literal notranslate"><span class="pre">missed</span></code>: the kind of the last missed poll, or <code class="docutils literal notranslate"><span class="pre">null</span></code> when an answer ended the wait at once.
+The order stays open, and a resume collects it later. A result that still cannot be read is made final
+with <code class="docutils literal notranslate"><span class="pre">qdevices</span> <span class="pre">resolve</span> <span class="pre">RECORD</span> <span class="pre">ORDER</span> <span class="pre">--unreadable</span></code>: after two calls 10 minutes or more apart when the
+answer could not be used, else after two calls 24 hours or more apart (<a class="reference internal" href="#resolving"><span class="std std-ref">Resolving an order, and a stale lock</span></a>).</p></li>
+<li><p>The wait for a VLQ init job ends at the first failed read (a stop <code class="docutils literal notranslate"><span class="pre">prepare</span></code>). The order stays unsent. A
+resume with <code class="docutils literal notranslate"><span class="pre">--max-order</span></code> makes a new init job.</p></li>
+<li><p>A line <code class="docutils literal notranslate"><span class="pre">RECORD</span> <span class="pre">WRITE</span> <span class="pre">FAILED</span> <span class="pre">(...):</span> <span class="pre">order</span> <span class="pre">N</span> <span class="pre">(NAME),</span> <span class="pre">job</span> <span class="pre">ID:</span> <span class="pre">...</span></code> or <code class="docutils literal notranslate"><span class="pre">Under</span> <span class="pre">way</span> <span class="pre">at</span> <span class="pre">the</span> <span class="pre">stop:</span> <span class="pre">...</span></code> gives the
+id of the job or init job under way. That id may not be in the record: write it down. When
+<code class="docutils literal notranslate"><span class="pre">qdevices</span> <span class="pre">jobs</span> <span class="pre">RECORD</span></code> shows the order as lost, give it with <code class="docutils literal notranslate"><span class="pre">qdevices</span> <span class="pre">resolve</span> <span class="pre">RECORD</span> <span class="pre">ORDER</span> <span class="pre">--job</span> <span class="pre">ID</span></code>.</p></li>
+</ul>
+</section>
+<section id="nothing-is-cancelled">
+<h2>Nothing is cancelled<a class="headerlink" href="#nothing-is-cancelled" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>The app has no cancel call. If you must, cancel a job at the site with its own tools. Then, if the
+record shows the order as lost, record what became of it with <code class="docutils literal notranslate"><span class="pre">qdevices</span> <span class="pre">resolve</span></code> (below).</p></li>
+<li><p>Ctrl-C, SIGTERM, SIGHUP and a wait time-out end the call with a “stop” line. The job runs on at the
+site. Collect it with <code class="docutils literal notranslate"><span class="pre">qdevices</span> <span class="pre">send</span> <span class="pre">MANIFEST</span> <span class="pre">--live</span> <span class="pre">--resume</span> <span class="pre">RECORD</span></code>. After an interrupt the call
+prints that command and <code class="docutils literal notranslate"><span class="pre">Under</span> <span class="pre">way</span> <span class="pre">at</span> <span class="pre">the</span> <span class="pre">stop:</span> <span class="pre">order</span> <span class="pre">N</span> <span class="pre">(NAME),</span> <span class="pre">job</span> <span class="pre">ID.</span></code> An error of the program (exit
+code 3) prints that line too.</p></li>
+<li><p>A signal set to ignore stays ignored, so <code class="docutils literal notranslate"><span class="pre">nohup</span></code> works. The screen never ends a live call: a closed pipe
+or terminal is passed over.</p></li>
+<li><p>Keep the machine awake (<code class="docutils literal notranslate"><span class="pre">caffeinate</span> <span class="pre">-i</span></code> on macOS). A sleep inside a request leaves a lost order.</p></li>
+</ul>
+</section>
+<section id="one-live-call-per-site-from-one-host">
+<span id="one-host"></span><h2>One live call per site, from one host<a class="headerlink" href="#one-live-call-per-site-from-one-host" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">send</span></code>, <code class="docutils literal notranslate"><span class="pre">check</span> <span class="pre">--live</span></code>, <code class="docutils literal notranslate"><span class="pre">resolve</span></code> and <code class="docutils literal notranslate"><span class="pre">unlock</span></code> take the site lock, <code class="docutils literal notranslate"><span class="pre">~/.local/state/qdevices/&lt;site&gt;.lock</span></code>.</p>
+<ul class="simple">
+<li><p>A second live call on the site from this host is refused while the first runs: wait for it to end.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">send</span></code> takes the lock before it reads any record. <code class="docutils literal notranslate"><span class="pre">resolve</span></code> reads the record to learn its site (for a
+record of another runner, the site whose <code class="docutils literal notranslate"><span class="pre">older_records</span></code> read it), takes the lock, reads it again and
+decides under the lock.</p></li>
+<li><p>The lock is an exclusive <code class="docutils literal notranslate"><span class="pre">flock</span></code> and a holder file <code class="docutils literal notranslate"><span class="pre">&lt;site&gt;.holder</span></code> (host name, pid, start time), as a
+cluster file system can grant a <code class="docutils literal notranslate"><span class="pre">flock</span></code> on each node with no error. A holder of another host refuses the
+call: check that host, then give <code class="docutils literal notranslate"><span class="pre">qdevices</span> <span class="pre">unlock</span> <span class="pre">SITE</span> <span class="pre">--host</span> <span class="pre">NAME</span></code>. A holder of this host whose process
+has ended is cleared. With no <code class="docutils literal notranslate"><span class="pre">flock</span></code> or no holder file, the call is refused: use a host whose home
+folder has <code class="docutils literal notranslate"><span class="pre">flock</span></code>.</p></li>
+<li><p><strong>Drive one site from one host.</strong> A laptop and a login node have different home folders and do not see
+each other’s lock or records. A resume that sends is refused on another host than the one that started
+the record. A resume without <code class="docutils literal notranslate"><span class="pre">--max-order</span></code> still collects there.</p></li>
+<li><p>The lock covers this app only: no other tool may send to the site during a live call. Records of another
+runner count in the budget and the open-order check only when listed in <code class="docutils literal notranslate"><span class="pre">older_records</span></code>
+(<a class="reference internal" href="../configuration/"><span class="doc">Configuration</span></a>).</p></li>
+<li><p>Keep the clock of the host synchronised (NTP). The records, job times and time rules read it.</p></li>
+</ul>
+</section>
+<section id="resolving-an-order-and-a-stale-lock">
+<span id="resolving"></span><h2>Resolving an order, and a stale lock<a class="headerlink" href="#resolving-an-order-and-a-stale-lock" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">qdevices</span> <span class="pre">resolve</span> <span class="pre">RECORD</span> <span class="pre">ORDER</span> <span class="pre">OPTION</span></code> records your decision on one order, offline, in one synced line.
+Find the order with <code class="docutils literal notranslate"><span class="pre">qdevices</span> <span class="pre">jobs</span> <span class="pre">RECORD</span></code>. In a record of this app it takes these cases, and refuses any
+other:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Order</p></th>
+<th class="head"><p>Give</p></th>
+<th class="head"><p>When</p></th>
+<th class="head"><p>Then</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>lost</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--job</span> <span class="pre">ID</span></code></p></td>
+<td><p>you found the job in the job list of the site (Piast-Q has none: ask PCSS, <a class="reference internal" href="../piastq/"><span class="doc">Piast-Q (PCSS)</span></a>)</p></td>
+<td><p>a resume collects it</p></td>
+</tr>
+<tr class="row-odd"><td><p>lost</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--none</span></code></p></td>
+<td><p>the job list shows no job</p></td>
+<td><p>final, with no job</p></td>
+</tr>
+<tr class="row-even"><td><p>open VLQ, last stop <code class="docutils literal notranslate"><span class="pre">submit_unknown</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--none</span></code></p></td>
+<td><p>the site shows that the job never ran</p></td>
+<td><p>final, with no job</p></td>
+</tr>
+<tr class="row-odd"><td><p>open or lost, with a job id that no URL can hold (a newline in it)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--job</span> <span class="pre">ID</span></code> with the id the site shows, or <code class="docutils literal notranslate"><span class="pre">--none</span></code></p></td>
+<td><p>no read of its state can name the job</p></td>
+<td><p>with <code class="docutils literal notranslate"><span class="pre">--none</span></code>: final, counts at <code class="docutils literal notranslate"><span class="pre">job_seconds_limit</span></code>, as a job may exist</p></td>
+</tr>
+<tr class="row-even"><td><p>open, shown only as <code class="docutils literal notranslate"><span class="pre">New</span></code> (Piast-Q)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--none</span></code></p></td>
+<td><p>every status line with a state says <code class="docutils literal notranslate"><span class="pre">New</span></code> (a missed poll is passed over), the first is 3 days old or more and the last at most 24 hours old: resume once more first</p></td>
+<td><p>counts at <code class="docutils literal notranslate"><span class="pre">job_seconds_limit</span></code>, as its job may still run</p></td>
+</tr>
+<tr class="row-odd"><td><p>open, last stop <code class="docutils literal notranslate"><span class="pre">result_expired</span></code> (Piast-Q)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--expired</span></code></p></td>
+<td><p>two calls 10 minutes or more apart got that answer</p></td>
+<td><p>final, counts at <code class="docutils literal notranslate"><span class="pre">job_seconds_limit</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>open, last stop <code class="docutils literal notranslate"><span class="pre">result_error</span></code>: the job finished, and its result cannot be read</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--unreadable</span></code></p></td>
+<td><p>two calls 10 minutes or more apart got an answer that could not be used, or two calls 24 hours or more apart got that stop (below)</p></td>
+<td><p>final, counts at <code class="docutils literal notranslate"><span class="pre">job_seconds_limit</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>final, the result has more seconds than <code class="docutils literal notranslate"><span class="pre">job_seconds_limit</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--over-limit</span></code></p></td>
+<td><p>the time is a wait at the site, cause not known, not the run of the job</p></td>
+<td><p>counts at <code class="docutils literal notranslate"><span class="pre">job_seconds_limit</span></code>; the measured seconds stay in the record</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><img alt="The states of an order: unsent, lost, open and final, and the lines that move it" src="../_images/order-states.svg" /></p>
+<p>For <code class="docutils literal notranslate"><span class="pre">--unreadable</span></code>, an answer that could not be used is a <code class="docutils literal notranslate"><span class="pre">result_error</span></code> stop with <code class="docutils literal notranslate"><span class="pre">missed</span></code> <code class="docutils literal notranslate"><span class="pre">null</span></code> and no
+<code class="docutils literal notranslate"><span class="pre">http_status</span></code> of 300 or more. Any other <code class="docutils literal notranslate"><span class="pre">result_error</span></code> stop got no usable answer: missed polls up to
+<code class="docutils literal notranslate"><span class="pre">wait_seconds</span></code>, a redirect or an HTTP error of 400 or more, or a stop line of qdevices before 0.2.0, which
+has no <code class="docutils literal notranslate"><span class="pre">missed</span></code>. The stop says how far apart the two calls must be, and names the command. A record with an
+<code class="docutils literal notranslate"><span class="pre">--unreadable</span></code> decision needs qdevices 0.2.0 or later; an older app reads the order as open and refuses new
+sends of that site.</p>
+<p>The app never sends a resolved order again, and never cancels the job at the site. For an open order that
+<code class="docutils literal notranslate"><span class="pre">resolve</span></code> does not take, ask the site (each site page gives its support), and resume once the job is final.</p>
+<p><strong>A record of another runner is never written.</strong> That is a record whose first start line this app did
+not write, and which is not in the records folder of the app.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">resolve</span></code> takes it only when its first line is a start line (settle any other with its runner), and the
+app reads it for its own site: list it, or its folder, in <code class="docutils literal notranslate"><span class="pre">older_records</span></code> of that site, or of one site
+only when its site cannot be told (<a class="reference internal" href="../configuration/"><span class="doc">Configuration</span></a>). Else the decision has no effect.</p></li>
+<li><p>The decision goes to <code class="docutils literal notranslate"><span class="pre">older_decisions.jsonl</span></code> of that site, in one synced line under its lock
+(<a class="reference internal" href="../manifests-and-records/"><span class="doc">Manifests and records</span></a>). It holds only while the order is as it was decided on: a job id, new job
+or result that the other runner writes later stands. A send reads only the decisions of its own site.</p></li>
+<li><p>It takes <code class="docutils literal notranslate"><span class="pre">--none</span></code> for a lost order (final, with no job), <code class="docutils literal notranslate"><span class="pre">--gone</span></code> for an open order whose job the site
+no longer gives (final, counts at <code class="docutils literal notranslate"><span class="pre">job_seconds_limit</span></code>), and <code class="docutils literal notranslate"><span class="pre">--over-limit</span></code> as above.</p></li>
+<li><p>It refuses <code class="docutils literal notranslate"><span class="pre">--job</span></code>, <code class="docutils literal notranslate"><span class="pre">--expired</span></code> and <code class="docutils literal notranslate"><span class="pre">--unreadable</span></code>: the app does not collect such a record, so collect
+it with its runner. <code class="docutils literal notranslate"><span class="pre">--gone</span></code> on a record of this app is refused: there, <code class="docutils literal notranslate"><span class="pre">--expired</span></code> takes such an order.</p></li>
+</ul>
+</section>
+<section id="tokens">
+<span id="id1"></span><h2>Tokens<a class="headerlink" href="#tokens" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>The token is read once from one environment variable (<code class="docutils literal notranslate"><span class="pre">MQSS_TOKEN</span></code>, <code class="docutils literal notranslate"><span class="pre">LEXIS_TOKEN</span></code>, <code class="docutils literal notranslate"><span class="pre">PCSS_API_KEY</span></code>).
+The variable is then deleted from the process environment, before a rules file is imported (<a class="reference internal" href="../rules/"><span class="doc">Rules</span></a>).</p></li>
+<li><p>The app reads no token file, and never stores or prints a token.</p></li>
+<li><p>Never type the token on the command line. Use <code class="docutils literal notranslate"><span class="pre">set</span> <span class="pre">+x;</span> <span class="pre">export</span> <span class="pre">NAME=&quot;$(cat</span> <span class="pre">FILE)&quot;</span></code>: then it is not in your
+shell history or a trace.</p></li>
+<li><p>The token goes only to the fixed addresses of the site, with no redirect. No flag and no environment
+variable moves them.</p></li>
+<li><p>A filter cleans every record line, error, downloaded log and traceback. It takes out the token and the
+VLQ envelope passwords of the call (each password raw and in base64), each whole, in JSON form and by
+every start and every end of 8 characters or more; any text in the form of a JWT; the value of
+<code class="docutils literal notranslate"><span class="pre">USER_JWT_PWD</span></code> (the envelope password in the environment of a VLQ job) in any form; and Fernet text and
+its base64 form.</p></li>
+</ul>
+</section>
+<section id="budget-and-rules">
+<h2>Budget and rules<a class="headerlink" href="#budget-and-rules" title="Link to this heading">¶</a></h2>
+<p>The generic rules check the shots, the budget and more before each job, and the result after it
+(<a class="reference internal" href="../rules/"><span class="doc">Rules</span></a>). The budget counts a lost or open order at <code class="docutils literal notranslate"><span class="pre">job_seconds_limit</span></code>, so the sum is an upper bound
+(<a class="reference internal" href="../billing-and-usage/"><span class="doc">Billing and usage</span></a>).</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+<div class="cc3-logos">
+  <a href="https://www.eurohpc-ju.europa.eu/index_en"><img src="../_static/logos/cc3/eurohpc.svg" alt="EuroHPC Joint Undertaking"></a>
+  <a href="https://hpc-portal.eu/"><img src="../_static/logos/cc3/hpc-in-europe.svg" alt="HPC in Europe"></a>
+  <a href="https://hpc-portal.eu/projects/eurocc-3-national-competence-centres-in-the-framework-eurohpc"><img src="../_static/logos/cc3/eurocc3.svg" alt="EuroCC 3"></a>
+  <a href="https://liu.se/en"><img src="../_static/logos/partners/liu.svg" alt="Linköping University"></a>
+  <a href="https://www.ri.se/en"><img src="../_static/logos/partners/rise.svg" alt="RISE Research Institutes of Sweden"></a>
+  <a href="https://www.vr.se/english.html"><img src="../_static/logos/national/vr.svg" alt="Swedish Research Council"></a>
+  <a href="https://www.vinnova.se/en/"><img src="../_static/logos/national/vinnova.svg" alt="Vinnova"></a>
+</div>
+
+        <div class="related-pages">
+          <a class="next-page" href="../examples/">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Examples</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../rules/">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Rules</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; ENCCS contributors | EuroCC 3 has received funding from the European High-Performance Computing Joint Undertaking (JU) under Grant Agreement No. 101306701. The JU receives support from the European Union&#39;s Digital Europe Programme and Germany, Albania, Austria, Belgium, Bosnia and Herzegovina, Bulgaria, Croatia, Cyprus, Czechia, Denmark, Estonia, Finland, France, Greece, Hungary, Iceland, Ireland, Italy, Latvia, Lithuania, Luxembourg, Malta, Montenegro, the Netherlands, North Macedonia, Norway, Poland, Portugal, Romania, Serbia, Slovakia, Slovenia, Spain, Sweden, Türkiye, and Kosovo. Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or EuroHPC Joint Undertaking. Neither the European Union nor the EuroHPC Joint Undertaking can be held responsible for them. ENCCS has also received national funding through Vinnova and the Swedish Research Council (VR). HPC in Europe is the umbrella brand uniting Europe&#39;s high-performance computing initiatives across 36+ countries. The project is supported by the European High-Performance Computing Joint Undertaking and its members.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/ENCCS/eurohpc-qdevices" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var c = document.querySelector(".copyright");
+    if (!c) return;
+    var a = document.createElement("a");
+    a.href = "https://european-union.europa.eu/index_en";
+    a.className = "eu-emblem-link";
+    a.setAttribute("aria-label", "European Union");
+    c.prepend(a);
+  });
+</script>
+
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Live runs</a><ul>
+<li><a class="reference internal" href="#the-record">The record</a></li>
+<li><a class="reference internal" href="#the-answer-to-a-job-request">The answer to a job request</a></li>
+<li><a class="reference internal" href="#nothing-is-cancelled">Nothing is cancelled</a></li>
+<li><a class="reference internal" href="#one-live-call-per-site-from-one-host">One live call per site, from one host</a></li>
+<li><a class="reference internal" href="#resolving-an-order-and-a-stale-lock">Resolving an order, and a stale lock</a></li>
+<li><a class="reference internal" href="#tokens">Tokens</a></li>
+<li><a class="reference internal" href="#budget-and-rules">Budget and rules</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=187304be"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=35a8b989"></script>
+    <script src="../_static/minipres.js?v=a0d29692"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-domain="enccs.github.io/eurohpc-qdevices" defer="defer" src="https://plausible.io/js/script.js"></script>
+    </body>
+</html>

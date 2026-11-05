@@ -1,0 +1,1213 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex/"><link rel="search" title="Search" href="../search/"><link rel="next" title="Billing and usage" href="../billing-and-usage/"><link rel="prev" title="Circuits written in Qrisp" href="../qrisp/">
+        <link rel="prefetch" href="../_static/ENCCS_logo_light.png" as="image">
+        <link rel="prefetch" href="../_static/ENCCS_logo_dark.png" as="image">
+
+    <link rel="shortcut icon" href="../_static/favicon.ico"><!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
+        <title>Hamiltonian simulation on a quantum computer, step by step - eurohpc-qdevices user manual</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_lesson.css?v=e9df6548" />
+    <link rel="stylesheet" type="text/css" href="../_static/term_role_formatting.css?v=4194e21c" />
+    <link rel="stylesheet" type="text/css" href="../_static/furo_ext_lesson.css?v=6c0cde2e" />
+    <link rel="stylesheet" type="text/css" href="../_static/EN_Co-funded.css?v=bf081b0b" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../_static/overrides.css?v=5eba887c" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../"><div class="brand">eurohpc-qdevices user manual</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../_static/ENCCS_logo_light.png" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../_static/ENCCS_logo_dark.png" alt="Dark Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">eurohpc-qdevices user manual</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search/" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Using the app</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installing/">Install and first run</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../commands/">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manifests-and-records/">Manifests and records</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration/">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rules/">Rules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../live-runs/">Live runs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../qrisp/">Circuits written in Qrisp</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Hamiltonian simulation on a quantum computer, step by step</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../billing-and-usage/">Billing and usage</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">The sites</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../euroqexa/">Euro-Q-Exa (LRZ)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vlq/">VLQ (IT4Innovations)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../piastq/">Piast-Q (PCSS)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references/">References</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/ENCCS/eurohpc-qdevices/blob/main//content/hamiltonian.ipynb?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/ENCCS/eurohpc-qdevices/edit/main//content/hamiltonian.ipynb" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section class="tex2jax_ignore mathjax_ignore" id="hamiltonian-simulation-on-a-quantum-computer-step-by-step">
+<h1>Hamiltonian simulation on a quantum computer, step by step<a class="headerlink" href="#hamiltonian-simulation-on-a-quantum-computer-step-by-step" title="Link to this heading">¶</a></h1>
+<p><a class="reference external" href="https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/hamiltonian/tutorial.ipynb"><img alt="Run on Binder" src="https://mybinder.org/badge_logo.svg" /></a></p>
+<p>We take one small Hamiltonian, compute exactly what it does, write the same evolution as a quantum circuit, run that circuit on the quantum computer Euro-Q-Exa, and compare the counts with the exact answer.</p>
+<p>To try it yourself: <strong>Run &gt; Run All Cells</strong> emulates it on this page.</p>
+<p><em>Hamiltonian simulation</em> is what the quantum computer does: it applies the evolution of a physical system to its qubits.</p>
+<p><em>Emulation</em> is what this page does: a classical computer computes what the quantum computer would do with the same circuit.</p>
+<p>Applying <span class="math notranslate nohighlight">\(e^{-iHt}\)</span> to a state is the central step of quantum simulation. Studies of how spins and electrons move use it directly. Energy calculations for atoms and molecules use it inside phase estimation. The questions in this small example come back at every scale: how to split <span class="math notranslate nohighlight">\(H\)</span>, how many steps to take, what the machine’s errors do, and how to check the answer.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">"chain.py"</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="s2">"Open this page from examples/hamiltonian/ of a clone, where its files are."</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[:</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">"../tools"</span><span class="p">)]</span>
+
+<span class="n">Image</span><span class="p">(</span><span class="s2">"figs/pipeline.png"</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/0b5078b74b11b634355b2a1d06dd8b44461bd98a52863e5e0dcb0464053167d8.png"><img alt="../_images/0b5078b74b11b634355b2a1d06dd8b44461bd98a52863e5e0dcb0464053167d8.png" src="../_images/0b5078b74b11b634355b2a1d06dd8b44461bd98a52863e5e0dcb0464053167d8.png" style="width: 900px;" />
+</a>
+</div>
+</div>
+<section id="the-task-apply-e-iht">
+<h2>1. The task: apply <span class="math notranslate nohighlight">\(e^{-iHt}\)</span><a class="headerlink" href="#the-task-apply-e-iht" title="Link to this heading">¶</a></h2>
+<p>The Schrödinger equation, with <span class="math notranslate nohighlight">\(\hbar = 1\)</span>, is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[i\frac{d}{dt}|\psi(t)\rangle = H|\psi(t)\rangle .\]</div>
+</div>
+<p>For a Hamiltonian that does not depend on time, the solution is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[|\psi(t)\rangle = e^{-iHt}|\psi(0)\rangle .\]</div>
+</div>
+<p>In the eigenbasis of <span class="math notranslate nohighlight">\(H\)</span>, with <span class="math notranslate nohighlight">\(H|E_k\rangle = E_k|E_k\rangle\)</span>, each component only gains a phase:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[|\psi(t)\rangle = \sum_k c_k\, e^{-iE_k t}\, |E_k\rangle .\]</div>
+</div>
+<p>The dynamics come from differences of energies. And the energies are written in phases.</p>
+<p>For <span class="math notranslate nohighlight">\(n\)</span> qubits, <span class="math notranslate nohighlight">\(H\)</span> is a matrix of size <span class="math notranslate nohighlight">\(2^n \times 2^n\)</span>. A gate-based quantum computer such as Euro-Q-Exa does not apply such a matrix directly: it offers one-qubit and two-qubit gates. The task is possible when <span class="math notranslate nohighlight">\(H\)</span> is a sum of terms that each act on few orbitals or spins, <span class="math notranslate nohighlight">\(H = \sum_j H_j\)</span>, as the Hamiltonians here are, because the exponential of each term is a short circuit. So we build <span class="math notranslate nohighlight">\(e^{-iHt}\)</span> from those short circuits (Lloyd).</p>
+</section>
+<section id="the-model-and-its-exact-answer">
+<h2>2. The model, and its exact answer<a class="headerlink" href="#the-model-and-its-exact-answer" title="Link to this heading">¶</a></h2>
+<p>Three qubits in a line, with</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[H = \frac12\sum_{k=0}^{1}\left(X_k X_{k+1} + Y_k Y_{k+1}\right).\]</div>
+</div>
+<p>Call a qubit in <span class="math notranslate nohighlight">\(|1\rangle\)</span> an excitation. One term moves an excitation to the neighbouring qubit, and gives zero on <span class="math notranslate nohighlight">\(|00\rangle\)</span> and <span class="math notranslate nohighlight">\(|11\rangle\)</span>:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\tfrac12(XX+YY)\,|01\rangle = |10\rangle .\]</div>
+</div>
+<p>So the number of excitations never changes. With one excitation the state lives in three dimensions, and there <span class="math notranslate nohighlight">\(H\)</span> is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{pmatrix}0&amp;1&amp;0\\1&amp;0&amp;1\\0&amp;1&amp;0\end{pmatrix}, \quad\text{with eigenvalues } 0, \pm\sqrt2 .\end{split}\]</div>
+</div>
+<p>Expand the start in the eigenvectors <span class="math notranslate nohighlight">\((1,\sqrt2,1)/2\)</span>, <span class="math notranslate nohighlight">\((1,-\sqrt2,1)/2\)</span> and <span class="math notranslate nohighlight">\((1,0,-1)/\sqrt2\)</span>, with <span class="math notranslate nohighlight">\(E=\sqrt2,-\sqrt2,0\)</span>. The start <span class="math notranslate nohighlight">\((1,0,0)\)</span>, the excitation on <code class="docutils literal notranslate"><span class="pre">q[0]</span></code>, has components <span class="math notranslate nohighlight">\(\tfrac12,\tfrac12,\tfrac1{\sqrt2}\)</span>. Each gains its phase, as in Section 1. Adding them gives the amplitudes <span class="math notranslate nohighlight">\(\cos^2\frac{t}{\sqrt2}\)</span>, <span class="math notranslate nohighlight">\(-\frac{i}{\sqrt2}\sin(\sqrt2t)\)</span>, <span class="math notranslate nohighlight">\(-\sin^2\frac{t}{\sqrt2}\)</span> on <code class="docutils literal notranslate"><span class="pre">q[0]</span></code>, <code class="docutils literal notranslate"><span class="pre">q[1]</span></code>, <code class="docutils literal notranslate"><span class="pre">q[2]</span></code>.</p>
+<p>The share of each outcome is the square of its amplitude. A key reads <code class="docutils literal notranslate"><span class="pre">q[2]</span> <span class="pre">q[1]</span> <span class="pre">q[0]</span></code>, as the machine returns it:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[P_{001}(t)=\cos^4\frac{t}{\sqrt2},\qquad P_{010}(t)=\tfrac12\sin^2(\sqrt2\,t),\qquad P_{100}(t)=\sin^4\frac{t}{\sqrt2}.\]</div>
+</div>
+<p>At <span class="math notranslate nohighlight">\(T=\pi/\sqrt2\)</span> the phases <span class="math notranslate nohighlight">\(e^{\mp i\sqrt2T}\)</span> are both <span class="math notranslate nohighlight">\(-1\)</span>, so the state is <span class="math notranslate nohighlight">\(-|100\rangle\)</span>: the excitation is on <code class="docutils literal notranslate"><span class="pre">q[2]</span></code> in full. At <span class="math notranslate nohighlight">\(2T\)</span> it is back on <code class="docutils literal notranslate"><span class="pre">q[0]</span></code>. Chains of equal couplings do this exactly only at two and three qubits (Christandl et al.). Below, the same numbers come from three routes: the closed form, a matrix exponential, and QuTiP’s solver of the Schrödinger equation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">chain</span><span class="w"> </span><span class="kn">import</span> <span class="n">T</span><span class="p">,</span> <span class="n">closed_form</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">H</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">routes</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"T = </span><span class="si">{</span><span class="n">T</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">; the eigenvalues of H: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">H</span><span class="p">),</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">routes</span><span class="p">())</span>
+
+<span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s2">"qutip"</span><span class="p">):</span>
+    <span class="o">%</span><span class="k">run</span> exact.py
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"QuTiP is not installed here, so its check is left out."</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>T = 2.2214; the eigenvalues of H: [-1.4142 -1.4142 -0.     -0.      0.      0.      1.4142  1.4142]
+   t  closed form 001, 010, 100     matrix exponential
+   0  1.000 0.000 0.000           1.000 0.000 0.000
+ T/2  0.250 0.500 0.250           0.250 0.500 0.250
+   T  0.000 0.000 1.000           0.000 0.000 1.000
+  2T  1.000 0.000 0.000           1.000 0.000 0.000
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    t      sesolve 001, 010, 100                closed form
+    0   1.0000   0.0000   0.0000   1.0000   0.0000   0.0000
+  T/4   0.7286   0.2500   0.0214   0.7286   0.2500   0.0214
+  T/2   0.2500   0.5000   0.2500   0.2500   0.5000   0.2500
+ 3T/4   0.0214   0.2500   0.7286   0.0214   0.2500   0.7286
+    T   0.0000   0.0000   1.0000   0.0000   0.0000   1.0000
+   2T   1.0000   0.0000   0.0000   1.0000   0.0000   0.0000
+largest difference: 1.1e-11
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">figures</span><span class="w"> </span><span class="kn">import</span> <span class="n">curves</span>
+<span class="n">curves</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b491774a837391de900eb6affcb00c46f8da3c5d15f8bc0f0f289be37c0b8bfd.png" src="../_images/b491774a837391de900eb6affcb00c46f8da3c5d15f8bc0f0f289be37c0b8bfd.png" />
+</div>
+</div>
+</section>
+<section id="split-the-exponential-product-formulas">
+<h2>3. Split the exponential: product formulas<a class="headerlink" href="#split-the-exponential-product-formulas" title="Link to this heading">¶</a></h2>
+<p>Write <span class="math notranslate nohighlight">\(H = A + B\)</span>, with <span class="math notranslate nohighlight">\(A\)</span> on <code class="docutils literal notranslate"><span class="pre">q[0],</span> <span class="pre">q[1]</span></code> and <span class="math notranslate nohighlight">\(B\)</span> on <code class="docutils literal notranslate"><span class="pre">q[1],</span> <span class="pre">q[2]</span></code>. Each part is easy: a short circuit (Section 4). But they do not commute, <span class="math notranslate nohighlight">\([A,B]\neq 0\)</span>, so <span class="math notranslate nohighlight">\(e^{-i(A+B)t} \neq e^{-iBt}e^{-iAt}\)</span>.</p>
+<p>For a short time <span class="math notranslate nohighlight">\(dt=t/N\)</span> the difference is small, and that is the idea of a product formula. <span class="math notranslate nohighlight">\(N\)</span> steps of</p>
+<ul class="simple">
+<li><p><strong>order 1:</strong> <span class="math notranslate nohighlight">\(U_1(dt) = e^{-iB\,dt}\,e^{-iA\,dt}\)</span>, with an error of order <span class="math notranslate nohighlight">\(dt^2\)</span> a step;</p></li>
+<li><p><strong>order 2:</strong> <span class="math notranslate nohighlight">\(U_2(dt) = e^{-iA\,dt/2}\,e^{-iB\,dt}\,e^{-iA\,dt/2}\)</span>, with an error of order <span class="math notranslate nohighlight">\(dt^3\)</span> a step.</p></li>
+</ul>
+<p>These are also called Trotter steps. Expanding gives <span class="math notranslate nohighlight">\(U_1(dt)=e^{-iH\,dt}+\tfrac12[A,B]\,dt^2+O(dt^3)\)</span>, so the commutator sets the first error; the symmetric form of order 2 cancels it. A product acts from the right, so in <span class="math notranslate nohighlight">\(U_1\)</span> <span class="math notranslate nohighlight">\(A\)</span> acts first.</p>
+<p>Over <span class="math notranslate nohighlight">\(N\)</span> steps the errors add at most, so the total falls as <span class="math notranslate nohighlight">\(1/N\)</span> at order 1 and as <span class="math notranslate nohighlight">\(1/N^2\)</span> at order 2 (Suzuki). Its size is bounded by the commutators of the terms: pairs at order 1, nested commutators at higher orders. Terms that commute add nothing, so the number of terms alone does not set it (Childs et al.). The bound is for the worst state; a given state can do better.</p>
+<p>The table gives the largest error on any state, <span class="math notranslate nohighlight">\(\lVert V - e^{-iHT}\rVert\)</span>, the share of the arrival key, and the two-qubit gates each circuit needs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">formulas</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">formulas</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  N | error, order 1, order 2 | share of 100, order 1, order 2 | two-qubit gates, order 1, order 2
+  1 |        1.6534    0.8074 |               0.4009    0.5083 |                       4         6
+  2 |        0.8074    0.1829 |               0.7591    0.9704 |                       8        10
+  4 |        0.3957    0.0441 |               0.9310    0.9983 |                      16        18
+  8 |        0.1967    0.0109 |               0.9817    0.9999 |                      32        34
+ 16 |        0.0982    0.0027 |               0.9953    1.0000 |                      64        66
+</pre></div>
+</div>
+</div>
+</div>
+<p>Doubling <span class="math notranslate nohighlight">\(N\)</span> halves the error of order 1 and cuts that of order 2 by four. On paper, more steps are always better. But the two-qubit gates grow with <span class="math notranslate nohighlight">\(N\)</span>, and each of them adds an error on a real machine. Section 6 shows which of the two wins.</p>
+</section>
+<section id="one-bond-as-gates">
+<h2>4. One bond as gates<a class="headerlink" href="#one-bond-as-gates" title="Link to this heading">¶</a></h2>
+<p>We need <span class="math notranslate nohighlight">\(e^{-i\frac{\theta}{2}(XX+YY)}\)</span>. Here <span class="math notranslate nohighlight">\(R_x(\theta)=e^{-i\theta X/2}\)</span>, <span class="math notranslate nohighlight">\(R_z(\theta)=e^{-i\theta Z/2}\)</span>, and CX flips its second qubit when its first is 1. With <span class="math notranslate nohighlight">\(A=\tfrac12(XX+YY)\)</span> the bond is <span class="math notranslate nohighlight">\(e^{-iA\theta}\)</span>, so <span class="math notranslate nohighlight">\(\theta\)</span> is the time of that step: <span class="math notranslate nohighlight">\(dt\)</span> or <span class="math notranslate nohighlight">\(dt/2\)</span>. <span class="math notranslate nohighlight">\(XX\)</span> and <span class="math notranslate nohighlight">\(YY\)</span> commute, so no further split is needed. Two identities do the rest.</p>
+<ol class="arabic simple">
+<li><p>A CX moves a Pauli operator from one qubit to two: <span class="math notranslate nohighlight">\(\mathrm{CX}(X\otimes I)\mathrm{CX} = X\otimes X\)</span> and <span class="math notranslate nohighlight">\(\mathrm{CX}(I\otimes Z)\mathrm{CX} = Z\otimes Z\)</span>. So <code class="docutils literal notranslate"><span class="pre">cx</span> <span class="pre">a,b;</span> <span class="pre">rx(θ)</span> <span class="pre">a;</span> <span class="pre">rz(θ)</span> <span class="pre">b;</span> <span class="pre">cx</span> <span class="pre">a,b</span></code> is <span class="math notranslate nohighlight">\(e^{-i\frac{\theta}{2}(XX+ZZ)}\)</span>.</p></li>
+<li><p>A rotation changes the basis: <span class="math notranslate nohighlight">\(R_x(-\tfrac{\pi}{2})\, Z\, R_x(\tfrac{\pi}{2}) = Y\)</span>, and <span class="math notranslate nohighlight">\(X\)</span> stays <span class="math notranslate nohighlight">\(X\)</span>. So with <span class="math notranslate nohighlight">\(R_x(\pi/2)\)</span> on both qubits before and <span class="math notranslate nohighlight">\(R_x(-\pi/2)\)</span> after, <span class="math notranslate nohighlight">\(ZZ\)</span> becomes <span class="math notranslate nohighlight">\(YY\)</span>.</p></li>
+</ol>
+<p>That is 2 CX for a bond. Neighbouring <span class="math notranslate nohighlight">\(R_x(\pi/2)\)</span> and <span class="math notranslate nohighlight">\(R_x(-\pi/2)\)</span> cancel, so a whole job needs them only at its two ends. The figure shows the job, one bond, and the general recipe for any Pauli term. The cell checks the bond against the matrix exponential.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Image</span><span class="p">(</span><span class="s2">"figs/circuit.png"</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<a class="reference internal image-reference" href="../_images/9bd7aaff8752e8e6be06b5c4387df10e0f530a1af9442f654fbe828a869264f2.png"><img alt="../_images/9bd7aaff8752e8e6be06b5c4387df10e0f530a1af9442f654fbe828a869264f2.png" src="../_images/9bd7aaff8752e8e6be06b5c4387df10e0f530a1af9442f654fbe828a869264f2.png" style="width: 900px;" />
+</a>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">expm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">bond</span><span class="p">,</span> <span class="n">pauli</span>
+
+<span class="n">theta</span> <span class="o">=</span> <span class="mf">0.7</span>
+<span class="n">wanted</span> <span class="o">=</span> <span class="n">expm</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta</span> <span class="o">*</span> <span class="p">(</span><span class="n">pauli</span><span class="p">(</span><span class="s2">"XX"</span><span class="p">)</span> <span class="o">+</span> <span class="n">pauli</span><span class="p">(</span><span class="s2">"YY"</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"largest difference from the exponential:"</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">bond</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="n">wanted</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>largest difference from the exponential: 1.1902799230898936e-16
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-whole-circuit-in-two-forms">
+<h2>5. The whole circuit, in two forms<a class="headerlink" href="#the-whole-circuit-in-two-forms" title="Link to this heading">¶</a></h2>
+<p><strong>Written bond by bond.</strong> <code class="docutils literal notranslate"><span class="pre">chain.py</span></code> writes the text the machine gets: OpenQASM 2, a gate-level text that the site compiles. Here is the main job, MAIN: order 2, <span class="math notranslate nohighlight">\(N=2\)</span>, <span class="math notranslate nohighlight">\(t=T\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">chain</span><span class="w"> </span><span class="kn">import</span> <span class="n">Steps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">circuit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Circuit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">emulate</span><span class="w"> </span><span class="kn">import</span> <span class="n">fractions</span><span class="p">,</span> <span class="n">top</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="n">Steps</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">Circuit</span><span class="o">.</span><span class="n">of_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"A perfect machine:"</span><span class="p">,</span> <span class="n">top</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">shares</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>OPENQASM 2.0;
+include "qelib1.inc";
+qreg q[3];
+creg c[3];
+x q[0];
+rx(1.5707963267948966) q[0];
+rx(1.5707963267948966) q[1];
+rx(1.5707963267948966) q[2];
+cx q[0],q[1];
+rx(0.5553603672697958) q[0];
+rz(0.5553603672697958) q[1];
+cx q[0],q[1];
+cx q[1],q[2];
+rx(1.1107207345395915) q[1];
+rz(1.1107207345395915) q[2];
+cx q[1],q[2];
+cx q[0],q[1];
+rx(1.1107207345395915) q[0];
+rz(1.1107207345395915) q[1];
+cx q[0],q[1];
+cx q[1],q[2];
+rx(1.1107207345395915) q[1];
+rz(1.1107207345395915) q[2];
+cx q[1],q[2];
+cx q[0],q[1];
+rx(0.5553603672697958) q[0];
+rz(0.5553603672697958) q[1];
+cx q[0],q[1];
+rx(-1.5707963267948966) q[0];
+rx(-1.5707963267948966) q[1];
+rx(-1.5707963267948966) q[2];
+measure q[0] -&gt; c[0];
+measure q[1] -&gt; c[1];
+measure q[2] -&gt; c[2];
+
+qubits read 3, gates 27, two-qubit gates 10
+A perfect machine: 100: 0.970  001: 0.027  010: 0.003
+</pre></div>
+</div>
+</div>
+</div>
+<p>The same text as a picture, drawn by code: <code class="docutils literal notranslate"><span class="pre">qutip-qip</span></code>, the quantum information processing package of QuTiP, draws the gates as the text has them, so the gates and their order are those that are sent. One-qubit gates are blue, two-qubit gates orange; each rotation shows its angle, and the meters on the right are the three measurements. The figure of Section 4 groups the same gates into bonds.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s2">"qutip_qip"</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">circuit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Circuit</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pictures</span><span class="w"> </span><span class="kn">import</span> <span class="n">circuit_figure</span>
+    <span class="n">steps</span> <span class="o">=</span> <span class="n">Circuit</span><span class="o">.</span><span class="n">of_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">circuit_figure</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">most</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">steps</span><span class="o">.</span><span class="n">ops</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="s2">"Two steps"</span><span class="p">);</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"qutip-qip is not installed here, so this drawing is left out: pip install qutip-qip"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/aea7a806688642e0baf7479741423bdf55812cb7d35ebb3dd143d93783ca278e.png" src="../_images/aea7a806688642e0baf7479741423bdf55812cb7d35ebb3dd143d93783ca278e.png" />
+</div>
+</div>
+<p><strong>In one line of Qrisp.</strong> Qrisp’s <code class="docutils literal notranslate"><span class="pre">trotterization</span></code> builds the same evolution from the operator (<code class="docutils literal notranslate"><span class="pre">with_qrisp.py</span></code>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ham</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="nb">sum</span><span class="p">(</span><span class="n">X</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="n">X</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">Y</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="n">Y</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">ham</span><span class="o">.</span><span class="n">trotterization</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"commuting"</span><span class="p">)(</span><span class="n">qv</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With <code class="docutils literal notranslate"><span class="pre">method=&quot;commuting&quot;</span></code> it turns <span class="math notranslate nohighlight">\(XX\)</span> and <span class="math notranslate nohighlight">\(YY\)</span> together to diagonal form, with one CZ on each side and 2 CX in the diagonal part: 4 two-qubit gates a bond, 20 in this job. The default method writes the two gadgets of the figure, also 4 on one bond, but at order 2 not all its halves merge: 26 in this job, for the same operator. The operator is the same, so the shares are the same. Where Qrisp is installed the cell also emulates its circuit; in every case it then reads the text that was sent.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s2">"qrisp"</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">with_qrisp</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain_by_qrisp</span><span class="p">,</span> <span class="n">measured</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Qrisp's own emulator; its labels read q[0] first:"</span><span class="p">,</span> <span class="n">top</span><span class="p">(</span><span class="n">measured</span><span class="p">(</span><span class="n">chain_by_qrisp</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="mi">2</span><span class="p">))))</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">Circuit</span><span class="o">.</span><span class="n">of_text</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">"state_transfer/QRISP.qasm"</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"A perfect machine:"</span><span class="p">,</span> <span class="n">top</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">shares</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Qrisp's own emulator; its labels read q[0] first: 001: 0.970  100: 0.027  010: 0.003
+qubits read 3, gates 59, two-qubit gates 20
+A perfect machine: 100: 0.970  001: 0.027  010: 0.003
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="what-came-back-from-the-machine">
+<h2>6. What came back from the machine<a class="headerlink" href="#what-came-back-from-the-machine" title="Link to this heading">¶</a></h2>
+<p>The eleven jobs went to Euro-Q-Exa in one run on one evening, through the app <code class="docutils literal notranslate"><span class="pre">qdevices</span></code>, each with 1000 shots (CONTROL with 100). It shows how much of each answer survived that evening, not how good the machine is. The site compiles each text to the machine’s own gates, <code class="docutils literal notranslate"><span class="pre">r</span></code> and <code class="docutils literal notranslate"><span class="pre">cz</span></code>, and places it on its qubits. The record does not hold the compiled circuit, so what follows about the compile is read on the job pages of the portal.</p>
+<p>A shot is one run of the circuit, ended by one measurement of every qubit; its key is the bits that come back. <em>Readable</em>, as set before the run: the ideal top key is the top of the counts and at least twice the next wrong key.</p>
+<p><code class="docutils literal notranslate"><span class="pre">state_transfer/results.json</span></code> holds the counts. After a run of your own, <code class="docutils literal notranslate"><span class="pre">compare.py</span> <span class="pre">--live</span></code> writes <code class="docutils literal notranslate"><span class="pre">live.json</span></code>, and this page reads it in place of the same jobs (the README says how). To read a run sent by someone else, such as the speaker of a talk, put its link in <code class="docutils literal notranslate"><span class="pre">COUNTS</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">reading</span><span class="w"> </span><span class="kn">import</span> <span class="n">Run</span>
+
+<span class="n">COUNTS</span> <span class="o">=</span> <span class="s2">"live.json"</span> <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"live.json"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">else</span> <span class="s2">"state_transfer/results.json"</span>     <span class="c1"># or a link: https://...</span>
+
+<span class="n">run</span> <span class="o">=</span> <span class="n">Run</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="s2">"state_transfer"</span><span class="p">,</span> <span class="n">COUNTS</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"The counts come from"</span><span class="p">,</span> <span class="n">COUNTS</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">table</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The counts come from state_transfer/results.json
+job            t  N  2q  key  perfect   read   kept  checked
+CONTROL        0  0   0  001    1.000  0.970  0.970    1.000
+MAIN           T  2  10  100    0.970  0.641  0.706    0.908
+QRISP          T  2  20  100    0.970  0.696  0.769    0.905
+REPEAT         T  2  10  100    0.970  0.661  0.741    0.892
+HALF         T/2  2  10  010    0.480  0.351  0.728    0.482
+BACK          2T  4  18  001    0.988  0.476  0.604    0.788
+ZERO           T  2  10  000    1.000  0.642  0.642    1.000
+STEPS1         T  1   6  100    0.508  0.381  0.820    0.465
+STEPS4         T  4  18  100    0.998  0.474  0.572    0.829
+STEPS8         T  8  34  100    1.000  0.190  0.388    0.490
+ORDER1         T  2   8  100    0.759  0.638  0.805    0.793
+</pre></div>
+</div>
+</div>
+</div>
+<p>Read the table from the top. <em>perfect</em> is what a perfect machine gives for that text. <em>read</em> is the share of all shots. <em>kept</em> and <em>checked</em> come from the conservation check below.</p>
+<p><strong>CONTROL</strong> has no evolution: only the X gate and the readout. It reads <code class="docutils literal notranslate"><span class="pre">001</span></code>, so q[0] is the right-hand character of a key. A reversed reading would look like no transfer at all.</p>
+<p><strong>MAIN</strong> is the job of Section 5, and the result this tutorial is built on. The excitation arrives: <code class="docutils literal notranslate"><span class="pre">100</span></code> is the top key by far. The perfect share is 0.970, so most of the loss is the machine’s, not the formula’s.</p>
+<p><strong>REPEAT</strong> is the same text as MAIN, sent again about 12 seconds later. One number from one job says little until you know how far a second job of the same circuit lands from it, so a repeat is the first check of any measurement. The two differ by 0.020. Shot noise alone, at 1000 shots each, gives a difference of about 0.021, so they agree as far as 1000 shots can show. One pair, 12 seconds apart, says nothing about how the machine drifts over minutes, hours or days. <span class="math notranslate nohighlight">\(N = 1, 4\)</span> and <span class="math notranslate nohighlight">\(8\)</span> ran about three minutes after <span class="math notranslate nohighlight">\(N = 2\)</span>, and no repeat spans that gap.</p>
+<p><strong>The conservation check.</strong> Every step keeps one excitation, so a key with another number of 1s is a machine error, never an error of the formula. <em>kept</em> is the share of shots that pass, and <em>checked</em> is the answer among those. The check removes one readout flip in every case. It cannot remove an error that keeps the number of excitations, such as a wrong angle on a whole bond, so it is shown beside the raw reading, never in its place. The same check is used in chemistry, where the number of electrons is conserved (Section 10).</p>
+<p><strong>ZERO</strong> is the MAIN text without the X gate. With no excitation <span class="math notranslate nohighlight">\(H|000\rangle = 0\)</span>, so a perfect machine gives <code class="docutils literal notranslate"><span class="pre">000</span></code> at any <span class="math notranslate nohighlight">\(t\)</span> and any <span class="math notranslate nohighlight">\(N\)</span>, with no error of the formula at all. Here the answer is known exactly, so its reading shows what the compiled gates and the readout cost. It reads well below CONTROL, so gates did run, and the circuit that ran has all 10 CZ. Only <code class="docutils literal notranslate"><span class="pre">000</span></code> has no 1s, so here <em>checked</em> is 1 by construction.</p>
+<p><strong>QRISP</strong> has twice the two-qubit gates of MAIN in its text, and reads no lower (0.696 against 0.641 and 0.661). A text is a request, not what runs: the job page on the portal shows the circuit that ran, under Executed Circuit. For QRISP it has 10 CZ, as for MAIN: the site’s compile merged the four two-qubit gates of each bond into two. The two-spin example <a class="reference external" href="https://github.com/ENCCS/eurohpc-qdevices/tree/main/examples/qrisp/ising2"><code class="docutils literal notranslate"><span class="pre">ising2</span></code></a> shows this more sharply: at 5 and at 16 Trotter steps it read the same, and both jobs ran with 2 CZ, as all their steps are one two-qubit block.</p>
+<p><strong>HALF and BACK</strong> follow the excitation in time. At <span class="math notranslate nohighlight">\(T/2\)</span> the middle key leads, and at <span class="math notranslate nohighlight">\(2T\)</span> the start key leads again. BACK evolves forward only, so no gate meets its own inverse. A compile could still shorten it: its product is close to the identity on all eight states, as the exact evolution at <span class="math notranslate nohighlight">\(2T\)</span> is the identity, and it equals three bonds with small angles. It reads close to STEPS4, with the same 18 two-qubit gates in its text (0.476 against 0.474, where shot noise alone gives about 0.022; kept 0.604 against 0.572). It keeps far fewer shots than STEPS1, with 6 (0.604 against 0.820), and its executed circuit has all 18 CZ: it was not cut to three bonds.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">curves</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">over_time</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/f90242a3af5433f0fc2c8150ff0ad393cc2210b828c551eb504aadb9c375bfcd.png" src="../_images/f90242a3af5433f0fc2c8150ff0ad393cc2210b828c551eb504aadb9c375bfcd.png" />
+</div>
+</div>
+<p>At each time the key that should lead leads, but it reads below its curve, by what the machine loses. After the gates, a key that should be empty reads above zero. The shot error of a point, at most 0.017, is smaller than its dot.</p>
+<p><strong>The number of steps.</strong> Now the same time <span class="math notranslate nohighlight">\(T\)</span> with <span class="math notranslate nohighlight">\(N = 1, 2, 4, 8\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">figures</span><span class="w"> </span><span class="kn">import</span> <span class="n">sweep</span>
+
+<span class="n">sweep</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">over_steps</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b436797e01621e58955279e46181f790fc7f9dd05fb6bc5f182ac4848f01832a.png" src="../_images/b436797e01621e58955279e46181f790fc7f9dd05fb6bc5f182ac4848f01832a.png" />
+</div>
+</div>
+<p>This is the main result. At <span class="math notranslate nohighlight">\(N=1\)</span> the formula itself is wrong: a perfect machine gives only 0.508. At <span class="math notranslate nohighlight">\(N=2\)</span> the formula is nearly right and the circuit is still short, and the reading is the highest of the four. At <span class="math notranslate nohighlight">\(N=4\)</span> and <span class="math notranslate nohighlight">\(N=8\)</span> the formula is close to perfect, but the reading falls. Each step adds gates, which fits the fall; one run cannot separate this from other causes. The best number of steps is set by both errors together. An experiment on two transmons, on the transverse-field Ising model, shows the same kind of maximum at a finite number of steps (Salathé et al.). On the same XX model, Smith et al. state the trade-off, measure the loss with each added step, and use the same conservation check.</p>
+<p>That fall also tells us something about the compile. This model is free fermions (Section 8). For three sites every product of its bonds equals three bonds with suitable angles, at any <span class="math notranslate nohighlight">\(N\)</span>: 6 CX in all (Kökcü et al.). The compile did not find that form: each STEPS job ran every two-qubit gate of its text (34 CZ for STEPS8), and the reading falls with <span class="math notranslate nohighlight">\(N\)</span>.</p>
+<p><strong>Order 1 against order 2.</strong> ORDER1 has 2 fewer two-qubit gates than MAIN, and a perfect share of 0.759 against 0.970. Raw, the two read about the same (0.638 against 0.641 and 0.661). Two fewer gates do not explain this: the simple model of Section 7, set to match MAIN, puts ORDER1 about 0.1 below it. One pair of jobs cannot say why. With the conservation check the gain of order 2 shows: 0.908 and 0.892 against 0.793. The check is not a bound: ORDER1 then reads above its perfect 0.759, by about two standard errors. Key <code class="docutils literal notranslate"><span class="pre">100</span></code> read 0.84 of its perfect share and key <code class="docutils literal notranslate"><span class="pre">010</span></code> only 0.58. The simple model of Section 7 does not do this, and one job cannot say why.</p>
+<p><strong>What may be said from this.</strong> What these compiled jobs returned, on that evening, and which gates ran. Not what one gate costs: for that one needs many runs.</p>
+</section>
+<section id="emulate-it-yourself">
+<h2>7. Emulate it yourself<a class="headerlink" href="#emulate-it-yourself" title="Link to this heading">¶</a></h2>
+<p>Now try the same jobs with no machine at all. <code class="docutils literal notranslate"><span class="pre">tools/emulate.py</span></code> runs a text on a state vector, in Python alone. Its noise is a simple model for learning: after each two-qubit gate, one of the 15 two-qubit Pauli errors with chance <code class="docutils literal notranslate"><span class="pre">noise</span></code>, and at the end each bit reads wrong with chance <code class="docutils literal notranslate"><span class="pre">readout</span></code>. It is not a model of Euro-Q-Exa. Change the numbers below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Try it: choose a time, a number of steps, and how noisy the machine is. Nothing is sent.</span>
+<span class="n">t</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">order</span> <span class="o">=</span> <span class="n">T</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span>
+<span class="n">noise</span><span class="p">,</span> <span class="n">readout</span> <span class="o">=</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.03</span>
+
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">Circuit</span><span class="o">.</span><span class="n">of_text</span><span class="p">(</span><span class="n">Steps</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"The exact shares: "</span><span class="p">,</span> <span class="n">top</span><span class="p">(</span><span class="n">closed_form</span><span class="p">(</span><span class="n">t</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"A perfect machine:"</span><span class="p">,</span> <span class="n">top</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">shares</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"With this noise:  "</span><span class="p">,</span> <span class="n">top</span><span class="p">(</span><span class="n">fractions</span><span class="p">(</span><span class="n">circuit</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="n">noise</span><span class="p">,</span> <span class="n">readout</span><span class="p">))))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>qubits read 3, gates 35, two-qubit gates 14
+The exact shares:  010: 0.500  001: 0.250  100: 0.250
+A perfect machine: 010: 0.491  001: 0.261  100: 0.248
+With this noise:   010: 0.361  001: 0.198  100: 0.168  000: 0.086  011: 0.077  110: 0.043  and 2 more
+</pre></div>
+</div>
+</div>
+</div>
+<p>Where Qrisp is installed, Sections 5 and 8 run its emulator. Section 9 shows a stored run of it, unless you set <code class="docutils literal notranslate"><span class="pre">RUN_THE_GATES</span> <span class="pre">=</span> <span class="pre">True</span></code>. Here it stands beside ours, beside a third emulator, QuTiP, and beside the machine, on the key of each job. QuTiP runs the same text gate by gate through its package qutip-qip, on a state vector with no noise. The cell runs each of the two if it can, and otherwise reads its stored shares: <code class="docutils literal notranslate"><span class="pre">state_transfer/qrisp_emulated.json</span></code> and <code class="docutils literal notranslate"><span class="pre">state_transfer/qutip_emulated.json</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">emulate</span><span class="w"> </span><span class="kn">import</span> <span class="n">qrisp_stored</span><span class="p">,</span> <span class="n">qutip_stored</span>
+
+<span class="n">folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"state_transfer"</span><span class="p">)</span>
+<span class="n">shares</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"Qrisp"</span><span class="p">:</span> <span class="n">qrisp_stored</span><span class="p">(</span><span class="n">folder</span><span class="p">),</span> <span class="s2">"QuTiP"</span><span class="p">:</span> <span class="n">qutip_stored</span><span class="p">(</span><span class="n">folder</span><span class="p">)}</span>
+<span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s2">"qrisp"</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">qrisp_emulator</span><span class="w"> </span><span class="kn">import</span> <span class="n">folder_shares</span> <span class="k">as</span> <span class="n">by_qrisp</span>
+    <span class="n">shares</span><span class="p">[</span><span class="s2">"Qrisp"</span><span class="p">]</span> <span class="o">=</span> <span class="n">by_qrisp</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s2">"qutip_qip"</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">qutip_emulator</span><span class="w"> </span><span class="kn">import</span> <span class="n">folder_shares</span> <span class="k">as</span> <span class="n">by_qutip</span>
+    <span class="n">shares</span><span class="p">[</span><span class="s2">"QuTiP"</span><span class="p">]</span> <span class="o">=</span> <span class="n">by_qutip</span><span class="p">(</span><span class="n">folder</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">beside</span><span class="p">(</span><span class="n">shares</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>job          key      ours     Qrisp     QuTiP  machine
+CONTROL      001  1.000000  1.000000  1.000000    0.970
+MAIN         100  0.970409  0.970410  0.970409    0.641
+QRISP        100  0.970409  0.970410  0.970409    0.696
+REPEAT       100  0.970409  0.970410  0.970409    0.661
+HALF         010  0.480430  0.480430  0.480430    0.351
+BACK         001  0.987890  0.987890  0.987890    0.476
+ZERO         000  1.000000  1.000000  1.000000    0.642
+STEPS1       100  0.508307  0.508310  0.508307    0.381
+STEPS4       100  0.998267  0.998270  0.998267    0.474
+STEPS8       100  0.999894  0.999900  0.999894    0.190
+ORDER1       100  0.759056  0.759052  0.759056    0.638
+</pre></div>
+</div>
+</div>
+</div>
+<p>Ours and Qrisp’s agree to about five places: the largest difference in any key is about 0.000006 in these eleven jobs, in STEPS8, and about 0.000009 in all 43 jobs of the examples, in <code class="docutils literal notranslate"><span class="pre">qrisp/ising</span></code>. Qrisp’s emulator rounds its shares to 5 or 6 places and scales them to sum to 1, and those two steps give the whole difference, to the 8 places stored. Ours and QuTiP agree to the 8 places stored: the largest difference in all 43 jobs is 0.000000005, in <code class="docutils literal notranslate"><span class="pre">qrisp/qubo</span></code>, which is that rounding, and before it 0.0000000000000014. So QuTiP and Qrisp differ by as much as ours and Qrisp’s do. All three read the text through the same parser, so the comparison checks the gates and the state vector, not how a text is read. Neither the emulator Qrisp runs by default nor QuTiP as it runs here has a model of noise, so the noise in this section is ours alone. The stored files were made on an Apple Silicon Mac; on another kind of computer a live run of Qrisp may differ from its file by about 0.00001.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The rise and fall, emulated: the share of 100 at T, for each number of steps, at three levels of noise.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">arrival</span><span class="p">,</span> <span class="n">rise_and_fall</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">rise_and_fall</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  N   2q  perfect  noise 0.01  noise 0.03  noise 0.06
+  1    6    0.508       0.444       0.424       0.385
+  2   10    0.970       0.818       0.689       0.545
+  3   14    0.994       0.796       0.653       0.467
+  4   18    0.998       0.789       0.592       0.392
+  6   26    1.000       0.726       0.485       0.302
+  8   34    1.000       0.671       0.408       0.236
+ 12   50    1.000       0.615       0.299       0.171
+</pre></div>
+</div>
+</div>
+</div>
+<p>The table holds readout at 0.03, and each number is a sample, good to about 0.02. More noise lowers every row, and the long circuits lose the most, so the rise and fall of Section 6 appears here with no machine. Now put the emulator beside the machine.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Can you match the machine? The chart of Section 6, with the emulator on it. Change the two numbers and run this cell again.</span>
+<span class="n">noise</span><span class="p">,</span> <span class="n">readout</span> <span class="o">=</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.03</span>
+
+<span class="n">rows</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">over_steps</span><span class="p">()</span>
+<span class="n">sweep</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="p">[</span><span class="n">arrival</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">noise</span><span class="p">,</span> <span class="n">readout</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">]);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/7f48a1917e623ad9eb36a430ef84bf11ff3f3243448b43dcd85ae700d32a6957.png" src="../_images/7f48a1917e623ad9eb36a430ef84bf11ff3f3243448b43dcd85ae700d32a6957.png" />
+</div>
+</div>
+<p>No one pair of numbers fits all four points. <span class="math notranslate nohighlight">\(N = 1, 2\)</span> and <span class="math notranslate nohighlight">\(4\)</span> alone fit to about 0.02, but with all four, <span class="math notranslate nohighlight">\(N = 8\)</span> reads about 0.07 low, about five shot errors: from <span class="math notranslate nohighlight">\(N = 4\)</span> to <span class="math notranslate nohighlight">\(N = 8\)</span> the machine kept 0.40 of its share, and no pair keeps less than 0.55. That rests on one job, so it cannot say why. So one number per gate does not describe this run. Every folder of the examples can be emulated in the same way: <code class="docutils literal notranslate"><span class="pre">./emulate.sh</span> <span class="pre">--noise</span> <span class="pre">0.03</span> <span class="pre">--readout</span> <span class="pre">0.03</span></code>, or the page <a class="reference external" href="https://github.com/ENCCS/eurohpc-qdevices/blob/main/examples/all_examples.ipynb"><code class="docutils literal notranslate"><span class="pre">all_examples.ipynb</span></code></a>, also <a class="reference external" href="https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/all_examples.ipynb">on Binder</a>.</p>
+<p>On your own laptop, with no account: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/ENCCS/eurohpc-qdevices</span></code>, <code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">eurohpc-qdevices/examples/hamiltonian</span></code>, then <code class="docutils literal notranslate"><span class="pre">./open.sh</span></code> opens this page (it needs pixi), or <code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">state_transfer</span> <span class="pre">&amp;&amp;</span> <span class="pre">./emulate.sh</span></code> runs all eleven jobs with Python alone.</p>
+<p>To run a job on the machine you need an account of your own: a token acts fully as its owner, so it is never handed to someone else. From this page you cannot send a job, and that is on purpose. The <a class="reference external" href="https://enccs.github.io/eurohpc-quantum-devices-access-hpcqc/">ENCCS lesson</a> says how to get an account, and the README in <a class="reference external" href="https://github.com/ENCCS/eurohpc-qdevices/tree/main/examples/hamiltonian/live"><code class="docutils literal notranslate"><span class="pre">live/</span></code></a> says how to send the job of a talk.</p>
+</section>
+<section id="from-three-qubits-to-atoms-and-molecules">
+<h2>8. From three qubits to atoms and molecules<a class="headerlink" href="#from-three-qubits-to-atoms-and-molecules" title="Link to this heading">¶</a></h2>
+<p>The path carries over; the shortcuts do not. Electrons in an atom or a molecule, with the nuclei held fixed and a finite set of spin orbitals, are described by</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[H = \sum_{pq} h_{pq}\, a_p^\dagger a_q + \frac12\sum_{pqrs} g_{pqrs}\, a_p^\dagger a_q^\dagger a_r a_s ,\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(a_p^\dagger\)</span> puts an electron in spin orbital <span class="math notranslate nohighlight">\(p\)</span>. The numbers <span class="math notranslate nohighlight">\(h\)</span> and <span class="math notranslate nohighlight">\(g\)</span>, with <span class="math notranslate nohighlight">\(g_{pqrs}=\langle pq|sr\rangle\)</span>, are integrals that a classical code computes.</p>
+<p>With one electron, or many with no second sum, the problem stays free-fermion: an <span class="math notranslate nohighlight">\(M\times M\)</span> matrix, which a classical computer diagonalises in time polynomial in <span class="math notranslate nohighlight">\(M\)</span>. That is why the chain has a closed form and fits 6 CX. The second sum couples the electrons. An exact classical solution then works in a space of size <span class="math notranslate nohighlight">\(\binom{M}{n}\)</span>, for <span class="math notranslate nohighlight">\(n\)</span> electrons in <span class="math notranslate nohighlight">\(M\)</span> spin orbitals: about <span class="math notranslate nohighlight">\(10^{29}\)</span> for 50 in 100. <span class="math notranslate nohighlight">\(M\)</span> qubits hold that space, which is why the method is studied. Classical methods treat many molecules well. A broad study of ground-state energies found no evidence so far of an exponential quantum gain across chemical space, and calls a relevant system with strong evidence an open question. It did not study other tasks and does not rule out smaller gains (S. Lee et al.).</p>
+<p><strong>Step 1, to qubits.</strong> Let qubit <span class="math notranslate nohighlight">\(p\)</span> read 1 when spin orbital <span class="math notranslate nohighlight">\(p\)</span> is full. The Jordan-Wigner transformation writes <span class="math notranslate nohighlight">\(a_p = \left(\prod_{k&lt;p} Z_k\right)\tfrac12(X_p + iY_p)\)</span>. Electrons anticommute, <span class="math notranslate nohighlight">\(a_pa_q=-a_qa_p\)</span>. Operators on different qubits commute, so the <span class="math notranslate nohighlight">\(Z\)</span> string supplies the sign: it counts, modulo 2, the electrons in the orbitals below <span class="math notranslate nohighlight">\(p\)</span>. So a term can reach across many qubits. For neighbouring orbitals the <span class="math notranslate nohighlight">\(Z\)</span>s cancel:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[a_k^\dagger a_{k+1} + a_{k+1}^\dagger a_k = \tfrac12\left(X_k X_{k+1} + Y_k Y_{k+1}\right).\]</div>
+</div>
+<p><strong>That is the bond of this tutorial.</strong> The chain above is one electron hopping along three orbitals in a line. Its <span class="math notranslate nohighlight">\(3\times3\)</span> matrix is the Hückel matrix of the three π orbitals of the allyl radical, in units of <span class="math notranslate nohighlight">\(\beta\)</span>, with <span class="math notranslate nohighlight">\(\alpha\)</span> set to zero. The radical has three π electrons; here we follow one, and with no second sum each moves on its own. Between orbitals that are not neighbours, the <span class="math notranslate nohighlight">\(Z\)</span>s stay. The cell checks both.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matrices</span><span class="w"> </span><span class="kn">import</span> <span class="n">JordanWigner</span>
+
+<span class="n">two</span><span class="p">,</span> <span class="n">three</span> <span class="o">=</span> <span class="n">JordanWigner</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">JordanWigner</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"hop(0, 1) = (XX + YY)/2 on two orbitals:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">two</span><span class="o">.</span><span class="n">hop</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">pauli</span><span class="p">(</span><span class="s2">"XX"</span><span class="p">)</span> <span class="o">+</span> <span class="n">pauli</span><span class="p">(</span><span class="s2">"YY"</span><span class="p">))))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"hop(0, 1) + hop(1, 2) = H of this tutorial:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">three</span><span class="o">.</span><span class="n">hop</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">three</span><span class="o">.</span><span class="n">hop</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">H</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"hop(0, 2) = (XZX + YZY)/2, a Z stays between:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">three</span><span class="o">.</span><span class="n">hop</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">pauli</span><span class="p">(</span><span class="s2">"XZX"</span><span class="p">)</span> <span class="o">+</span> <span class="n">pauli</span><span class="p">(</span><span class="s2">"YZY"</span><span class="p">))))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>hop(0, 1) = (XX + YY)/2 on two orbitals: True
+hop(0, 1) + hop(1, 2) = H of this tutorial: True
+hop(0, 2) = (XZX + YZY)/2, a Z stays between: True
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Step 2, the terms.</strong> The second sum of <span class="math notranslate nohighlight">\(H\)</span> adds terms such as <span class="math notranslate nohighlight">\(Z_pZ_q\)</span> and <span class="math notranslate nohighlight">\(X_pX_qY_rY_s\)</span>. Their number grows as the fourth power of the number of spin orbitals. Each is one Pauli term, so each uses the general recipe of the figure, and they are split by the same product formulas, with the same trade-off of Section 6.</p>
+<p><strong>Step 3, what we get from it.</strong></p>
+<ul class="simple">
+<li><p><em>Dynamics:</em> evolve a prepared state and measure, as here: how charge moves, or how a system answers a sudden change.</p></li>
+<li><p><em>Energies:</em> phase estimation runs a controlled <span class="math notranslate nohighlight">\(e^{-iHt}\)</span> and reads the phase <span class="math notranslate nohighlight">\(e^{-iEt}\)</span> of Section 1 into a register, which gives the energy <span class="math notranslate nohighlight">\(E\)</span> (Abrams and Lloyd; Aspuru-Guzik et al.). An error in <span class="math notranslate nohighlight">\(e^{-iHt}\)</span> becomes an error in <span class="math notranslate nohighlight">\(E\)</span>. It returns <span class="math notranslate nohighlight">\(E_k\)</span> with probability <span class="math notranslate nohighlight">\(|c_k|^2\)</span>, the <span class="math notranslate nohighlight">\(c_k\)</span> of Section 1. So the state prepared first must overlap the state wanted; for a large molecule that is a problem of its own.</p></li>
+<li><p><em>Other algorithms</em> use it as a part: linear systems, thermal states, adiabatic state preparation. Card <a class="reference external" href="https://elhamkashefi.github.io/primitives-atlas/#P06">P06</a> of the Quantum Algorithmic Primitives Atlas lists them. The Quantum Algorithm Zoo (Jordan) has an entry on this routine, which lists Qrisp among its implementations.</p></li>
+</ul>
+<p>Here is the hydrogen molecule, emulated, with the two-qubit Hamiltonian of Qrisp’s <a class="reference external" href="https://qrisp.eu/reference/Examples/GroundStateEnergyQPE.html">ground-state page</a>: the same <code class="docutils literal notranslate"><span class="pre">trotterization</span></code>, inside phase estimation. Its numbers match H2 in the minimal basis STO-3G at 0.735 Å: 4 spin orbitals, which its symmetries reduce to 2 qubits. Energies are in hartree, for the electrons alone. The repulsion of the nuclei adds 0.720, so the total is -1.137.</p>
+<p>The code is in <code class="docutils literal notranslate"><span class="pre">with_qrisp.py</span></code>, and its centre is one line:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">return</span> <span class="n">QPE</span><span class="p">(</span><span class="n">qv</span><span class="p">,</span> <span class="n">ham</span><span class="o">.</span><span class="n">trotterization</span><span class="p">(),</span> <span class="n">precision</span><span class="o">=</span><span class="n">bits</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">"steps"</span><span class="p">:</span> <span class="n">STEPS</span><span class="p">},</span> <span class="n">iter_spec</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here <code class="docutils literal notranslate"><span class="pre">ham</span></code> is <code class="docutils literal notranslate"><span class="pre">h2()</span></code>, the numbers of the page, and <code class="docutils literal notranslate"><span class="pre">STEPS</span></code> is 3. Its start, <code class="docutils literal notranslate"><span class="pre">x(qv[0])</span></code>, is the restricted Hartree-Fock state, with energy -1.837 and squared overlap 0.988 with the ground state. At <span class="math notranslate nohighlight">\(t=1\)</span> the register holds <span class="math notranslate nohighlight">\(\varphi\)</span> with <span class="math notranslate nohighlight">\(e^{-iE}=e^{2\pi i\varphi}\)</span>, so <span class="math notranslate nohighlight">\(E=-2\pi\varphi\)</span>, for <span class="math notranslate nohighlight">\(E\)</span> between <span class="math notranslate nohighlight">\(-2\pi\)</span> and 0. The code uses the first-order formula with 3 steps per unit time: at <span class="math notranslate nohighlight">\(t=1\)</span>, 3 steps shift <span class="math notranslate nohighlight">\(E\)</span> by 0.0005 hartree and 1 step by 0.0044. With no Qrisp the cell prints what a run gave.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">figures</span><span class="w"> </span><span class="kn">import</span> <span class="n">phases</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">hydrogen</span><span class="w"> </span><span class="kn">import</span> <span class="n">MADE</span>
+
+<span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s2">"qrisp"</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">with_qrisp</span><span class="w"> </span><span class="kn">import</span> <span class="n">hydrogen</span>
+    <span class="n">estimates</span> <span class="o">=</span> <span class="n">hydrogen</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Qrisp is not installed here: this is what a run gave."</span><span class="p">)</span>
+    <span class="n">estimates</span> <span class="o">=</span> <span class="n">MADE</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">estimates</span><span class="o">.</span><span class="n">table</span><span class="p">())</span>
+<span class="n">phases</span><span class="p">(</span><span class="n">estimates</span><span class="o">.</span><span class="n">energies</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The exact energy: -1.857 hartree
+bits  qubits  two-qubit gates  top phase  energy
+   3       5              261     0.2500  -1.571
+   4       6              558     0.3125  -1.963
+   5       7             1142     0.2812  -1.767
+   6       8             2307     0.2969  -1.865
+</pre></div>
+</div>
+<img alt="../_images/d9071bfc0a8f190c62416db9d86909a4898f14c6f4da036eec4e3e4119845162.png" src="../_images/d9071bfc0a8f190c62416db9d86909a4898f14c6f4da036eec4e3e4119845162.png" />
+</div>
+</div>
+<p>The chart is the last row, at 6 bits. The high bar is the grid point nearest the ground level, -1.857: the grid has steps of 0.098. The low bar near -0.2 is the upper level, -0.225, with a squared overlap of 0.012 with the start. So the chart shows both the grid and the <span class="math notranslate nohighlight">\(|c_k|^2\)</span> above.</p>
+<p>Each bit adds one binary digit to the phase, and about doubles the circuit, as bit <span class="math notranslate nohighlight">\(k\)</span> runs <span class="math notranslate nohighlight">\(e^{-iH2^k}\)</span>. With 6 bits the grid of <span class="math notranslate nohighlight">\(E\)</span> has steps of <span class="math notranslate nohighlight">\(2\pi/64=0.098\)</span> hartree. The usual target, called chemical accuracy, is about 0.0016 hartree, 1 kcal/mol, for energy differences. A grid with steps of that size takes 12 bits, about 150,000 two-qubit gates in this form, with no compression. In the run above the answer was clear at 18 two-qubit gates in the text (474 against 108) and no longer readable at 34 (190 against 175, where the rule asks for twice). That gap is what this small example measures.</p>
+</section>
+<section id="the-whole-curve-of-h2">
+<h2>9. The whole curve of H2<a class="headerlink" href="#the-whole-curve-of-h2" title="Link to this heading">¶</a></h2>
+<p>So far the molecule has one bond length. Now we hold the nuclei fixed at many bond lengths, and compute the energy at each. The result, energy against bond length, is the potential energy curve, the picture chemists recognise for a bond. Its minimum gives the equilibrium length of the bond. The depth of its well is close to the energy it takes to break the bond, but larger by the zero-point vibration of the nuclei, which fixed nuclei leave out: about 6 kcal/mol for H2 (from the constants of the NIST WebBook). Its far end must reach the energy of two separate atoms, and not every method gets there.</p>
+<p>The phase estimation below is emulated: a laptop computes what a perfect quantum computer would do, and nothing is sent to a machine. Its circuits are far longer than anything the machine of Section 6 read: 9248 two-qubit gates at each bond length in this form, against at most 34 in the texts sent there. A laptop also solves this molecule directly, and much faster, so nothing on this page gains over a classical computer.</p>
+<p><strong>What <em>exact</em> means for each method.</strong> Each one works on the same equation: the Schrödinger equation of the electrons, with the nuclei held fixed (the Born-Oppenheimer approximation) and no relativity. They differ in the method and in the basis. A <em>basis</em> is the finite set of functions, centred on the nuclei, from which the orbitals are built. STO-3G is a minimal basis: one function on each atom, a fixed sum of 3 Gaussians. cc-pVQZ, the largest here, has 30 on each atom.</p>
+<ul class="simple">
+<li><p><em>Restricted Hartree-Fock</em> puts both electrons in one orbital. It is the start of our phase estimation. In any basis it is an approximation.</p></li>
+<li><p><em>Full configuration interaction (FCI)</em> solves the Schrödinger equation exactly within a basis: in the words of Szabo and Ostlund (p. 234), “exact within the subspace spanned by the one-electron basis”. So each basis has its own FCI energy. In STO-3G, for the ground state, FCI comes down to a <span class="math notranslate nohighlight">\(2\times2\)</span> matrix, which <code class="docutils literal notranslate"><span class="pre">molecule.py</span></code> builds with NumPy alone. <code class="docutils literal notranslate"><span class="pre">exact_chemistry.py</span></code> uses PySCF for the larger bases, and this page reads its stored numbers.</p></li>
+<li><p><em>Phase estimation in STO-3G</em> reads the levels of the same <span class="math notranslate nohighlight">\(2\times2\)</span> matrix, on a grid of energies and through a product formula. With a finer grid and more steps it closes on FCI in STO-3G, and on nothing better. A single reading can fall below FCI: that is the grid, not a better result.</p></li>
+<li><p><em>The published values</em> (Pachucki) solve the same equation with no limit from a basis, as they are extrapolated to a complete set. To every digit we print they are exact for this equation, not for the real molecule, and they are computed, not measured. Here they are the benchmark. Sims and Hagstrom agree with them to better than <span class="math notranslate nohighlight">\(4\times10^{-12}\)</span> hartree at every length both list, from 0.21 to 3.18 Å.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">Molecule(length).terms</span></code> gives the five coefficients of the two-qubit Hamiltonian at any bond length. At 0.735 Å they are the numbers on Qrisp’s page, to every digit it prints, and the cell prints how close. The run is the same <code class="docutils literal notranslate"><span class="pre">trotterization</span></code> inside phase estimation as in Section 8, at 8 bits, with 3 steps per unit time, at eight bond lengths. Only the angles change with the length, so the count of gates is the same at each. The next cell shows a stored run of those gates, so Run All stays light; a fresh run on a laptop gave the same numbers. Set <code class="docutils literal notranslate"><span class="pre">RUN_THE_GATES</span> <span class="pre">=</span> <span class="pre">True</span></code> to run them yourself. On a laptop that took from half a minute to about three minutes, and about 1.5 GB of memory. The checks behind this section are in <a class="reference external" href="https://github.com/ENCCS/eurohpc-qdevices/blob/main/examples/hamiltonian/curve_checks.md"><code class="docutils literal notranslate"><span class="pre">curve_checks.md</span></code></a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">hydrogen</span><span class="w"> </span><span class="kn">import</span> <span class="n">Curve</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">molecule</span><span class="w"> </span><span class="kn">import</span> <span class="n">difference_from_page</span>
+
+<span class="n">RUN_THE_GATES</span> <span class="o">=</span> <span class="kc">False</span>       <span class="c1"># True needs Qrisp, and about 1.5 GB of memory</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Largest difference from the numbers of Qrisp's page: </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">abs</span><span class="p">,</span><span class="w"> </span><span class="n">difference_from_page</span><span class="p">()))</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">RUN_THE_GATES</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">with_qrisp</span><span class="w"> </span><span class="kn">import</span> <span class="n">curve</span>
+    <span class="n">emulated</span> <span class="o">=</span> <span class="n">curve</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">emulated</span> <span class="o">=</span> <span class="n">Curve</span><span class="o">.</span><span class="n">stored</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">emulated</span><span class="o">.</span><span class="n">table</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Largest difference from the numbers of Qrisp's page: 4.8e-09
+8 bits, 3 steps per unit time: 10 qubits, 9248 two-qubit gates, grid step 0.025 hartree
+length     exact  overlap  reading  share      top  share
+   0.5   -1.0552    0.995   -1.052  0.970   -1.052  0.970
+0.7414   -1.1373    0.987   -1.127  0.568   -1.127  0.568
+   1.1   -1.0792    0.958   -1.090  0.480   -1.090  0.480
+   1.4   -1.0155    0.901   -1.021  0.749   -1.021  0.749
+   1.8   -0.9618    0.777   -0.958  0.712   -0.958  0.712
+   2.6   -0.9352    0.579   -0.925  0.336   -0.361  0.363
+   3.0   -0.9336    0.537   -0.928  0.453   -0.928  0.453
+   4.0   -0.9332    0.504   -0.923  0.280   -0.285  0.409
+</pre></div>
+</div>
+</div>
+</div>
+<p><em>length</em> is in Å, and all energies are total energies in hartree: the electrons and the repulsion of the nuclei, unlike the chart of Section 8. <em>exact</em> is FCI in STO-3G, and <em>overlap</em> is the squared overlap of the start with the ground state. <em>top</em> is the grid point with the most shots, and <em>reading</em> is the one that the rule below picks. Each <em>share</em> is that of the energy on its left.</p>
+<p><strong>Which peak to read.</strong> The start reaches two levels, and phase estimation returns each with its <span class="math notranslate nohighlight">\(|c_k|^2\)</span>. At 0.735 Å the overlap is 0.988, so the top reading is the ground level. As the bond stretches the overlap falls, to 0.504 at 4 Å. The start keeps both electrons in one orbital, and half of that state has both of them on one atom (the ionic terms of Szabo and Ostlund, p. 167). The ground state of two atoms far apart does not have that. So the two levels hold comparable shares, and which one is on top depends on how near each lies to a grid point.</p>
+<p>So we read the <em>lowest strong peak</em>: the grid point with the lowest energy among those that hold at least 0.1 of the shots and no less than either neighbour. From 5 bits up this rule read the ground level at every length we tried, up to 15 Å. It uses what we know of this molecule, its overlap. For a large molecule the overlap is not known in advance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">figures</span><span class="w"> </span><span class="kn">import</span> <span class="n">overlaps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">readings</span>
+
+<span class="n">overlaps</span><span class="p">();</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">readings</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>At 2.6 angstrom: exact energy -0.935, squared overlap 0.579.
+bits  top reading  lowest strong peak
+   6       -0.975              -0.975
+   7       -0.925              -0.925
+   8       -0.361              -0.925
+   9       -0.938              -0.938
+  10       -0.355              -0.938
+</pre></div>
+</div>
+<img alt="../_images/8d174dfe5a6f56ca7023a51ae536d99c16550fd7168a03a71ce1b3883ca37d2d.png" src="../_images/8d174dfe5a6f56ca7023a51ae536d99c16550fd7168a03a71ce1b3883ca37d2d.png" />
+</div>
+</div>
+<p>The chart shows the fall of the overlap. The table comes from the closed form of the shares of phase estimation (in <code class="docutils literal notranslate"><span class="pre">curve_checks.md</span></code>), with no gates and no product formula. At 2.6 Å, the length of the table, the top reading at 8 and at 10 bits is -0.361 and -0.355: that is the upper level, at -0.3558, and not the ground level, at -0.935. At 6, 7 and 9 bits it is the ground level, so more bits do not cure this. The lowest strong peak stays near the ground level at each number of bits. In the emulated curve above, the top reading is the wrong level at 2.6 Å and at 4 Å.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">figures</span><span class="w"> </span><span class="kn">import</span> <span class="n">dissociation</span>
+
+<span class="n">dissociation</span><span class="p">(</span><span class="n">emulated</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/38c547e3a04ce9f13e0f02da2e87196208ae7ddb74bc4cb4b3262713cef19dae.png" src="../_images/38c547e3a04ce9f13e0f02da2e87196208ae7ddb74bc4cb4b3262713cef19dae.png" />
+</div>
+</div>
+<p><strong>Reading the chart.</strong> Each orange point has a bar of half a grid step either way.</p>
+<p>The grey line, restricted Hartree-Fock in STO-3G, has a well but no proper far end. At 4 Å it reads -0.6149, where two atoms in this basis have -0.9332, so it lies 0.3183 too high, and it goes on rising, to 0.3873 too high at infinite distance. Szabo and Ostlund give the cause (p. 167): “since both electrons occupy the same spatial orbital, there remains even at infinity some electron-electron repulsion.”</p>
+<p>The blue line, exact in STO-3G, does reach the energy of two atoms in this basis. The orange points follow it: the largest gap is 0.0105. They fall on either side of the line, so a point below it is the grid, not a better result.</p>
+<p>The teal line, FCI in the largest basis here, runs through the published points. The blue line lies above the published values at all 24 stored lengths, as the variational principle requires: by 0.0370 at its closest, at 0.7 Å, and by 0.0819 at 0.35 Å. In the words of Szabo and Ostlund (p. 241): “although full CI is exact in the STO-3G basis, it gives a potential curve which does not agree very well with the exact one.”</p>
+<p>A deeper well is not a better result here. The minimum of the blue curve, at 0.7349 Å against the published 0.7414 Å, lies 0.2041 below its two atoms. The well of the published curve is 0.1745 deep. So the well of STO-3G is deeper than the published one, although its energy lies above the published one at every stored length. The reason is the atom: in this basis it has -0.4666, where the exact value is -0.5 (Szabo and Ostlund, p. 161). Two atoms miss 0.0668, and the molecule at its minimum misses only 0.0372. Szabo and Ostlund (p. 241) say the well depths are greater “because the STO-3G basis is so poor for the hydrogen atom”.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">reference</span><span class="w"> </span><span class="kn">import</span> <span class="n">methods</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">well</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">methods</span><span class="p">(</span><span class="n">emulated</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">well</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                     at 0.7414 angstrom         at 3.0 angstrom            
+method                                hartree    above kcal/mol   hartree    above kcal/mol  
+restricted Hartree-Fock, STO-3G       -1.1167  +0.0578   +36.3    -0.6560  +0.3453  +216.7 
+exact in STO-3G: FCI                  -1.1373  +0.0372   +23.3    -0.9336  +0.0677   +42.5 
+phase estimation in STO-3G, 8 bits    -1.1270  +0.0475   +29.8    -0.9281  +0.0733   +46.0 
+restricted Hartree-Fock, cc-pVQZ      -1.1335  +0.0410   +25.7    -0.8333  +0.1680  +105.4 
+FCI, cc-pVQZ                          -1.1738  +0.0007    +0.4    -1.0011  +0.0003    +0.2 
+published, by interpolation           -1.1745                     -1.0014                  
+
+                  length    energy   depth
+exact in STO-3G   0.7349   -1.1373  0.2041
+published         0.7414   -1.1745  0.1745
+STO-3G is too deep by 0.0297 hartree, 18.6 kcal/mol
+</pre></div>
+</div>
+</div>
+</div>
+<p>In the first table, <em>above</em> is the energy less the published value at that length, also given in kcal/mol. In the second, <em>length</em> and <em>energy</em> are those of the minimum, and <em>depth</em> is how far it lies below two atoms.</p>
+<p>The first table separates two limits: the method and the basis. A large basis does not repair the method: restricted Hartree-Fock in cc-pVQZ lies 0.0410 above at 0.7414 Å and 0.1680 above at 3 Å. An exact method does not repair the basis: FCI in STO-3G lies 0.0372 and 0.0677 above. Only both together come close: FCI in cc-pVQZ lies 0.0007 and 0.0003 above. Phase estimation in STO-3G reads the same level as FCI in STO-3G, so it has the limit of the basis, and the error of its grid as well.</p>
+<p><strong>Exact in a small basis is far from the published energy.</strong> The next two tables test that. The first uses the closed form with the 3 steps, and no gates, at 0.7414 Å. The second reads the stored numbers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">reference</span><span class="w"> </span><span class="kn">import</span> <span class="n">bases</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">more_bits</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">more_bits</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bases</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>bits  grid step   reading  above exact in STO-3G  above published
+   6    0.09817  -1.15157               -0.01430         +0.02291
+   8    0.02454  -1.12702               +0.01025         +0.04745
+  10    0.00614  -1.13929               -0.00202         +0.03518
+  12    0.00153  -1.13623               +0.00104         +0.03825
+  14    0.00038  -1.13661               +0.00066         +0.03787
+  16    0.00010  -1.13680               +0.00047         +0.03767
+
+                           FCI above the published value
+                           at 0.7414 angstrom    largest on the curve
+basis      M  C(M, 2)        hartree kcal/mol      hartree kcal/mol
+STO-3G     4        6        0.03721    23.35      0.08188    51.38
+6-31G      8       28        0.02279    14.30      0.03545    22.25
+cc-pVDZ   20      190        0.01106     6.94      0.04933    30.95
+cc-pVTZ   56     1540        0.00214     1.34      0.00671     4.21
+cc-pVQZ  120     7140        0.00068     0.43      0.00137     0.86
+</pre></div>
+</div>
+</div>
+</div>
+<p>With more bits the reading closes on the exact energy in STO-3G, not on the published one. At 16 bits it lies 0.00047 above the exact energy in STO-3G, which is the shift of the 3 steps, and 0.03767 above the published one. More steps would shrink the 0.00047. No number of bits or steps touches the 0.03721 that FCI in STO-3G lies above the published value: here that takes a larger basis.</p>
+<p>A larger basis has a price. <em>M</em> is the number of spin orbitals, which is the number of qubits before any symmetry: from 4 to 120 here. Of these five bases, only cc-pVQZ lies within 1 kcal/mol of the published values: 0.43 kcal/mol above at 0.7414 Å, and 0.86 above at its worst, at 0.35 Å. cc-pVTZ, with 56 spin orbitals, lies 1.34 above at 0.7414 Å. A larger basis is also not always lower: from 6-31G to cc-pVDZ the FCI energy rises at short bonds, by 0.0139 at 0.35 Å. Neither set contains the other, so the variational principle does not order them.</p>
+<p>These are errors of total energies. <em>Chemical accuracy</em> usually refers to energy differences against experiment, within 1 kcal/mol (Motta and Rice). Agreement with FCI in a fixed basis is another thing, which Motta and Rice call algorithmic accuracy. Phase estimation in STO-3G could reach that and still lie about 23 kcal/mol from the published energy at 0.7414 Å.</p>
+<p>For a classical computer these two electrons stay easy. <em>C(M, 2)</em> is the <span class="math notranslate nohighlight">\(\binom{M}{n}\)</span> of Section 8 for two electrons, at most 7140 here, before symmetry makes it smaller: in STO-3G the 6 states become the <span class="math notranslate nohighlight">\(2\times2\)</span> matrix. PySCF solved all five bases at all 24 bond lengths on one laptop in one to five minutes. This molecule is a place to check the method against known numbers.</p>
+<p>Experiments have traced the curve of this molecule in a minimal basis. Lanyon et al. worked in STO-3G, with 2 photonic qubits and 20 bits of iterative phase estimation, which reads one bit at a time on one control qubit. A problem this small let them set each power of the evolution directly, “by re-encoding the same number of gates”. They do not expect that for larger molecules. They also encode “exact eigenstates, obtained via a preliminary calculation on a classical computer”. O’Malley et al. worked in STO-6G, with 2 superconducting qubits for a variational method and 3 for Trotterised iterative phase estimation. They write: “we are able to implement only a single Trotter step, which is not enough to achieve chemical accuracy.” Their chemical accuracy is measured against the exact energy in that basis, which is the algorithmic accuracy above. So the limit of the basis applies to both.</p>
+</section>
+<section id="what-changes-with-size">
+<h2>10. What changes with size<a class="headerlink" href="#what-changes-with-size" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>The chain of Sections 2 to 7</p></th>
+<th class="head"><p>A large molecule, at useful accuracy</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Qubits</p></td>
+<td><p>3</p></td>
+<td><p>one per spin orbital, less a few by symmetry</p></td>
+</tr>
+<tr class="row-odd"><td><p>The terms</p></td>
+<td><p>4 Pauli terms</p></td>
+<td><p>of order <span class="math notranslate nohighlight">\(M^4\)</span> for <span class="math notranslate nohighlight">\(M\)</span> spin orbitals</p></td>
+</tr>
+<tr class="row-even"><td><p>Gates of one term</p></td>
+<td><p>2 CX a bond</p></td>
+<td><p>up to <span class="math notranslate nohighlight">\(2(M-1)\)</span> CX: its <span class="math notranslate nohighlight">\(Z\)</span> string sets the ladder</p></td>
+</tr>
+<tr class="row-odd"><td><p>The start</p></td>
+<td><p>one excitation, known exactly</p></td>
+<td><p>a state with enough overlap with the state wanted</p></td>
+</tr>
+<tr class="row-even"><td><p>The formula</p></td>
+<td><p>a product formula, no extra qubits</p></td>
+<td><p>product formulas, or qubitization, whose query cost is optimal in the time and the error, at the cost of extra qubits and control (Low and Chuang)</p></td>
+</tr>
+<tr class="row-odd"><td><p>The machine’s errors</p></td>
+<td><p>seen in the counts, on one evening</p></td>
+<td><p>more than a noisy machine carries: error correction. One estimate is about four million physical qubits and under four days for an active-space model of FeMoco, at 0.1% gate error and 1 microsecond cycles (J. Lee et al.)</p></td>
+</tr>
+<tr class="row-even"><td><p>The check</p></td>
+<td><p>the number of excitations</p></td>
+<td><p>the number of electrons and the spin, or their parities: symmetry verification (Bonet-Monroig et al.; McArdle et al.)</p></td>
+</tr>
+<tr class="row-odd"><td><p>What was sent is not what ran</p></td>
+<td><p>the compile merged the gates of one pair of qubits (Executed Circuit on the portal)</p></td>
+<td><p>the same, and more: compile, routing and layout decide the cost</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>So today this is a place to learn the method and to measure what a machine does with it: it reaches no answer that a classical computer cannot give. The mapping carries over to a larger, error-corrected machine. So does the split, as long as a product formula stays; on such a machine qubitization may replace it. The symmetry checks cited here were made for near-term machines.</p>
+<p><strong>The same in the language of the atlas.</strong> Card P06 describes Hamiltonian simulation by a contract in five places and a verification hook, which this tutorial fills in like this:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>Here</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Access</p></td>
+<td><p>a list of Pauli terms</p></td>
+</tr>
+<tr class="row-odd"><td><p>Promise</p></td>
+<td><p><span class="math notranslate nohighlight">\(H\)</span> splits into parts that are easy to exponentiate</p></td>
+</tr>
+<tr class="row-even"><td><p>Output</p></td>
+<td><p><span class="math notranslate nohighlight">\(V\)</span> applied to a state, with <span class="math notranslate nohighlight">\(V \approx e^{-iHT}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Error</p></td>
+<td><p><span class="math notranslate nohighlight">\(\lVert V - e^{-iHT}\rVert\)</span>: the table of Section 3</p></td>
+</tr>
+<tr class="row-even"><td><p>Cost</p></td>
+<td><p>10 two-qubit gates at <span class="math notranslate nohighlight">\(N=2\)</span>, no extra qubits</p></td>
+</tr>
+<tr class="row-odd"><td><p>How to check it</p></td>
+<td><p>a conserved quantity (<em>kept</em>), a known input (ZERO), and a forward evolution that returns to its start (BACK), in place of the card’s forwards-and-backwards echo test</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>S. Lloyd, <em>Universal quantum simulators</em>, Science 273, 1073, <a class="reference external" href="https://doi.org/10.1126/science.273.5278.1073">doi:10.1126/science.273.5278.1073</a>.</p></li>
+<li><p>M. Suzuki, <em>General theory of fractal path integrals with applications to many-body theories and statistical physics</em>, J. Math. Phys. 32, 400, <a class="reference external" href="https://doi.org/10.1063/1.529425">doi:10.1063/1.529425</a>.</p></li>
+<li><p>A. M. Childs, Y. Su, M. C. Tran, N. Wiebe, S. Zhu, <em>Theory of Trotter error with commutator scaling</em>, Phys. Rev. X 11, 011020, <a class="reference external" href="https://arxiv.org/abs/1912.08854">arXiv:1912.08854</a>.</p></li>
+<li><p>M. Christandl, N. Datta, A. Ekert, A. J. Landahl, <em>Perfect state transfer in quantum spin networks</em>, Phys. Rev. Lett. 92, 187902, <a class="reference external" href="https://arxiv.org/abs/quant-ph/0309131">arXiv:quant-ph/0309131</a>.</p></li>
+<li><p>Y. Salathé et al., <em>Digital quantum simulation of spin models with circuit quantum electrodynamics</em>, Phys. Rev. X 5, 021027, <a class="reference external" href="https://arxiv.org/abs/1502.06778">arXiv:1502.06778</a>.</p></li>
+<li><p>A. Smith, M. S. Kim, F. Pollmann, J. Knolle, <em>Simulating quantum many-body dynamics on a current digital quantum computer</em>, npj Quantum Inf. 5, 106, <a class="reference external" href="https://arxiv.org/abs/1906.06343">arXiv:1906.06343</a>.</p></li>
+<li><p>E. Kökcü, D. Camps, L. Bassman Oftelie, J. K. Freericks, W. A. de Jong, R. Van Beeumen, A. F. Kemper, <em>Algebraic compression of quantum circuits for Hamiltonian evolution</em>, Phys. Rev. A 105, 032420, <a class="reference external" href="https://arxiv.org/abs/2108.03282">arXiv:2108.03282</a>.</p></li>
+<li><p>D. S. Abrams, S. Lloyd, <em>Quantum algorithm providing exponential speed increase for finding eigenvalues and eigenvectors</em>, Phys. Rev. Lett. 83, 5162, <a class="reference external" href="https://arxiv.org/abs/quant-ph/9807070">arXiv:quant-ph/9807070</a>.</p></li>
+<li><p>A. Aspuru-Guzik, A. D. Dutoi, P. J. Love, M. Head-Gordon, <em>Simulated quantum computation of molecular energies</em>, Science 309, 1704, <a class="reference external" href="https://arxiv.org/abs/quant-ph/0604193">arXiv:quant-ph/0604193</a>.</p></li>
+<li><p>G. H. Low, I. L. Chuang, <em>Hamiltonian simulation by qubitization</em>, Quantum 3, 163, <a class="reference external" href="https://arxiv.org/abs/1610.06546">arXiv:1610.06546</a>.</p></li>
+<li><p>J. Lee et al., <em>Even more efficient quantum computations of chemistry through tensor hypercontraction</em>, PRX Quantum 2, 030305, <a class="reference external" href="https://arxiv.org/abs/2011.03494">arXiv:2011.03494</a>.</p></li>
+<li><p>S. Lee et al., Nat. Commun. 14, 1952, <a class="reference external" href="https://arxiv.org/abs/2208.02199">arXiv:2208.02199</a>.</p></li>
+<li><p>X. Bonet-Monroig, R. Sagastizabal, M. Singh, T. E. O’Brien, <em>Low-cost error mitigation by symmetry verification</em>, Phys. Rev. A 98, 062339, <a class="reference external" href="https://arxiv.org/abs/1807.10050">arXiv:1807.10050</a>.</p></li>
+<li><p>S. McArdle, X. Yuan, S. Benjamin, <em>Error-mitigated digital quantum simulation</em>, Phys. Rev. Lett. 122, 180501, <a class="reference external" href="https://arxiv.org/abs/1807.02467">arXiv:1807.02467</a>.</p></li>
+<li><p>K. Pachucki, <em>Born-Oppenheimer potential for H2</em>, Phys. Rev. A 82, 032509, <a class="reference external" href="https://arxiv.org/abs/1007.0322">arXiv:1007.0322</a>.</p></li>
+<li><p>J. S. Sims, S. A. Hagstrom, <em>High precision variational calculations for the Born-Oppenheimer energies of the ground state of the hydrogen molecule</em>, J. Chem. Phys. 124, 094101, <a class="reference external" href="https://doi.org/10.1063/1.2173250">doi:10.1063/1.2173250</a>.</p></li>
+<li><p>A. Szabo, N. S. Ostlund, <em>Modern Quantum Chemistry</em> (Dover), pp. 161, 167, 234, 241.</p></li>
+<li><p>NIST Chemistry WebBook, <em>Hydrogen</em>, <a class="reference external" href="https://webbook.nist.gov/cgi/cbook.cgi?ID=C1333740&amp;Mask=1000">constants of diatomic molecules</a>.</p></li>
+<li><p>M. Motta, J. E. Rice, <em>Emerging quantum computing algorithms for quantum chemistry</em>, WIREs Comput. Mol. Sci. e1580, <a class="reference external" href="https://arxiv.org/abs/2109.02873">arXiv:2109.02873</a>.</p></li>
+<li><p>B. P. Lanyon et al., <em>Towards quantum chemistry on a quantum computer</em>, Nature Chemistry 2, 106, <a class="reference external" href="https://arxiv.org/abs/0905.0887">arXiv:0905.0887</a>.</p></li>
+<li><p>P. J. J. O’Malley et al., <em>Scalable quantum simulation of molecular energies</em>, Phys. Rev. X 6, 031007, <a class="reference external" href="https://arxiv.org/abs/1512.06860">arXiv:1512.06860</a>.</p></li>
+<li><p>E. Kashefi (ed.), <a class="reference external" href="https://elhamkashefi.github.io/primitives-atlas/"><em>Quantum Algorithmic Primitives Atlas</em></a>, version 0.4, card P06, CC BY 4.0.</p></li>
+<li><p>S. P. Jordan, <a class="reference external" href="https://quantumalgorithmzoo.org/"><em>Quantum Algorithm Zoo</em></a> (<a class="reference external" href="https://github.com/stephenjordan/stephenjordan.github.io">source</a>), entry <em>Simulating Quantum Hamiltonian Dynamics</em>, which lists <a class="reference external" href="https://qrisp.eu/general/tutorial/H2.html">Qrisp</a> among its implementations.</p></li>
+<li><p>Tools: <a class="reference external" href="https://qutip.org">QuTiP</a> (<a class="reference external" href="https://arxiv.org/abs/2412.04705">arXiv:2412.04705</a>), <a class="reference external" href="https://qutip-qip.readthedocs.io">qutip-qip</a> (<a class="reference external" href="https://arxiv.org/abs/2105.09902">arXiv:2105.09902</a>), <a class="reference external" href="https://qrisp.eu">Qrisp</a> (<a class="reference external" href="https://arxiv.org/abs/2406.14792">arXiv:2406.14792</a>), <a class="reference external" href="https://pyscf.org">PySCF</a> (Q. Sun et al., J. Chem. Phys. 153, 024109, <a class="reference external" href="https://arxiv.org/abs/2002.12531">arXiv:2002.12531</a>).</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+<div class="cc3-logos">
+  <a href="https://www.eurohpc-ju.europa.eu/index_en"><img src="../_static/logos/cc3/eurohpc.svg" alt="EuroHPC Joint Undertaking"></a>
+  <a href="https://hpc-portal.eu/"><img src="../_static/logos/cc3/hpc-in-europe.svg" alt="HPC in Europe"></a>
+  <a href="https://hpc-portal.eu/projects/eurocc-3-national-competence-centres-in-the-framework-eurohpc"><img src="../_static/logos/cc3/eurocc3.svg" alt="EuroCC 3"></a>
+  <a href="https://liu.se/en"><img src="../_static/logos/partners/liu.svg" alt="Linköping University"></a>
+  <a href="https://www.ri.se/en"><img src="../_static/logos/partners/rise.svg" alt="RISE Research Institutes of Sweden"></a>
+  <a href="https://www.vr.se/english.html"><img src="../_static/logos/national/vr.svg" alt="Swedish Research Council"></a>
+  <a href="https://www.vinnova.se/en/"><img src="../_static/logos/national/vinnova.svg" alt="Vinnova"></a>
+</div>
+
+        <div class="related-pages">
+          <a class="next-page" href="../billing-and-usage/">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Billing and usage</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../qrisp/">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Circuits written in Qrisp</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; ENCCS contributors | EuroCC 3 has received funding from the European High-Performance Computing Joint Undertaking (JU) under Grant Agreement No. 101306701. The JU receives support from the European Union&#39;s Digital Europe Programme and Germany, Albania, Austria, Belgium, Bosnia and Herzegovina, Bulgaria, Croatia, Cyprus, Czechia, Denmark, Estonia, Finland, France, Greece, Hungary, Iceland, Ireland, Italy, Latvia, Lithuania, Luxembourg, Malta, Montenegro, the Netherlands, North Macedonia, Norway, Poland, Portugal, Romania, Serbia, Slovakia, Slovenia, Spain, Sweden, Türkiye, and Kosovo. Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or EuroHPC Joint Undertaking. Neither the European Union nor the EuroHPC Joint Undertaking can be held responsible for them. ENCCS has also received national funding through Vinnova and the Swedish Research Council (VR). HPC in Europe is the umbrella brand uniting Europe&#39;s high-performance computing initiatives across 36+ countries. The project is supported by the European High-Performance Computing Joint Undertaking and its members.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/ENCCS/eurohpc-qdevices" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var c = document.querySelector(".copyright");
+    if (!c) return;
+    var a = document.createElement("a");
+    a.href = "https://european-union.europa.eu/index_en";
+    a.className = "eu-emblem-link";
+    a.setAttribute("aria-label", "European Union");
+    c.prepend(a);
+  });
+</script>
+
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Hamiltonian simulation on a quantum computer, step by step</a><ul>
+<li><a class="reference internal" href="#the-task-apply-e-iht">1. The task: apply <span class="math notranslate nohighlight">\(e^{-iHt}\)</span></a></li>
+<li><a class="reference internal" href="#the-model-and-its-exact-answer">2. The model, and its exact answer</a></li>
+<li><a class="reference internal" href="#split-the-exponential-product-formulas">3. Split the exponential: product formulas</a></li>
+<li><a class="reference internal" href="#one-bond-as-gates">4. One bond as gates</a></li>
+<li><a class="reference internal" href="#the-whole-circuit-in-two-forms">5. The whole circuit, in two forms</a></li>
+<li><a class="reference internal" href="#what-came-back-from-the-machine">6. What came back from the machine</a></li>
+<li><a class="reference internal" href="#emulate-it-yourself">7. Emulate it yourself</a></li>
+<li><a class="reference internal" href="#from-three-qubits-to-atoms-and-molecules">8. From three qubits to atoms and molecules</a></li>
+<li><a class="reference internal" href="#the-whole-curve-of-h2">9. The whole curve of H2</a></li>
+<li><a class="reference internal" href="#what-changes-with-size">10. What changes with size</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=187304be"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=35a8b989"></script>
+    <script src="../_static/minipres.js?v=a0d29692"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script data-domain="enccs.github.io/eurohpc-qdevices" defer="defer" src="https://plausible.io/js/script.js"></script>
+    </body>
+</html>
