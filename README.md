@@ -82,4 +82,5 @@ pixi run -e test test     # offline, with fake sites
 pixi run --manifest-path examples/qrisp/pixi.toml test    # the same, and the Qrisp examples made again
 ```
 
-Code: MIT (`LICENSE.code`). Manual: CC BY-SA 4.0 (`LICENSE`). Citation: `CITATION.cff`.
+Code: MIT (`LICENSE.code`). Manual: CC BY-SA 4.0 (`LICENSE`). Citation: `CITATION.cff`, or the DOI of all
+versions, [10.5281/zenodo.23974192](https://doi.org/10.5281/zenodo.23974192).

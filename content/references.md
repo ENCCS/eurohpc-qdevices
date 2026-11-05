@@ -66,4 +66,5 @@ own rules. The sources of the starter examples, and their licences, are in {doc}
 The broker's interface comes from the PCSS client 0.2.2, the operation list from the AQT Public API 1.1.1,
 and what the broker did with the jobs of the app from the release gate.
 
-To cite the app, use `CITATION.cff` in the repository.
+To cite the app, use `CITATION.cff` in the repository, or the DOI of all its versions,
+[10.5281/zenodo.23974192](https://doi.org/10.5281/zenodo.23974192).
