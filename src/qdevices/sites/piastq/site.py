@@ -4,8 +4,10 @@ The broker is that of pcss-qapi 0.2.2 (0.3.0 and 0.3.1 talk to another service);
 """
 
 import json
+from collections import Counter
 from typing import TYPE_CHECKING, Any, Final
 
+from ...values import is_int
 from ..base import Expired, Site, SiteError, cut
 from ..facts import SHARED_KEYS, Profile, Rule
 from ..protocol import JobState, Note, Refusal
@@ -41,19 +43,19 @@ def _expired(answer: object) -> bool:
     return isinstance(reply, dict) and reply.get("code") == EXPIRED_CODE and reply.get("message") == EXPIRED_MESSAGE
 
 
+def _bits(shot: list) -> bool:
+    """True for a shot of one or more bits, each the int 0 or 1, the form the broker gives."""
+    return bool(shot) and all(is_int(bit) and bit in (0, 1) for bit in shot)
+
+
 def _counts(reply: object) -> dict[str, int]:
     """Counts from the per-shot lists. Element i of a shot is qubit i, so qubit 0 is the leftmost bit."""
     shots = reply.get("result") if isinstance(reply, dict) else None
     if not isinstance(shots, list) or not all(isinstance(s, list) for s in shots):
         raise SiteError("the result is not a list of shots", body=cut(reply), step="result")
-    counts: dict[str, int] = {}
-    for shot in shots:
-        try:
-            key = "".join(str(int(b)) for b in shot)
-        except (ValueError, TypeError, OverflowError):
-            raise SiteError("a shot of the result is not a list of bits", body=cut(reply), step="result") from None
-        counts[key] = counts.get(key, 0) + 1
-    return counts
+    if not all(map(_bits, shots)):
+        raise SiteError("a shot of the result is not a list of bits", body=cut(reply), step="result")
+    return dict(Counter("".join(map(str, shot)) for shot in shots))
 
 
 class PiastQ(Site):

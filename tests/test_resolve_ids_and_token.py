@@ -1,4 +1,4 @@
-"""Faults 29 and 31 of the plan: resolve refuses an empty job id or one no URL holds; a token expiry not finite."""
+"""`resolve` refuses an empty job id or one no URL holds; a token expiry that is not finite cannot be read."""
 
 import base64
 

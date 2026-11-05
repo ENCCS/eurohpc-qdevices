@@ -79,7 +79,7 @@ line as a `NOTE`, with the job id it holds, which may be cut too. The resume lin
 | `status` | each state read while waiting; a missed poll ({doc}`live-runs`) when the kind of failure changes, with `missed` and the error |
 | `result` | the counts and the seconds; for VLQ also `calibration_set`, or `null` ({doc}`vlq`). The bit order of the counts is in {doc}`rules` |
 | `refused`, `failed`, `not_submitted` | a job the site refused, a job that failed, a VLQ job never submitted |
-| `resolved` | your decision with `qdevices resolve`; with `--over-limit`, `--expired` and `--gone`, the seconds the order counts with from then on (`counted_seconds`). For a record of another runner it is in a file of the app (below) |
+| `resolved` | your decision with `qdevices resolve`; with `--over-limit`, `--expired`, `--unreadable` and `--gone`, the seconds the order counts with from then on (`counted_seconds`). For a record of another runner it is in a file of the app (below) |
 | `stop` | the end of a call before every order is final, with the reason and its kind |
 | `end` | the normal end of a call |
 
@@ -90,6 +90,9 @@ through the token filter ({ref}`tokens`). A read of Euro-Q-Exa also holds `layou
 beside `qubits`; a read of VLQ holds `status`, from the status file of the site ({doc}`vlq`). The list of
 machines of Euro-Q-Exa (a check without `--manifest`) is stored as `list_<UTC>.json`; the dry run does
 not take it.
+
+In records and reads, a number that is not finite is written as the text `"NaN"`, `"Infinity"` or
+`"-Infinity"`, so each line and each read is standard JSON.
 
 ## Records of other runners
 

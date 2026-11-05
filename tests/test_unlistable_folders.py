@@ -24,15 +24,15 @@ def write(path: Path) -> Path:
 
 
 def refuse_stat(monkeypatch, path: Path) -> None:
-    """Path.is_file of `path` raises PermissionError, as in a folder that can be listed but not searched."""
-    is_file = Path.is_file
+    """Path.stat of `path` raises PermissionError, as in a folder that can be listed but not searched."""
+    stat = Path.stat
 
-    def denied(self):
+    def denied(self, *, follow_symlinks=True):
         if self == path:
             raise PermissionError(13, "Permission denied", str(self))
-        return is_file(self)
+        return stat(self, follow_symlinks=follow_symlinks)
 
-    monkeypatch.setattr(Path, "is_file", denied)
+    monkeypatch.setattr(Path, "stat", denied)
 
 
 def test_a_subfolder_that_cannot_be_listed_refuses_a_send(tmp_path, places, clock, monkeypatch):

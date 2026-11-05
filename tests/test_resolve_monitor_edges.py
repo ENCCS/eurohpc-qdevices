@@ -1,4 +1,4 @@
-"""Branches of `resolve` and of the monitor that no other test pins, written before W8 moved them."""
+"""Branches of `resolve` and of the monitor that no other test pins."""
 
 import json
 from pathlib import Path
@@ -134,7 +134,7 @@ def test_a_record_of_the_app_names_the_site_of_its_own_lines(tmp_path, places, c
     ([{"project": ["P"]}], ["vlq       ['P']  "]),
     ([{"project": 5}, {"project": "A"}], ["vlq       5      ", "vlq       A      "])])
 def test_a_start_line_with_a_project_of_another_type_is_shown_as_text_by_usage(tmp_path, starts, rows):
-    """Fault 19 of the plan, fixed: a project that is a list, or projects of two types, ended usage in a TypeError."""
+    """A project that is a list, or projects of two types, do not end usage in a TypeError."""
     paths = [write(tmp_path / f"r{i}" / "run_20260101T100000Z.jsonl",
                    [{"event": "start", "app": "qdevices", "site": "vlq", **start}]) for i, start in enumerate(starts)]
     lines = monitor.usage([monitor.summary(p) for p in paths], cfg())
@@ -142,7 +142,7 @@ def test_a_start_line_with_a_project_of_another_type_is_shown_as_text_by_usage(t
 
 
 def test_a_start_line_whose_lists_is_no_text_is_a_record_that_cannot_be_read(tmp_path):
-    """Fault 19 of the plan, fixed: it ended runs and usage in a TypeError; now its line says why it is not read."""
+    """It does not end runs and usage in a TypeError: its line says why it is not read."""
     path = write(tmp_path / "r" / "run_20260101T100000Z.jsonl",
                  [{"event": "start", "app": "qdevices", "site": "vlq", "lists": 7}])
     found = monitor.summary(path)
@@ -152,7 +152,7 @@ def test_a_start_line_whose_lists_is_no_text_is_a_record_that_cannot_be_read(tmp
 
 
 def test_a_vlq_job_id_of_digits_that_int_refuses_is_kept_as_text(tmp_path, places, clock):
-    """Fault 20, fixed: "²" passes isdigit and is no number, so it is kept as a text id, as any other text is."""
+    """An id "²" passes isdigit and is no number, so it is kept as a text id, as any other text is."""
     m = write_manifest(tmp_path / "m", site="vlq", jobs=(("J1", 10),))
     assert send(m, FakeSite("vlq", seconds_left=3600, submits={1: ("noanswer",)}), places, clock, max_order=1) == 2
     rec = records_of(places)[0]

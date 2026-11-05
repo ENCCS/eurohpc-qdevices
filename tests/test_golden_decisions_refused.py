@@ -54,7 +54,10 @@ def test_refusals_of_final_lost_and_unsent_orders(tmp_path, clock, monkeypatch, 
             ("--over-limit on an order not in the record", at(9, decision="over_limit")),
             ("--expired on a final order", at(1, decision="expired")),
             ("--expired on a lost order", at(2, decision="expired")),
-            ("--expired on an order not in the record", at(9, decision="expired"))]
+            ("--expired on an order not in the record", at(9, decision="expired")),
+            ("--unreadable on a final order", at(1, decision="unreadable")),
+            ("--unreadable on a lost order", at(2, decision="unreadable")),
+            ("--unreadable on an order not in the record", at(9, decision="unreadable"))]
     f = places_in(tmp_path / "f")
     assert send(write_manifest(tmp_path / "f" / "m", jobs=ONE), FakeSite(max_shots=5), f, clock, max_order=1) == 2
     at = partial(refused, records_of(f)[0], places=f, clock=clock, cfg=cfg())         # a rule stopped it: unsent
@@ -78,7 +81,8 @@ def test_refusals_of_open_orders(tmp_path, clock, monkeypatch, golden):
     assert send(m, FakeSite(states={"J-1": [STATE()]}), b, clock, max_order=1) == 2      # the wait timed out
     at = partial(refused, records_of(b)[0], places=b, clock=clock, cfg=cfg())
     rows = [("--none on an open order the site showed as RUNNING", at(1)), ("--job on it", at(1, "J-9")),
-            ("--expired on it", at(1, decision="expired")), ("--over-limit on it", at(1, decision="over_limit"))]
+            ("--expired on it", at(1, decision="expired")), ("--over-limit on it", at(1, decision="over_limit")),
+            ("--unreadable on it", at(1, decision="unreadable"))]
     c = places_in(tmp_path / "c")
     m = write_manifest(tmp_path / "c" / "m", site="vlq", jobs=ONE)
     assert send(m, FakeSite("vlq", seconds_left=3600, submits={1: ("steps", ("noanswer",), STEPS)}), c, clock,
@@ -106,6 +110,15 @@ def test_refusals_of_open_orders(tmp_path, clock, monkeypatch, golden):
     clock.t += 60
     assert run_broker(tmp_path / "e", e, clock, broker, resume=records_of(e)[0]) == 1
     rows.append(("--expired after two calls a minute apart", at(1, decision="expired")))
+    rows.append(("--unreadable on an order whose last stop is result_expired", at(1, decision="unreadable")))
+    u, broker = places_in(tmp_path / "u"), Broker(results=[answer(200, json={"result": [["a"]]})])
+    assert run_broker(tmp_path / "u", u, clock, broker) == 1                              # result_error
+    at = partial(refused, records_of(u)[0], places=u, clock=clock, cfg=cfg())
+    rows.append(("--unreadable after one call got result_error", at(1, decision="unreadable")))
+    clock.t += 60
+    assert run_broker(tmp_path / "u", u, clock, broker, resume=records_of(u)[0]) == 1
+    rows += [("--unreadable after two calls a minute apart", at(1, decision="unreadable")),
+             ("--expired on an order whose last stop is result_error", at(1, decision="expired"))]
     golden("decisions_refused_app_open", table(rows))
 
 
@@ -135,7 +148,8 @@ def test_refusals_of_the_orders_of_a_record_of_another_runner(tmp_path, places, 
     within = {**conf, "piastq": {**conf["piastq"], "job_seconds_limit": 600.0}}
     at = partial(refused, rec, places=places, clock=clock, cfg=conf)
     rows = [("--job", at(2, "p-2")), ("--expired", at(1, decision="expired")),
-            ("--gone on a final order", at(3, decision="gone")), ("--gone on a lost order", at(2, decision="gone")),
+            ("--unreadable", at(1, decision="unreadable")), ("--gone on a final order", at(3, decision="gone")),
+            ("--gone on a lost order", at(2, decision="gone")),
             ("--gone on an order not in the record", at(9, decision="gone")),
             ("--none on an open order", at(1)), ("--none on a final order", at(3)),
             ("--none on an order not in the record", at(9)),
@@ -174,7 +188,7 @@ def test_refusals_of_a_record_of_another_runner_for_its_site(tmp_path, places, c
 
 
 def test_a_record_removed_between_the_two_reads(tmp_path, places, clock):
-    """Of another runner and of the app: refused. Fault 5 of the plan, fixed: it was a RecordError for the app."""
+    """Of another runner and of the app: refused, not a RecordError."""
     def removing(path: Path):
         def take(name):
             path.unlink()

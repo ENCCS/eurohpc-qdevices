@@ -1,4 +1,4 @@
-"""Faults 24, 25, 26 and 34 of the plan: answers of the wrong type and odd values end in the site's own kind of stop."""
+"""Answers of the wrong type and odd values end in the site's own kind of stop."""
 
 import base64
 import json

@@ -1,4 +1,4 @@
-"""The record (sync, cut lines) and invariant 5 (the token filter)."""
+"""The record (sync, cut lines) and the token filter."""
 
 import base64
 import json

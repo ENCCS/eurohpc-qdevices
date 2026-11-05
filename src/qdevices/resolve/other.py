@@ -11,6 +11,7 @@ from ..errors import Refused
 from ..finder import OlderRecords
 from ..ledger import Ledger, Status
 from ..sites import SITES
+from .names import DECISIONS, flag, joined
 from .resolution import Case, Resolution
 
 
@@ -20,10 +21,11 @@ class OtherResolution(Resolution):
 
     def site(self) -> str:
         """The one site whose older_records hold the record and read it; the config is read here, once."""
-        if self.job_id is not None or self.decision == "expired":
-            raise Refused(f"{self.path} is a record of another runner: the app does not collect it, so --job and "
-                          "--expired are not taken (collect it with that runner). --gone takes an open order whose "
-                          "job the site no longer gives")
+        collected = [name for name in DECISIONS if name not in self.TAKES]      # decisions on what the app collects
+        if self.job_id is not None or self.decision in collected:
+            raise Refused(f"{self.path} is a record of another runner: the app does not collect it, so "
+                          f"{joined(['--job', *map(flag, collected)], 'and')} are not taken (collect it with that "
+                          "runner). --gone takes an open order whose job the site no longer gives")
         self.cfg = self._config()
         site = self._site_for()
         self._starts(self.events)

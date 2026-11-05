@@ -16,6 +16,9 @@ examples/tools/write_qutip_scripts.py writes this file from the text of each job
 so you can copy it anywhere.
 """
 
+import os
+import sys
+
 import numpy as np
 from qutip import basis
 from qutip_qip.circuit import QubitCircuit
@@ -51,6 +54,16 @@ def top(shares, most=6):
 
 
 if __name__ == "__main__":
-    for name, (build, read) in JOBS.items():
-        print(f"{name}: QuTiP, run now, no noise  {top(shares_of(build(), read))}")
-    print("Emulated on this computer: nothing was sent.")
+    # The script reads its arguments when sys.orig_argv (Python 3.10 or later) ends with sys.argv and sys.argv[0] is
+    # the file in __file__, as with python FILE; else (python -m, a Jupyter kernel) only when the first is --qasm.
+    program = ("__file__" in globals() and getattr(sys, "orig_argv", [])[-len(sys.argv):] == sys.argv
+               and sys.argv and os.path.realpath(sys.argv[0]) == os.path.realpath(__file__))
+    args = sys.argv[1:] if program or sys.argv[1:2] == ["--qasm"] else []
+    if not args:
+        for name, (build, read) in JOBS.items():
+            print(f"{name}: QuTiP, run now, no noise  {top(shares_of(build(), read))}")
+        print("Emulated on this computer: nothing was sent.")
+    elif args[0] == "--qasm":
+        sys.exit("--qasm is for the folders of Euro-Q-Exa; VLQ takes OpenQASM 3 in its own gates r, cz and move")
+    else:
+        sys.exit("usage: python emulate_qutip.py")

@@ -304,6 +304,22 @@ def test_the_results_of_the_run_are_in_the_folder():
     assert Reading(held["STEPS8"]).raw["100"] == pytest.approx(0.19)
 
 
+def test_the_tutorial_says_what_ran_as_the_job_pages_of_the_portal_show():
+    book = json.loads((HERE / "tutorial.ipynb").read_text(encoding="utf-8"))
+    cells = {cell.get("id"): "".join(cell["source"]) for cell in book["cells"]}
+    two = {job["name"]: job["two_qubit"] for job in JOBS}
+    said = " ".join(cells[name] for name in ("cell-18", "cell-20", "cell-24", "curve-after"))
+    assert not [w for w in ("very likely", "inferred", "have not read", "do not show how many") if w in said]
+    assert "what follows about the compile is read on the job pages of the portal" in cells["cell-18"]
+    assert f"so gates did run, and the circuit that ran has all {two['ZERO']} CZ" in cells["cell-20"]
+    assert f"For QRISP it has {two['MAIN']} CZ, as for MAIN" in cells["cell-20"] and two["QRISP"] == 2 * two["MAIN"]
+    assert f"its executed circuit has all {two['BACK']} CZ: it was not cut to three bonds" in cells["cell-20"]
+    assert f"every two-qubit gate of its text ({two['STEPS8']} CZ for STEPS8)" in cells["cell-24"]
+    assert "the compile merged the gates of one pair of qubits (Executed Circuit on the portal)" in cells["curve-after"]
+    binder = "https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/all_examples.ipynb"
+    assert f"blob/main/examples/all_examples.ipynb), also [on Binder]({binder})." in cells["cell-30"]
+
+
 def test_a_reading_counts_raw_and_post_selected_shares():
     read = Reading(READINGS[2])
     assert read.raw["100"] == pytest.approx(0.65) and read.kept == pytest.approx(0.75)
@@ -347,14 +363,48 @@ def test_compare_shows_what_was_not_sent_and_stops_on_a_key_of_another_width(tmp
 # ------------------------------------------------------------ with Qrisp
 
 
-def test_qrisp_makes_the_same_files_again_and_the_same_answer_as_the_hand_text(tmp_path):
+@pytest.fixture(scope="module")
+def chain_written(tmp_path_factory):
+    """The two folders as write_chain.py writes them now, in a process of its own."""
     pytest.importorskip("qrisp")
-    subprocess.run([sys.executable, HERE / "write_chain.py", "--out", tmp_path], check=True, capture_output=True)
+    out = tmp_path_factory.mktemp("chain")
+    subprocess.run([sys.executable, HERE / "write_chain.py", "--out", out], check=True, capture_output=True)
+    return out
+
+
+def test_qrisp_makes_the_same_files_again_and_the_same_answer_as_the_hand_text(chain_written):
     for folder in (FOLDER, LIVE):
         for file in (f for f in folder.iterdir() if f.name not in KEPT):
-            assert (tmp_path / folder.name / file.name).read_bytes() == file.read_bytes(), file.name
+            assert (chain_written / folder.name / file.name).read_bytes() == file.read_bytes(), file.name
     assert distance(shares_of((FOLDER / "QRISP.qasm").read_text(encoding="utf-8")),
                     shares_of((FOLDER / "MAIN.qasm").read_text(encoding="utf-8"))) < 1e-5
+
+
+def test_made_with_names_qrisp_only_where_a_text_comes_from_it_and_no_other_key_changes(chain_written):
+    """state_transfer holds QRISP, by Qrisp, and ten texts by chain.py; live holds the MAIN of chain.py alone."""
+    said = {"state_transfer": "Qrisp and a small function, examples/hamiltonian/write_chain.py",
+            "live": "a small function, examples/hamiltonian/write_chain.py"}
+    for folder in (FOLDER, LIVE):
+        made = json.loads((chain_written / folder.name / "manifest.json").read_text(encoding="utf-8"))
+        kept = json.loads((folder / "manifest.json").read_text(encoding="utf-8"))
+        assert made["made_with"] == said[folder.name]
+        assert {**made, "made_with": ""} == {**kept, "made_with": ""}
+        for job in made["jobs"]:
+            assert (chain_written / folder.name / job["file"]).read_bytes() == (folder / job["file"]).read_bytes()
+
+
+def test_made_with_puts_qrisp_first_and_names_each_maker_once():
+    pytest.importorskip("qrisp")
+    from write_chain import SMALL, Job, made_with
+
+    def job(name, made=SMALL):
+        return Job(name, "", "T", T, 2, made=made)
+
+    assert made_with((job("MAIN"), job("REPEAT"))) == f"{SMALL}, examples/hamiltonian/write_chain.py"
+    assert made_with((job("MAIN"), job("QRISP", "Qrisp"))) == f"Qrisp and {SMALL}, examples/hamiltonian/write_chain.py"
+    assert made_with((job("QRISP", "Qrisp"),)) == "Qrisp, examples/hamiltonian/write_chain.py"
+    assert made_with((job("MAIN", "Python"), job("QRISP", "Qrisp"))) == (      # Python sorts before Qrisp
+        "Qrisp and Python, examples/hamiltonian/write_chain.py")
 
 
 def test_qrisp_makes_the_numbers_of_hydrogen_again():

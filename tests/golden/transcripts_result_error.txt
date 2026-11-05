@@ -10,6 +10,6 @@ Record: <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl
   rule token: pass
   rule window: pass
   job J-1 sent
-STOP: order 1 (J1), job J-1: the result cannot be read: the answer is not JSON. The order stays open; a resume reads it again
+STOP: order 1 (J1), job J-1: the result cannot be read: the answer is not JSON. The order stays open; a resume reads it again. When two calls 10 minutes or more apart got this stop, record it with: qdevices resolve <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl 1 --unreadable
 Record: <TMP>/records/euroqexa/m/run_20260105T120000Z.jsonl
 --- stderr

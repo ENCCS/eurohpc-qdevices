@@ -16,7 +16,7 @@ To get an account and a first job: the lesson page
 |---|---|
 | Access | the REST interface of the Munich Quantum Portal, `https://portal.quantum.lrz.de:4000/v1` |
 | Token | make one on the Tokens page of the portal, and set `MQSS_TOKEN`. The [demo slides of the Euro-Q-Exa kick-off](https://portal.quantum.lrz.de/documents/Euro-Q-Exa-Demo.pdf) show this step |
-| Manifest | `"machine": "EQE1"`; one OpenQASM circuit per job, sent unchanged as a list of one text, the form the public reference clients send |
+| Manifest | `"machine": "EQE1"`; one OpenQASM circuit per job, sent unchanged as a list of one text, the form the public reference clients send. A file with more than one `OPENQASM` line fails the checks: a file to send holds one job |
 | Limits | 3,000,000 shots times gates a job (below). The public portal code has two active jobs per user and resource, and 24 hours for a job sent with `queued` true while the machine is offline. The app sends one job at a time with `queued` false; the MQSS adapter guide says that such a job is cancelled when the machine is offline. The app reads the machine only before the first job of a call, so a later job sent while it is offline ends as a failed job, and the run stops unless your `on_refusal` rule lets it go on ({doc}`rules`) |
 | Billing | wall-clock QPU seconds (LRZ); the records hold the app's own measure ({doc}`billing-and-usage`) |
 | Status | LRZ puts each user on a mailing list for notices on the system; users cannot send to it. The Resources section of the portal shows the device status, for example online or maintenance (portal FAQ) |
@@ -76,7 +76,8 @@ time of the job request. The result line keeps the stamps, and adds `scheduled_u
 `zone_check`. With `zone_check` `true`, the seconds run from `scheduled_utc` to `completed_utc`. It is
 `false` when the record has neither time for the job, `timestamp_submitted` is more than 5 minutes from it,
 or a stamp cannot be read so or has two readings: the seconds are then the plain difference of the stamps,
-and could be one hour off.
+and could be one hour off. A difference below zero is no time: the seconds are then `null`, and the result
+counts as one with no `seconds` ({doc}`billing-and-usage`).
 
 ## Traps
 

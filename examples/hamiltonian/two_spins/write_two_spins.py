@@ -42,8 +42,8 @@ PERFECT: Final = ("`11` at 0.866 for STEPS5 and at 0.877 for STEPS16; with no Tr
 BACK: Final = ("1000 shots each, from runs of these same texts; STEPS5 was sent as `qrisp/ising2`. STEPS5: `11`: 783, "
                "`00`: 95, `01`: 67, `10`: 55. STEPS16: `11`: 789, `00`: 113, `01`: 53, `10`: 45. The two read the same "
                "within the shot error, about 0.013, though STEPS16 has 32 CX in its text and STEPS5 has 10. On two "
-               "qubits all the steps make one two-qubit block, which 2 CX can make, so the site's compile very likely "
-               "merged them; the circuit that ran has not been read.")
+               "qubits all the steps make one two-qubit block, which 2 CX can make, and the site's compile merged "
+               "them: the circuit that ran, on the job page of the portal, has 2 CZ for each.")
 MORE: Final = (("two_spins.ipynb", "the notebook: the model, the gates, Qrisp, the run, where the model is used, and "
                "what the run shows"),
                ("spins.py", "the model in QuTiP: its levels, the exact evolution, the Trotter steps, the chart"),

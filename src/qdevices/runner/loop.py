@@ -4,6 +4,7 @@ import traceback
 from collections.abc import Callable
 from dataclasses import dataclass
 
+from ..errors import described
 from ..layout import Pin
 from ..ledger import Ledger, Order, Status
 from ..redact import redact
@@ -144,7 +145,7 @@ class Loop:
 
     def _broken(self, exc: Exception) -> int:
         call = self.call
-        reason = f"an error of the program: {type(exc).__name__}: {exc}"[:500]
+        reason = f"an error of the program: {described(exc)}"[:500]
         for write in _writes(call, lambda: call.rec.write("stop", kind=StopKind.ERROR.value, reason=reason,
                                                           **call.under_way.fields())):
             try:

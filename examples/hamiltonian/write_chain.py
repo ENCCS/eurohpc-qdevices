@@ -27,6 +27,7 @@ from with_qrisp import chain_by_qrisp
 
 HERE: Final = Path(__file__).resolve().parent
 ZERO: Final = {"000": 1.0}
+SMALL: Final = "a small function"           # Steps or control of chain.py, which write a text with no package
 
 
 def by_qrisp(t: float, steps: int) -> str:
@@ -51,6 +52,7 @@ class Job:
     key: str = "100"
     shots: int = 1000
     excitations: int = 1
+    made: str = SMALL                   # what made its text: SMALL, or Qrisp for the job QRISP
 
     def line(self, order: int, folder: Path, shots: int | None) -> dict:
         """Write the text and give the line of the manifest; the app copies its own keys to the record."""
@@ -70,7 +72,7 @@ def jobs() -> tuple[Job, ...]:
     hand = Steps(T, 2).text()
     return (Job("CONTROL", control(), "0", 0.0, 0, "001", 100),
             Job("MAIN", hand, "T", T, 2),
-            Job("QRISP", by_qrisp(T, 2), "T", T, 2),
+            Job("QRISP", by_qrisp(T, 2), "T", T, 2, made="Qrisp"),
             Job("REPEAT", hand, "T", T, 2),
             Job("HALF", Steps(T / 2, 2).text(), "T/2", T / 2, 2, "010"),
             Job("BACK", Steps(2 * T, 4).text(), "2T", 2 * T, 4, "001"),
@@ -79,6 +81,12 @@ def jobs() -> tuple[Job, ...]:
             Job("STEPS4", Steps(T, 4).text(), "T", T, 4),
             Job("STEPS8", Steps(T, 8).text(), "T", T, 8),
             Job("ORDER1", Steps(T, 2, 1).text(), "T", T, 2))
+
+
+def made_with(chosen: tuple[Job, ...]) -> str:
+    """The made_with of a manifest: what made the texts of its jobs, Qrisp first, then this writer."""
+    makers = sorted({job.made for job in chosen}, key=lambda made: (made != "Qrisp", made))
+    return f"{' and '.join(makers)}, examples/hamiltonian/write_chain.py"
 
 
 @dataclass(frozen=True, slots=True)
@@ -94,8 +102,7 @@ class Writer:
         """Write one folder: the texts, the manifest, the README and the scripts; the path of the manifest."""
         folder = ExampleFolder(self.out / name, f"hamiltonian/{name}")
         head = {"format": FORMAT, "site": "euroqexa", "machine": self.machine, "project": self.project,
-                "made_with": "Qrisp and a small function, examples/hamiltonian/write_chain.py",
-                "ideal": "keys read q[2] q[1] q[0]: 001 at the start, 100 on arrival"}
+                "made_with": made_with(chosen), "ideal": "keys read q[2] q[1] q[0]: 001 at the start, 100 on arrival"}
         folder.path.mkdir(parents=True, exist_ok=True)
         path = folder.write_manifest(head, [job.line(n, folder.path, self.shots) for n, job in enumerate(chosen, 1)])
         folder.write_page(page)

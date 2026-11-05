@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Final
 
 from .errors import Refused
-from .values import is_int, sha256_hex
+from .values import is_int, regular_file, sha256_hex
 
 FORMAT: Final = "qdevices/1"
 NAME: Final = re.compile(r"[A-Za-z0-9_-]+")
@@ -19,6 +19,26 @@ MOST_SHOTS: Final = 10 ** 9           # far above any site; the seconds and sums
 
 class ManifestError(Refused):
     """The manifest cannot be used. Nothing is sent."""
+
+
+def shot_problem(value: object) -> str | None:
+    """What is wrong with the shots of a job, in the words of a problem of the manifest; None for good shots."""
+    if not (is_int(value) and value >= 1):
+        return "shots must be a whole number of 1 or more"
+    return f"shots must be at most {MOST_SHOTS:,}" if value > MOST_SHOTS else None
+
+
+def takes_shots(value: object) -> bool:
+    """True for the shots of a job that a manifest takes: a whole number from 1 to MOST_SHOTS."""
+    return shot_problem(value) is None
+
+
+def _no_file(path: Path) -> str | None:
+    """Why there is no file to read at a path, or None; a folder that cannot be searched fails the test itself."""
+    try:
+        return None if regular_file(path) else f"there is no file {path}"
+    except OSError as exc:
+        return f"the file {path} cannot be read: {type(exc).__name__}"
 
 
 @dataclass(slots=True, kw_only=True)
@@ -103,14 +123,12 @@ class _Reader:
         file, folder = job["file"], self.path.parent
         if not isinstance(file, str) or Path(file).name != file or file in (".", ".."):
             self.problems.append(f"{where}: the file {file!r} must be a file name next to the manifest")
-        elif not (folder / file).is_file():
-            self.problems.append(f"{where}: there is no file {folder / file}")
+        elif (missing := _no_file(folder / file)) is not None:
+            self.problems.append(f"{where}: {missing}")
         if not isinstance(job["sha256"], str) or not SHA.fullmatch(job["sha256"]):
             self.problems.append(f"{where}: sha256 is not 64 lower-case hex digits")
-        if not (is_int(job["shots"]) and job["shots"] >= 1):
-            self.problems.append(f"{where}: shots must be a whole number of 1 or more")
-        elif job["shots"] > MOST_SHOTS:
-            self.problems.append(f"{where}: shots must be at most {MOST_SHOTS:,}")
+        if (problem := shot_problem(job["shots"])) is not None:
+            self.problems.append(f"{where}: {problem}")
         self._options(job.get("options", {}), where, options)
 
     def _options(self, given: object, where: str, options: dict) -> None:
@@ -130,7 +148,7 @@ class _Reader:
         given = job.get("options") or {}
         entry = {**job, "options": dict(given) if isinstance(given, dict) else given}     # not an object: a problem
         file = self.path.parent / str(job.get("file", ""))
-        if not self.problems and file.is_file():
+        if not self.problems and _no_file(file) is None:
             try:
                 entry["text"] = file.read_bytes()
             except OSError as exc:

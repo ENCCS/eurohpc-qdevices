@@ -120,6 +120,8 @@ def parse(text: str) -> dict:
         raise ConfigError(f"the config is not TOML: {exc}") from None
     except RecursionError:
         raise ConfigError("the config is not TOML: it is nested too deep") from None
+    except ValueError:                # a whole number of more digits than Python converts, 4,300 by default
+        raise ConfigError("the config holds a whole number of more digits than can be read") from None
     sites = tuple(SITES)
     unknown = sorted(set(raw) - set(sites))
     if unknown:
@@ -128,16 +130,20 @@ def parse(text: str) -> dict:
 
 
 def load(path: Path) -> dict:
-    """The config of every site. A file that does not exist gives the defaults (no project allowed)."""
+    """The config of every site. A file that does not exist gives the defaults (no project allowed).
+
+    The file is read, not tested first: on Python 3.14 the test of a path in a folder that cannot be searched is False.
+    """
     path = Path(path)
-    if not path.exists():
-        return parse("")
     try:
-        return parse(path.read_text(encoding="utf-8"))
+        text = path.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        return parse("")
     except OSError as exc:
         raise ConfigError(f"{path} cannot be read: {exc}") from None
     except UnicodeDecodeError:
         raise ConfigError(f"{path} cannot be read: it is not UTF-8 text") from None
+    return parse(text)
 
 
 def project_problems(man: dict, site_config: dict) -> list[str]:

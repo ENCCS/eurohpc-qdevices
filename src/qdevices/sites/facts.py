@@ -20,6 +20,14 @@ SECONDS: Final = MappingProxyType({   # the words of each kind of seconds of a r
 })
 
 
+def _finite(value: object) -> bool:
+    """False for a number that is not finite as a float: NaN, an infinity, or a whole number float() cannot hold."""
+    try:
+        return not isinstance(value, (int, float)) or math.isfinite(value)
+    except OverflowError:             # math.isfinite of an int beyond the floats
+        return False
+
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Key:
     """One key of a site table of qdevices.toml: its name, its type and its default."""
@@ -34,7 +42,7 @@ class Key:
         """What is wrong with a value for this key, in the words after its name in a refusal, or None for a good one."""
         if not isinstance(value, self.kind) or isinstance(value, bool):
             return "has the wrong type"
-        if isinstance(value, float) and not math.isfinite(value):
+        if not _finite(value):
             return "must be a finite number"
         if self.kind is list and not all(isinstance(item, str) for item in value):
             return "must be a list of texts"

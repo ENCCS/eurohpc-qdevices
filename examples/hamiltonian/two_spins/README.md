@@ -21,7 +21,7 @@ The share of the key a perfect machine gives most, for each job, from each sourc
 
 **What a perfect machine gives:** `11` at 0.866 for STEPS5 and at 0.877 for STEPS16; with no Trotter error, 0.874. A key reads q[1] q[0]. At this time the exact evolution puts nothing on `01` and `10`; 5 steps put 0.013 on each.
 
-**What came back:** 1000 shots each, from runs of these same texts; STEPS5 was sent as `qrisp/ising2`. STEPS5: `11`: 783, `00`: 95, `01`: 67, `10`: 55. STEPS16: `11`: 789, `00`: 113, `01`: 53, `10`: 45. The two read the same within the shot error, about 0.013, though STEPS16 has 32 CX in its text and STEPS5 has 10. On two qubits all the steps make one two-qubit block, which 2 CX can make, so the site's compile very likely merged them; the circuit that ran has not been read. One run, on one day: it shows how much of the answer survived that day, not how good the machine is.
+**What came back:** 1000 shots each, from runs of these same texts; STEPS5 was sent as `qrisp/ising2`. STEPS5: `11`: 783, `00`: 95, `01`: 67, `10`: 55. STEPS16: `11`: 789, `00`: 113, `01`: 53, `10`: 45. The two read the same within the shot error, about 0.013, though STEPS16 has 32 CX in its text and STEPS5 has 10. On two qubits all the steps make one two-qubit block, which 2 CX can make, and the site's compile merged them: the circuit that ran, on the job page of the portal, has 2 CZ for each. One run, on one day: it shows how much of the answer survived that day, not how good the machine is.
 
 ## Emulate it
 

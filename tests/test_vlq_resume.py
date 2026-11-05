@@ -1,4 +1,4 @@
-"""Invariant 1 on VLQ: a job made and not seen as submitted is never submitted on a resume."""
+"""On VLQ, a job made and not seen as submitted is never submitted on a resume."""
 
 import pytest
 from fakes import lines_of, records_of

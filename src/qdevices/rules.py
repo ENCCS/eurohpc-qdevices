@@ -87,6 +87,12 @@ def site_status(read: dict) -> dict:
     return verdict("site_status", True)
 
 
+def shot_state(site_config: dict, site_max_shots: int | None) -> dict:
+    """The two limits of the rule "shots": the site's (site_max_shots of the config, else the app's) and max_shots."""
+    return {"site_max_shots": site_config.get("site_max_shots") or site_max_shots,
+            "max_shots": site_config["max_shots"]}
+
+
 def shot_limit(job: dict, state: dict) -> dict:
     """The rule "shots": the shots of a job are within the lower of the limits of the site and of qdevices.toml."""
     limits = [n for n in (state.get("site_max_shots"), state.get("max_shots")) if n is not None]

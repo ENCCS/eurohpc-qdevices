@@ -4,8 +4,9 @@ import hashlib
 import types
 from pathlib import Path
 
-from .errors import Refused
+from .errors import Refused, described
 from .rules import Point
+from .values import regular_file
 
 
 class RuleFileError(Refused):
@@ -18,9 +19,9 @@ def load(path: Path | None) -> tuple[dict, dict | None]:
     if path is None:
         return {}, None
     path = Path(path)
-    if not path.is_file():
-        raise RuleFileError(f"no rules file at {path}")
     try:
+        if not regular_file(path):        # a folder that cannot be searched fails the test itself
+            raise RuleFileError(f"no rules file at {path}")
         data = path.read_bytes()
     except OSError as exc:
         raise RuleFileError(f"the rules file {path} cannot be read: {type(exc).__name__}") from None
@@ -29,7 +30,7 @@ def load(path: Path | None) -> tuple[dict, dict | None]:
     try:
         exec(compile(data, str(path), "exec", dont_inherit=True), module.__dict__)
     except (Exception, SystemExit, GeneratorExit) as exc:          # an interrupt stays an interrupt
-        raise RuleFileError(f"the rules file {path} cannot be loaded: {type(exc).__name__}: {exc}") from None
+        raise RuleFileError(f"the rules file {path} cannot be loaded: {described(exc)}") from None
     hooks = {point.value: getattr(module, point.value) for point in Point
              if callable(getattr(module, point.value, None))}
     return hooks, {"path": str(path.resolve()), "sha256": hashlib.sha256(data).hexdigest()}

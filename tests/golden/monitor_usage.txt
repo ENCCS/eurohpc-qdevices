@@ -9,5 +9,5 @@ euroqexa: award 1 h = 3,600 s; 5.5 s measured in the records found (0.15 %), 5.5
 vlq: award 10 h = 36,000 s; 0.2 s measured in the records found (0.00 %), 0.2 s counted (0.00 %)
 <TMP>/absent.jsonl: <TMP>/absent.jsonl cannot be read: FileNotFoundError
 The records and folders above cannot be read: they are not in the totals.
-These totals are read from the records found, not from the accounting of the sites. The seconds are what each site measures: VLQ the device seconds of the job, Euro-Q-Exa the time from scheduled to completed, Piast-Q wall seconds. The counted seconds put the seconds of a decision of `qdevices resolve --over-limit`, `--expired` or `--gone` in place of the measured ones. VLQ init jobs book classical node time only.
+These totals are read from the records found, not from the accounting of the sites. The seconds are what each site measures: VLQ the device seconds of the job, Euro-Q-Exa the time from scheduled to completed, Piast-Q wall seconds. The counted seconds put the seconds of a decision of `qdevices resolve --over-limit`, `--expired`, `--unreadable` or `--gone` in place of the measured ones. VLQ init jobs book classical node time only.
 exit 0

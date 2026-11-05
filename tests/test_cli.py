@@ -1,4 +1,4 @@
-"""Invariant 6 (a live call needs an explicit flag), exit codes from the command line, the token variable."""
+"""A live call needs an explicit flag; exit codes from the command line; the token variable."""
 
 import pytest
 from fakes import CONFIG, TOKEN, FakeClock, FakeSite, places_in, records_of, write_manifest

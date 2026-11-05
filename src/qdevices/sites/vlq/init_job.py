@@ -1,11 +1,13 @@
 """The init job of a VLQ order: it writes the two artefacts the metered job needs. No device time.
 
-Its lines are on disk before each next request; HEAppE books its node time, which the record keeps.
+Its lines are on disk before each next request; HEAppE books its node time, which the record keeps (a time below
+zero is no measure).
 """
 
 from dataclasses import dataclass
 
 from ...clock import Clock, Sleep, seconds_between
+from ...values import measure
 from ..base import SiteError
 from ..protocol import INIT_CREATED, INIT_STATUS, Note
 from .heappe import HeappeJobs
@@ -39,7 +41,7 @@ class InitJob:
         info = self.wait(job.id)
         state = HeappeState.of(info["State"])
         note(INIT_STATUS, init_job=job.id, state=state.name,
-             node_seconds=seconds_between(info.get("StartTime"), info.get("EndTime"), 3))
+             node_seconds=measure(seconds_between(info.get("StartTime"), info.get("EndTime"), 3)))
         if not state.ok:
             raise SiteError(f"init job {job.id} ended {state.name}; no metered job was made", step="init_failed")
         artefacts = {name: self.jobs.download(job.id, name, "init_download") for name in ARTEFACTS}

@@ -65,7 +65,12 @@ Each job file is a JSON object with the operation list of the broker:
   answer code 4 with `Unknown job. May be expired.`, whatever the HTTP status, ends the call with a stop
   `result_expired`. The order stays open (exit code 1). Resume once more, 10 minutes or more later. When
   two calls got that answer, `qdevices resolve RECORD ORDER --expired` makes the order final: never sent
-  again, counted at `job_seconds_limit` ({ref}`resolving`).
+  again, counted at `job_seconds_limit` ({ref}`resolving`). A result that is not a list of shots, each a
+  list of bits, ends the call with a stop `result_error`, and the order stays open; when two calls 10
+  minutes or more apart got it, `--unreadable` makes the order final, counted the same way. A read of the
+  result with no usable answer (a redirect or an HTTP error of 400 or more, or no answer or too many
+  connections up to `wait_seconds`) also stops at `result_error`; then the two calls must be 24 hours or
+  more apart.
 - **A lost order.** The broker has no published call that lists your tasks (PCSS client 0.2.2). Ask PCSS
   whether a task was made. Then give its id with `qdevices resolve RECORD ORDER --job ID`, or `--none`
   only when PCSS says none was made.

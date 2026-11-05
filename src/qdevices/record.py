@@ -17,6 +17,7 @@ from typing import Final, NamedTuple, Self
 
 from .clock import Clock
 from .redact import redact_all
+from .values import regular_file, standard_json
 
 NAME: Final = re.compile(r"run_[0-9]{8}T[0-9]{6}Z\.jsonl")
 
@@ -99,7 +100,7 @@ class Record:
     def write(self, event: str, **fields: object) -> dict:
         """The line of an event as this process made it, once its filtered text is on disk."""
         line = {"event": event, "utc": self.clock.utc().isoformat(), **self.base, **fields}
-        filtered = redact_all(line, list(self.secrets()))
+        filtered = standard_json(redact_all(line, list(self.secrets())))
         text = json.dumps(filtered, default=str, ensure_ascii=False)
         if not text.isascii() and not _utf8(text):
             text = json.dumps(filtered, default=str)              # a lone surrogate kept as its escape
@@ -125,7 +126,7 @@ class RecordLines(NamedTuple):
         """The lines of the record at a path; RecordError when no file is there or it cannot be read."""
         path = Path(path)
         try:
-            if not path.is_file():
+            if not regular_file(path):        # a folder that cannot be searched fails the test itself
                 raise RecordError(f"no record at {path}", path)
             data = path.read_bytes()
         except OSError as exc:

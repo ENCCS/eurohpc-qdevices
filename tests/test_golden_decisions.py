@@ -116,6 +116,17 @@ def test_expired_in_a_record_of_the_app(tmp_path, places, clock, monkeypatch, go
     golden("decisions_expired_app", text)
 
 
+def test_unreadable_in_a_record_of_the_app(tmp_path, places, clock, monkeypatch, golden):
+    broker = Broker(results=[answer(200, json={"result": [["a"]]})])       # a shot that is not bits
+    assert run_broker(tmp_path, places, clock, broker) == 1
+    rec = records_of(places)[0]
+    clock.t += EXPIRED_MINUTES * 60
+    assert run_broker(tmp_path, places, clock, broker, resume=rec) == 1
+    text = resolved(monkeypatch, rec, "piastq", 1, None, places=places, clock=clock, decision="unreadable",
+                    cfg=cfg())
+    golden("decisions_unreadable_app", text)
+
+
 @pytest.mark.parametrize("name, lines, order, decision", [("decisions_none_older", OLDER, 2, None),
                                                           ("decisions_gone_older", OLDER, 1, "gone"),
                                                           ("decisions_over_limit_older", [START, *LOST, *RESULT], 3,
@@ -167,7 +178,7 @@ def test_a_decision_holds_the_lines_read_under_the_lock(tmp_path, places, clock,
 
 @pytest.mark.parametrize("order, job, decision", [(1, None, None), (1, "J-9", None), (9, None, None),
                                                   (1, None, "over_limit"), (2, None, "over_limit"),
-                                                  (1, None, "expired"), (1, None, "gone")])
+                                                  (1, None, "expired"), (1, None, "unreadable"), (1, None, "gone")])
 def test_a_refused_resolve_of_a_record_with_a_cut_last_line_writes_and_syncs_nothing(tmp_path, places, clock,
                                                                                      monkeypatch, order, job,
                                                                                      decision):

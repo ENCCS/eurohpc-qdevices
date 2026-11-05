@@ -7,6 +7,7 @@ from datetime import UTC, datetime, timedelta
 from typing import Final
 
 from ..clock import seconds_between
+from ..values import measure
 
 _AGREE: Final = timedelta(minutes=5)   # the most timestamp_submitted may differ from submitted_utc
 STAMPS: Final = ("timestamp_submitted", "timestamp_scheduled", "timestamp_completed")    # in a result answer
@@ -61,8 +62,8 @@ def site_times(reply: dict, submitted_utc: str | None) -> dict:
     first = None if app is None else min(readings(submitted), key=lambda t: abs(t - app), default=None)
     ways = _ways(first, [scheduled, completed]) if first is not None and abs(first - app) <= _AGREE else []
     if len(ways) != 1:        # none fits within _AGREE, or two fit an hour apart: the stamps as written
-        return {"seconds": seconds_between(scheduled, completed, 6), "scheduled_utc": None, "completed_utc": None,
-                "zone_check": False}
+        return {"seconds": measure(seconds_between(scheduled, completed, 6)), "scheduled_utc": None,
+                "completed_utc": None, "zone_check": False}
     _, start, end = ways[0]
     return {"seconds": round((end - start).total_seconds(), 6), "scheduled_utc": start.isoformat(),
             "completed_utc": end.isoformat(), "zone_check": True}

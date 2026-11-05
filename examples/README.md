@@ -1,6 +1,6 @@
 # Examples
 
-Each folder explains itself. Go into it, read its `README.md`, and run its scripts, which use `tools/` of the clone. You can emulate every example with no account and no token: your computer computes what the machine would do. The words shot, key, share and text are defined under [Words used here](#words-used-here).
+Each folder explains itself. Go into it, read its `README.md`, and run its scripts, which use `tools/` of the clone. You can emulate every example with no account and no token: your computer computes what the machine would do. Words with a special meaning on these pages are defined under [Words used here](#words-used-here).
 
 ## Emulate them
 
@@ -110,7 +110,7 @@ Keep one job in a file, as the second line does, put its name and SHA-256 in `ma
 before a send. qutip-qip 0.4.2 writes no H or CZ and drops the semicolon after each measurement; `to_qasm` in each
 script works round that, and its docstring names other gates that qutip-qip refuses. The Qrisp examples were written
 this way: in `qrisp/bell`, `python emulate_qrisp.py --qasm` gives the bytes of its `BELL.qasm`. VLQ takes OpenQASM 3
-in its own gates and Piast-Q the broker's list, so their folders have no `--qasm`.
+in its own gates and Piast-Q the broker's list, so in their folders `--qasm` stops and says what the site takes.
 
 ## What happens
 

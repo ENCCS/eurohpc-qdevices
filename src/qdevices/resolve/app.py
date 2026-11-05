@@ -1,6 +1,7 @@
 """`qdevices resolve` on a record of this app: the "resolved" line goes into the record itself."""
 
 import contextlib
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -14,10 +15,10 @@ from ..sites import SITES
 from ..sites.protocol import MADE_STATE
 from ..values import in_url
 from .resolution import Case, Resolution, Said
+from .stops import EXPIRED_MINUTES, UNANSWERED_HOURS, Stops
 
 _NEW_DAYS: Final = 3
 _READ_HOURS: Final = 24
-EXPIRED_MINUTES: Final = 10
 
 
 def two_step_titles() -> str:
@@ -110,14 +111,24 @@ class AppResolution(Resolution):
         return self.job_id
 
     def _expired(self, case: Case) -> tuple[dict, str]:
-        why = self._expired_twice(case.lines) if case.status == Status.OPEN else "it is not open"
+        rule = f"result_expired, after two calls {EXPIRED_MINUTES} minutes or more apart got that answer"
+        return self._at_limit(case, "expired", rule, Stops.expired, "the site does not give its result")
+
+    def _unreadable(self, case: Case) -> tuple[dict, str]:
+        rule = (f"result_error, after two calls {EXPIRED_MINUTES} minutes or more apart got an answer that could not "
+                f"be used, or two calls {UNANSWERED_HOURS} hours or more apart got that stop")
+        return self._at_limit(case, "unreadable", rule, Stops.unreadable,
+                              "the site shows the job finished, and its result cannot be read")
+
+    def _at_limit(self, case: Case, key: str, rule: str, why_not: Callable[[Stops], str | None],
+                  cause: str) -> tuple[dict, str]:
+        """An open order whose stops meet the rule of the decision: final, counted at the job time limit."""
+        why = why_not(Stops.of(case.lines, self.order)) if case.status == Status.OPEN else "it is not open"
         if why is not None:
-            raise Refused(f"{self._where} is {case.status}: --expired takes only an open order whose last stop is "
-                          f"result_expired, after two calls {EXPIRED_MINUTES} minutes or more apart got that answer "
-                          f"({why})")
-        return ({"expired": True, "counted_seconds": case.limit},
-                f"{self._where} is final: the site does not give its result; it is never sent again, and it counts "
-                f"at {case.limit:.0f} s")
+            raise Refused(f"{self._where} is {case.status}: --{key} takes only an open order whose last stop is "
+                          f"{rule} ({why})")
+        return ({key: True, "counted_seconds": case.limit},
+                f"{self._where} is final: {cause}; it is never sent again, and it counts at {case.limit:.0f} s")
 
     def _still_new(self, events: list[dict]) -> str | None:
         now = self.clock.utc()
@@ -135,21 +146,5 @@ class AppResolution(Resolution):
             return f"its last read is older than {_READ_HOURS} h: read it once more with a resume"
         return None
 
-    def _expired_twice(self, events: list[dict]) -> str | None:
-        calls, stops = 0, []
-        for e in events:
-            if e.get("event") in ("start", "resume"):
-                calls += 1
-            elif e.get("event") == "stop" and e.get("order") == self.order:
-                stops.append((e.get("kind"), calls, e.get("utc")))
-        if not stops or stops[-1][0] != "result_expired":
-            return "its last stop is not result_expired"
-        seen = [(call, datetime.fromisoformat(utc)) for kind, call, utc in stops if kind == "result_expired" and utc]
-        if len({call for call, _ in seen}) < 2:
-            return f"one call only got that answer: resume once more, {EXPIRED_MINUTES} minutes or more later"
-        if seen[-1][1] - seen[0][1] < timedelta(minutes=EXPIRED_MINUTES):
-            return f"the calls that got it are less than {EXPIRED_MINUTES} minutes apart: resume once more later"
-        return None
-
     TAKES: ClassVar = MappingProxyType({None: _job_or_none, "over_limit": Resolution._over_limit,
-                                        "expired": _expired})
+                                        "expired": _expired, "unreadable": _unreadable})

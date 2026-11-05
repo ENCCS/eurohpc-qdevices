@@ -21,14 +21,6 @@ def _forms(secret: str) -> list[str]:
     return list(dict.fromkeys((secret, json.dumps(secret)[1:-1])))       # in this order: no hash order
 
 
-def _patterns(text: str) -> str:
-    text = JWT.sub(HIDDEN, text)
-    for name in SITES:                # then the patterns of each site, in registry order
-        for pattern, replacement in SITES[name].profile.secret_patterns:
-            text = pattern.sub(replacement, text)
-    return text
-
-
 def _take_out(text: str, form: str) -> str:
     if len(form) < _SHORTEST:
         return text.replace(form, HIDDEN)
@@ -47,23 +39,40 @@ def _take_ends(text: str, form: str) -> str:
     return text
 
 
+class Mask:
+    """The token filter of some secrets, made once for a value: the patterns, then each form of each secret."""
+
+    def __init__(self, secrets: Iterable[str] = ()) -> None:
+        self.patterns = [(JWT, HIDDEN), *(row for name in SITES for row in SITES[name].profile.secret_patterns)]
+        self.forms = [form for secret in secrets if secret for form in _forms(str(secret))]
+
+    def text(self, text: str) -> str:
+        """The text with every secret and every text in a secret's form taken out."""
+        text = str(text)
+        for pattern, replacement in self.patterns:      # the JWT, then the patterns of each site, in registry order
+            text = pattern.sub(replacement, text)
+        for form in self.forms:
+            text = _take_out(text, form)
+        for form in self.forms:                # each end only when no form is left whole
+            text = _take_ends(text, form)
+        return text
+
+    def value(self, value: object) -> object:
+        """The same for every text in a value made of dicts, lists and texts. Keys are filtered too."""
+        if isinstance(value, str):
+            return self.text(value)
+        if isinstance(value, dict):
+            return {self.value(k) if isinstance(k, str) else k: self.value(v) for k, v in value.items()}
+        if isinstance(value, (list, tuple)):
+            return [self.value(item) for item in value]
+        return value
+
+
 def redact(text: str, secrets: Iterable[str] = ()) -> str:
     """The text with every secret and every text in a secret's form taken out."""
-    text = _patterns(str(text))
-    forms = [form for secret in secrets if secret for form in _forms(str(secret))]
-    for form in forms:
-        text = _take_out(text, form)
-    for form in forms:                # each end only when no form is left whole
-        text = _take_ends(text, form)
-    return text
+    return Mask(secrets).text(text)
 
 
 def redact_all(value: object, secrets: Sequence[str] = ()) -> object:
     """The same for every text in a value made of dicts, lists and texts. Keys are filtered too."""
-    if isinstance(value, str):
-        return redact(value, secrets)
-    if isinstance(value, dict):
-        return {redact_all(k, secrets) if isinstance(k, str) else k: redact_all(v, secrets) for k, v in value.items()}
-    if isinstance(value, (list, tuple)):
-        return [redact_all(item, secrets) for item in value]
-    return value
+    return Mask(secrets).value(value)

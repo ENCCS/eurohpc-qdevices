@@ -86,7 +86,7 @@ class Commands:
 
     def do_resolve(self, args: argparse.Namespace) -> int:
         """`qdevices resolve RECORD ORDER`: what became of an order, by the one flag given."""
-        decision = "over_limit" if args.over_limit else "expired" if args.expired else "gone" if args.gone else None
+        decision = next((name for name in resolve.DECISIONS if getattr(args, name)), None)
         say(resolve.resolve(args.record, args.order, None if args.none else args.job, places=self.places,
                             clock=self.clock, host=self.host, decision=decision, cfg=self.cfg))
         return 0

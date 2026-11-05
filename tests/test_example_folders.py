@@ -6,6 +6,7 @@ import re
 import shutil
 import subprocess
 import sys
+from dataclasses import replace
 from math import pi
 from pathlib import Path
 
@@ -22,6 +23,7 @@ sys.path.insert(0, str(EXAMPLES / "tools"))
 import counts  # noqa: E402
 import dry_run  # noqa: E402
 import folders  # noqa: E402
+import readme  # noqa: E402
 from circuit import Circuit, circuit_of  # noqa: E402
 from emulate import Report  # noqa: E402
 from emulate import main as emulate_main  # noqa: E402
@@ -99,19 +101,32 @@ def test_each_folder_has_a_readme_that_says_how_to_run_it_and_names_its_files(fo
 
 @pytest.mark.parametrize("folder", FOLDERS, ids=NAMES)
 def test_each_readme_links_to_after_a_change_on_the_page_above_the_folders(folder):
-    ups = re.findall(r"\[After a change\]\(((?:\.\./)+)README\.md#after-a-change\)",
-                     (folder / "README.md").read_text(encoding="utf-8"))
+    link = r"\[After a change\]\(((?:\.\./)+)README\.md#after-a-change\)"
+    ups = re.findall(link, (folder / "README.md").read_text(encoding="utf-8"))
     assert len(ups) == 1 and (folder / ups[0] / "README.md").resolve() == EXAMPLES / "README.md", ups
     assert "\n## After a change\n" in (EXAMPLES / "README.md").read_text(encoding="utf-8")
+    page = readme.Readme("euroqexa", "A title", "", ("A step",), "", "", ("A.qasm",))     # as its writer makes it
+    assert re.findall(link, page.text(folder.relative_to(EXAMPLES).as_posix(), folder)) == ups
 
 
 def test_the_hand_written_folders_hold_what_folders_py_writes():
     assert set(folders.READMES) == {f.name for f in FOLDERS if f.parent == EXAMPLES}
     for name, page in folders.READMES.items():
-        assert (EXAMPLES / name / "README.md").read_text(encoding="utf-8") == page.text(name), name
+        stored = (EXAMPLES / name / "README.md").read_text(encoding="utf-8")
+        assert stored == page.text(name, EXAMPLES / name) == page.text(name), name
+
+
+def test_a_page_made_in_the_clone_outside_examples_links_from_its_place_to_the_page_above_the_folders():
+    """As `qrisp-examples --out my-runs` places a folder at the top of the clone; nothing is written here."""
+    place = EXAMPLES.parent / "my-runs" / "euroqexa-bell"
+    text = replace(folders.READMES["euroqexa-bell"], notebook=readme.BINDER).text("euroqexa-bell", place)
+    assert "[After a change](../../examples/README.md#after-a-change)" in text
+    assert "[`all_examples.ipynb`](../../examples/all_examples.ipynb)" in text
+    assert os.path.normpath(place / "../../examples/README.md") == str(EXAMPLES / "README.md")
 
 
 def test_a_folder_on_disk_gets_the_page_and_the_scripts_of_its_readme(tmp_path):
+    """Outside the clone, as here, a folder is taken to sit as in examples/: its page is the stored one."""
     name = "euroqexa-bell"
     ExampleFolder(tmp_path / name, name).write_page(folders.READMES[name])
     for file in ("README.md", *SCRIPT_MODELS.values()):
@@ -135,6 +150,27 @@ def test_the_readmes_above_the_folders_name_each_of_them():
     qrisp = (EXAMPLES / "qrisp" / "README.md").read_text(encoding="utf-8")
     for folder in (f for f in FOLDERS if f.parent == EXAMPLES / "qrisp"):
         assert f"{folder.name}/README.md" in qrisp, folder.name
+
+
+def test_the_page_above_the_folders_defines_each_word_once_and_names_all_or_none_where_it_points_to_them():
+    top = (EXAMPLES / "README.md").read_text(encoding="utf-8")
+    words = top.split("\n## Words used here\n")[1].split("\n## ")[0]
+    terms = re.findall(r"^- \*\*([^*]+):\*\* \S", words, re.MULTILINE)
+    assert terms and len(terms) == len(set(terms)) == words.count("\n- ")
+    pointer = next(s for s in top.split("\n## ")[0].split(". ") if "](#words-used-here)" in s)
+    named = [term for term in terms if re.search(rf"\b{re.escape(term)}\b", pointer, re.IGNORECASE)]
+    assert named in ([], terms), named
+
+
+def test_the_readme_of_a_wide_job_says_what_a_session_on_binder_has_and_what_to_do_there():
+    page = folders.READMES["euroqexa-bell"]
+    wide, narrow = replace(page, qubits=25).text("euroqexa-bell"), page.text("euroqexa-bell")
+    assert f"it takes {readme.WIDE[25]}. {readme.ON_BINDER}" in wide and readme.ON_BINDER not in narrow
+    for words in ("always has 1 GB of memory, only at times more, and at most 2 GB",
+                  "user-guidelines.html#user-memory)). So this job may not fit there. Try it in a terminal with no",
+                  "notebook kernel running (Kernel > Shut Down All Kernels), or run it on your own computer."):
+        assert words in readme.ON_BINDER, words
+    assert f"({readme.MENU})" in readme.ON_BINDER and f"({readme.MENU})" in readme.KERNEL_FIRST
 
 
 # ------------------------------------------------------------ the scripts
@@ -390,6 +426,8 @@ def test_the_page_of_all_the_examples_holds_each_folder():
 
 def test_binder_gets_the_notebooks_what_they_need_and_not_the_app():
     needs = (EXAMPLES.parent / ".binder" / "requirements.txt").read_text(encoding="utf-8").split()
-    assert {"scipy", "matplotlib", "qutip==5.3.1", "qutip-qip==0.4.2", "qrisp==0.9.10"} <= set(needs)
-    assert "." not in needs
+    names = {re.match(r"[\w.-]+", need)[0] for need in needs}     # pinned or not; test_binder_pins.py checks the pins
+    assert {"numpy", "scipy", "matplotlib", "qutip", "qutip-qip", "qrisp"} <= names
+    assert {"qutip==5.3.1", "qutip-qip==0.4.2", "qrisp==0.9.10"} <= set(needs)
+    assert "." not in needs and "eurohpc-qdevices" not in names
     assert (EXAMPLES.parent / ".binder" / "runtime.txt").read_text(encoding="utf-8").strip() == "python-3.12"

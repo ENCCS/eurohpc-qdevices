@@ -1,5 +1,6 @@
 """examples/hamiltonian/two_spins: the texts, the counts, the numbers its pages quote, its notebook and its links."""
 
+import ast
 import hashlib
 import json
 import re
@@ -91,6 +92,25 @@ def test_the_chain_of_the_tutorial_read_as_the_notebook_says():
     counts = json.loads((folder / "results.json").read_text(encoding="utf-8"))
     assert (chain["STEPS4"]["two_qubit"], chain["STEPS8"]["two_qubit"]) == (18, 34)
     assert (counts["STEPS4"]["100"] / 1000, counts["STEPS8"]["100"] / 1000) == (0.474, 0.190)
+
+
+def writer_text(name: str) -> str:
+    """A text of write_two_spins.py, read without running it: the writer needs Qrisp."""
+    tree = ast.parse((HERE / "write_two_spins.py").read_text(encoding="utf-8"))
+    return next(ast.literal_eval(node.value) for node in tree.body
+                if isinstance(node, ast.AnnAssign) and getattr(node.target, "id", None) == name)
+
+
+def test_the_notebook_and_the_readme_say_what_ran_as_the_job_pages_of_the_portal_show():
+    book = json.loads(NOTEBOOK.read_text(encoding="utf-8"))
+    read = "".join(next(c for c in book["cells"] if c["id"] == "merge-read")["source"])
+    back = writer_text("BACK")
+    for text in (read, back):
+        assert not [w for w in ("very likely", "inferred", "have not read", "not been read") if w in text], text
+    assert "That is what happened." in read and "under Executed Circuit: both jobs ran with 2 CZ" in read
+    assert "each of those circuits gives the shares of its text" in read
+    assert "its STEPS8 ran all 34 two-qubit gates, and the share read fell from 4 steps to 8" in read
+    assert "site's compile merged them: the circuit that ran, on the job page of the portal, has 2 CZ for each" in back
 
 
 def test_the_folder_passes_its_dry_run_and_writes_nothing(tmp_path, monkeypatch, capsys):

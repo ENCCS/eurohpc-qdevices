@@ -8,7 +8,7 @@ and sends nothing. `qdevices --version` prints the version, `qdevices COMMAND --
 | `qdevices check SITE [--live] [--manifest FILE]` | None without `--live`. With `--live`: one read of the machine, no job of any kind |
 | `qdevices dry-run MANIFEST [--read FILE]` | None |
 | `qdevices send MANIFEST --live --max-order N [--resume FILE] [--new-run] [--rules FILE] [--new-rules]` | Live. `--resume FILE` without `--max-order` collects only |
-| `qdevices resolve RECORD ORDER (--job ID \| --none \| --over-limit \| --expired \| --gone)` | None |
+| `qdevices resolve RECORD ORDER (--job ID \| --none \| --over-limit \| --expired \| --unreadable \| --gone)` | None |
 | `qdevices unlock SITE --host NAME` | None |
 | `qdevices runs [PATH ...]` | None |
 | `qdevices jobs RECORD` | None |
@@ -84,7 +84,9 @@ with the reason.
 
 `resolve` writes your decision on one order, offline and under the site lock, in one synced line: in the
 record, or, for a record of another runner, in `older_decisions.jsonl` of its site. The cases and options
-are on {ref}`resolving`; any other case is refused.
+are on {ref}`resolving`; any other case is refused. For example, `--unreadable` takes an open order whose
+last stop is `result_error`, after two calls 10 minutes or more apart got an answer that could not be used,
+or two calls 24 hours or more apart got that stop.
 
 `unlock` is offline. It removes the holder file of the site lock left by host `NAME`, after you have
 checked that no call runs there. It is refused if the holder names another host, or a live process on
@@ -101,7 +103,7 @@ such a record out of its totals; without its decisions, the orders show and coun
 
 | Command | One line for each | Columns |
 |---|---|---|
-| `runs` | record | site, project, run and path; results against the jobs of the manifest; seconds measured; seconds counted after `resolve --over-limit`, `--expired` or `--gone`; seconds by the published rule (VLQ); init jobs (VLQ); open or lost orders; cut lines; the first and last time; how the last call ended |
+| `runs` | record | site, project, run and path; results against the jobs of the manifest; seconds measured; seconds counted after `resolve --over-limit`, `--expired`, `--unreadable` or `--gone`; seconds by the published rule (VLQ); init jobs (VLQ); open or lost orders; cut lines; the first and last time; how the last call ended |
 | `jobs RECORD` | order | order, name, job id, state (final, open with the last state read, `lost: resolve it`, not sent, or skipped), shots and seconds; under an order each stop, refusal, failure or rule not met |
 | `usage` | site and project | records, jobs, shots, seconds measured and counted, seconds by the published rule, init jobs and their node seconds; then the use against `award_hours`, measured and counted ({doc}`billing-and-usage`) |
 

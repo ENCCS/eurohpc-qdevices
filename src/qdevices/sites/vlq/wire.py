@@ -11,7 +11,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Final, Self
 
-from ...values import sha256_hex
+from ...values import is_int, sha256_hex
 from ..facts import HIDDEN, Key, Rule
 
 HEAPPE: Final = "https://quantum.heappe.it4i.cz/heappe/heappe"
@@ -55,10 +55,14 @@ class HeappeState:
 
     @classmethod
     def of(cls, code: object) -> Self:
-        """The state of a code; any code above Running ends the wait, except WaitingForServiceAccount."""
-        return cls(code=code, name=STATES.get(code, f"unknown({code})"),
-                   final=isinstance(code, int) and code > 8 and code != _WAITING_FOR_SERVICE_ACCOUNT,
-                   ok=code == _FINISHED, configuring=code == CONFIGURING)
+        """The state of a code; any code above Running ends the wait, except WaitingForServiceAccount.
+
+        Only an int names a state: true and 1.0 equal 1 in Python, and would read as Configuring.
+        """
+        whole = is_int(code)
+        return cls(code=code, name=(STATES.get(code) if whole else None) or f"unknown({code!r})",
+                   final=whole and code > 8 and code != _WAITING_FOR_SERVICE_ACCOUNT,
+                   ok=whole and code == _FINISHED, configuring=whole and code == CONFIGURING)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

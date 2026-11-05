@@ -111,8 +111,7 @@ class VLQ(Site):
         except PickleRefused as exc:
             raise SiteError(f"a result file cannot be read: {exc}", step="result") from None
         if not found.counts or (seconds is None and not ResultsFile.names_seconds(files[wire.JOB_FILE])):
-            raise SiteError("the result files do not give the counts and the device seconds; the job is "
-                            "finished, a resume reads them again", step="result")
+            raise SiteError("the result files do not give the counts and the device seconds", step="result")
         return {"counts": found.counts, "seconds": seconds, "success": found.success, "returned_shots": found.shots,
                 "calibration_set": found.calibration_set, "files": wire.digests(files)}
 

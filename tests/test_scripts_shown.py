@@ -18,7 +18,9 @@ sys.path.insert(0, str(EXAMPLES / "tools"))
 from scripts_shown import LINES, SCRIPTS, first_job, show_scripts  # noqa: E402
 
 HELLO = ["qrisp/hello", "qrisp/hello/", "./qrisp/hello", "qrisp//hello", str(EXAMPLES / "qrisp" / "hello")]
-WIDE_LINE = "A job on 25 qubits: run it in a terminal, with `python emulate_qutip.py` in its folder."
+WIDE_LINE = ("A job on 25 qubits: run it in a terminal, with `python emulate_qutip.py` in its folder. On Binder, shut "
+             "down the notebook's kernel first (Kernel > Shut Down All Kernels); even then the job may not fit, as the "
+             "README of its folder says.")
 
 
 def script_with(tmp_path, gates):

@@ -18,8 +18,7 @@ line.
 
 Before each job the rule `budget` adds up:
 
-- the measured seconds of every result in every record of the site and project, and in `older_records`
-  (a negative time counts 0);
+- the measured seconds of every result in every record of the site and project, and in `older_records`;
 - `job_seconds_limit` for each order of unknown time: a lost or open order, a failed job, an order with
   no result that an older runner wrote as `expired`, and a result with no measured seconds;
 - `job_seconds_limit` for the job about to be sent.
@@ -27,18 +26,19 @@ Before each job the rule `budget` adds up:
 Above `budget_seconds`, the job is not sent and the run stops. Raise `budget_seconds` only if your award
 allows it. The sum is an upper bound of what the app has used, not the charge of the site.
 
-- **Measured seconds** are the first number among `seconds`, `device_seconds` (older runners) and
-  `wall_seconds`. `wall_seconds` (job request to result) is a number when the call that sent the job also
-  collected it, else null. So a result with no `seconds` (for example a Euro-Q-Exa result whose time stamps
-  cannot be read) counts its wall seconds, or else `job_seconds_limit`. `jobs`, `runs` and `usage` show
-  them as measured, and `resolve --over-limit` judges on them. The rule `job_time` reads `seconds` only,
-  so it stops at such a result.
+- **Measured seconds** are the first number of 0 or more among `seconds`, `device_seconds` (older runners)
+  and `wall_seconds`: a time below zero is no measure, in an older record too. `wall_seconds` (job request
+  to result) is a number when the call that sent the job also collected it, else null. So a result with no
+  `seconds` (for example a Euro-Q-Exa result whose time stamps cannot be read, or give a time below zero)
+  counts its wall seconds, or else `job_seconds_limit`. `jobs`, `runs` and `usage` show them as measured,
+  and `resolve --over-limit` judges on them. The rule `job_time` reads `seconds` only, so it stops at such
+  a result.
 - **0 seconds:** a refusal, a job never submitted, and an order resolved with `--none`. But an order
   resolved as still `New`, or one whose job id no URL can hold, counts at `job_seconds_limit`: its job may
   yet run.
-- **After `--over-limit`, `--expired` or `--gone`:** the `counted_seconds` of the `resolved` line, the
-  `job_seconds_limit` of the config at the decision. A later change of the config does not change them.
-  For a record of another runner, a result it writes later counts with its measured seconds
+- **After `--over-limit`, `--expired`, `--unreadable` or `--gone`:** the `counted_seconds` of the `resolved`
+  line, the `job_seconds_limit` of the config at the decision. A later change of the config does not change
+  them. For a record of another runner, a result it writes later counts with its measured seconds
   ({ref}`resolving`).
 - **Other members:** the app counts only the records it reads. LRZ counts the use of every member of a
   project against one budget
@@ -58,7 +58,7 @@ both. Decide it for each order: a job that did run that long would then count to
 ## `qdevices usage`
 
 `qdevices usage [PATH ...]` gives the totals by site and project ({doc}`commands`). Seconds counted put the
-seconds of a decision of `--over-limit`, `--expired` or `--gone` in place of the measured ones. Neither is
-the sum of the budget: both leave out each order of unknown time, and an order resolved as still `New`.
-The totals come from the records found, not from the sites. To count older records, give their folders as
-`PATH`, or list them in `older_records`.
+seconds of a decision of `--over-limit`, `--expired`, `--unreadable` or `--gone` in place of the measured
+ones. Neither is the sum of the budget: both leave out each order of unknown time, and an order resolved as
+still `New`. The totals come from the records found, not from the sites. To count older records, give
+their folders as `PATH`, or list them in `older_records`.

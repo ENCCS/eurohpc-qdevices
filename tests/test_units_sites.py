@@ -1,7 +1,7 @@
 """Unit tables of the sites, on the real site classes over the fakes.
 
-Faults 2, 3 and 6 of the plan, and the shots of fault 32, were each an error of the program here; now each is refused or
-a site error.
+A file that cannot be sent, an answer nested too deep and a shot that is not a list of bits are each refused or a site
+error, not an error of the program.
 """
 
 import json
@@ -196,7 +196,7 @@ FILES = {
     "piastq_rz_phi_infinity": ("piastq", broker_file({"operation": "RZ", "qubit": 0, "phi": float("inf")}, MEASURE),
                                NO_JSON),                        # httpx encodes JSON with allow_nan=False
     "euroqexa_not_utf8": ("euroqexa", QASM + b"// \xff\n", "the file is not UTF-8 text"),   # submit decodes strictly
-    "piastq_lone_surrogate": ("piastq", broker_file({"operation": "MEASURE", "note": "\ud800"}),     # fault 33
+    "piastq_lone_surrogate": ("piastq", broker_file({"operation": "MEASURE", "note": "\ud800"}),
                               "the file holds a lone surrogate escape, which a JSON request cannot carry"),
 }
 

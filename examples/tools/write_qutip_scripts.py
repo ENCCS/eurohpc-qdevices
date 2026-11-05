@@ -14,14 +14,14 @@ from circuit import circuit_of
 from emulate import jobs_of
 from overview import write_stored
 from qutip_emulator import PLACES, WHY, Step, gate_steps
-from readme import WIDE
-from script_parts import TOP, angle_text, commented, function_of, keys_of, main_block
+from readme import KERNEL_FIRST, WIDE
+from script_parts import TOP, angle_text, commented, example_path, function_of, keys_of, main_block, main_imports
 from script_qasm import QUTIP_EXTRA_IMPORT, QUTIP_HELP, QUTIP_IMPORTS, QUTIP_QASM, QUTIP_TO_QASM, for_qasm
 
 EXAMPLES: Final = Path(__file__).resolve().parent.parent
 SCRIPT: Final = "emulate_qutip.py"
 # The names a script binds or looks up when it runs: no job function takes them.
-TAKEN: Final = {"np", "basis", "QubitCircuit", "JOBS", "shares_of", "top", "re", "sys", "circuit_to_qasm_str",
+TAKEN: Final = {"np", "basis", "QubitCircuit", "JOBS", "shares_of", "top", "re", "os", "sys", "circuit_to_qasm_str",
                 "to_qasm"}
 IMPORTS: Final = "import numpy as np\nfrom qutip import basis\nfrom qutip_qip.circuit import QubitCircuit\n"
 SHARES: Final = '''
@@ -83,7 +83,7 @@ def head(path: str, keys: str, wide: str, qasm: bool) -> str:
         *([fill(QUTIP_HELP[0], 120), QUTIP_HELP[1]] if qasm else []),
         fill("examples/tools/write_qutip_scripts.py writes this file from the text of each job. It needs nothing else "
              "from the clone, so you can copy it anywhere.", 120)]) + '\n"""\n\n' + (
-        (QUTIP_IMPORTS + IMPORTS + QUTIP_EXTRA_IMPORT) if qasm else IMPORTS)
+        main_imports(QUTIP_IMPORTS if qasm else "") + "\n" + IMPORTS + (QUTIP_EXTRA_IMPORT if qasm else ""))
 
 
 @dataclass
@@ -105,8 +105,9 @@ class Script:
 
     def _wide(self, jobs: list) -> str:
         sizes = {job["name"]: len(circuit_of(self.folder / job["file"]).qubits) for job in jobs}
-        return "".join(f" The job {name} runs on {size} qubits, a state of 2**{size} amplitudes: it takes "
+        wide = "".join(f" The job {name} runs on {size} qubits, a state of 2**{size} amplitudes: it takes "
                        f"{WIDE[size]}." for name, size in sizes.items() if size in WIDE)
+        return f"{wide} {KERNEL_FIRST}" if wide else ""
 
     def text(self) -> str:
         """The whole script."""
@@ -115,7 +116,7 @@ class Script:
         rows = "".join(f'    "{job["name"]}": ({self.defined[job["name"]]}, '
                        f"{list(circuit_of(self.folder / job['file']).renumbered().bits)}),\n" for job in jobs)
         qasm = for_qasm(self.folder)
-        tail = SHARES + TOP + (QUTIP_TO_QASM if qasm else "") + main_block(LOOP, QUTIP_QASM if qasm else "")
+        tail = SHARES + TOP + (QUTIP_TO_QASM if qasm else "") + main_block(self.folder, SCRIPT, LOOP, QUTIP_QASM)
         return (head(self.path, keys_of(jobs), self._wide(jobs), qasm) + "\n" + body
                 + "\n# Each job: the function that builds its circuit, and the qubit that each character of a key "
                   "reads, in order.\nJOBS = {\n" + rows + "}\n" + tail)
@@ -123,7 +124,7 @@ class Script:
 
 def script_text(folder: Path, root: Path = EXAMPLES) -> str:
     """The emulate_qutip.py of one folder below `root`."""
-    return Script(folder, folder.relative_to(root).as_posix()).text()
+    return Script(folder, example_path(folder, root)).text()
 
 
 def write_scripts(root: Path, folders: list) -> None:

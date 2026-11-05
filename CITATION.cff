@@ -8,7 +8,9 @@ type: software
 authors:
   - given-names: Karim
     family-names: Elgammal
-version: 0.1.0
+    affiliation: ENCCS
+    orcid: "https://orcid.org/0000-0002-8222-3157"
+version: 0.2.0
 repository-code: "https://github.com/ENCCS/eurohpc-qdevices"
 abstract: >-
   A small command-line app to send a fixed list of circuits to a EuroHPC quantum computer

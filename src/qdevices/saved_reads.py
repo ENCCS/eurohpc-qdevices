@@ -9,6 +9,7 @@ from typing import Self
 
 from .clock import Clock, stamp
 from .redact import redact
+from .values import standard_json
 
 
 @dataclass(frozen=True, slots=True)
@@ -31,7 +32,8 @@ class SavedReads:
         """Store a read under the time of the call, with the secrets of the site, read last, hidden: the file."""
         self.folder.mkdir(parents=True, exist_ok=True)
         file = self.folder / f"{self.kind(read)}_{stamp(clock.utc())}.json"
-        text = redact(json.dumps({"read_at": clock.utc().isoformat(), **read}, indent=1, default=str), secrets())
+        held = standard_json({"read_at": clock.utc().isoformat(), **read})
+        text = redact(json.dumps(held, indent=1, default=str), secrets())
         file.write_text(text + "\n", encoding="utf-8")
         return file
 

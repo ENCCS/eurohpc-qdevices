@@ -15,7 +15,7 @@ from ..clock import CLOCK, SLEEP
 from ..errors import Refused
 from ..lock import this_host
 from ..paths import Places
-from ..screen import say
+from ..screen import finish, say
 from ..sites import SITES
 from ..sites import make_site as default_make_site
 from .commands import NO_DECISIONS, Commands
@@ -28,7 +28,7 @@ _ONE_OF: Final = ()                # the flags of a row that opens a required gr
 _SITE: Final = ("site",)           # a site of the registry, whose names are the choices
 _PATHS: Final[_Row] = (("paths",), {"nargs": "*", "type": Path,
                                     "help": "more records or folders, of this app or older runners"})
-# Each command: its name, its help and its rows, in the order of the help. Four helps are made from _texts().
+# Each command: its name, its help and its rows, in the order of the help. Five helps are made from _texts().
 _SPECS: Final[tuple[tuple[str, _Help, tuple[_Row, ...]], ...]] = (
     ("check", "the token and, with --live, one read of the machine (no job)", (
         (_SITE, {}),
@@ -49,7 +49,8 @@ _SPECS: Final[tuple[tuple[str, _Help, tuple[_Row, ...]], ...]] = (
         (("--rules",), {"type": Path, "metavar": "FILE", "help": "a Python file with the rules of an experiment"}))),
     ("resolve", lambda t: f"record what became of a lost order, of a {t['two_step']}job whose submit request may "
                           "have reached the site, of a job the site showed only as New for days, of a result above "
-                          "job_seconds_limit, or of a result or a job the site no longer gives (offline)", (
+                          "job_seconds_limit, of a result that cannot be read, or of a result or a job the site no "
+                          "longer gives (offline)", (
         (("record",), {"type": Path}),
         (("order",), {"type": int}),
         (_ONE_OF, {"required": True}),
@@ -62,6 +63,11 @@ _SPECS: Final[tuple[tuple[str, _Help, tuple[_Row, ...]], ...]] = (
         (("--expired",), {"action": "store_true", "help": lambda t: f"two calls, {t['expired_minutes']} minutes or "
                                                                     "more apart, stopped at result_expired: final, "
                                                                     "it counts at job_seconds_limit"}),
+        (("--unreadable",), {"action": "store_true",
+                             "help": lambda t: f"two calls stopped at result_error, {t['expired_minutes']} minutes or "
+                                               "more apart on an answer that could not be used, else "
+                                               f"{t['unanswered_hours']} hours or more apart: the job finished, its "
+                                               "result cannot be read; final, it counts at job_seconds_limit"}),
         (("--gone",), {"action": "store_true", "help": "a record of another runner: the site no longer gives the "
                                                        "job of an open order; final, it counts at "
                                                        "job_seconds_limit"}))),
@@ -76,13 +82,14 @@ _SPECS: Final[tuple[tuple[str, _Help, tuple[_Row, ...]], ...]] = (
 
 
 def _texts() -> dict[str, object]:
-    """The parts of the help that the registered sites give, by the names that the helps of _SPECS read."""
+    """The parts of the help that the sites and resolve give, by the names that the helps of _SPECS read."""
     classes = tuple(SITES.values())
     routed = ", ".join(cls.name for cls in classes if cls.profile.route_keys)
     unlisted = ", ".join(f"{cls.profile.title} has none: ask {cls.profile.operator}" for cls in classes
                          if not cls.profile.job_list)
     return {"routed": f" (needed for {routed})" if routed else "", "two_step": resolve.two_step_titles(),
-            "unlisted": f" ({unlisted})" if unlisted else "", "expired_minutes": resolve.EXPIRED_MINUTES}
+            "unlisted": f" ({unlisted})" if unlisted else "", "expired_minutes": resolve.EXPIRED_MINUTES,
+            "unanswered_hours": resolve.UNANSWERED_HOURS}
 
 
 def _text(text: _Help, filled: dict[str, object]) -> str:
@@ -108,6 +115,14 @@ def parser() -> argparse.ArgumentParser:
 
 def main(argv=None, *, places=None, environ=None, make_site=None, clock=None, sleep=None, host=None) -> int:
     """`qdevices ARGS`: one command, and its exit code; a refusal prints REFUSED and gives 1."""
+    try:
+        return _command(argv, places=places, environ=environ, make_site=make_site, clock=clock, sleep=sleep,
+                        host=host)
+    finally:
+        finish()          # the exit code stays; stderr tells of a screen that cannot be written, not of a closed pipe
+
+
+def _command(argv, *, places, environ, make_site, clock, sleep, host) -> int:
     ap = parser()
     try:
         args = ap.parse_args(argv)

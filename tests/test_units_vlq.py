@@ -126,7 +126,7 @@ def test_a_cluster_listing_that_cannot_be_read_stops_at_the_read(tmp_path, place
     clusters = listing(*LISTINGS[case])
     answers = {"ListAvailableClusters": lambda request: httpx.Response(200, json=clusters)}
     _fake, m, site = make(tmp_path, places, clock, answers)
-    assert send(m, site, places, clock, max_order=1) == 1                     # was 3 before fault 24 was fixed
+    assert send(m, site, places, clock, max_order=1) == 1                     # the stop of a read, not exit 3
     last = records_of(places)[0].read_text().splitlines()[-1]
     assert json.loads(last)["event"] == "stop" and json.loads(last)["kind"] == "read"
     golden(f"units_vlq_cluster_{case}", last + "\n")
@@ -219,7 +219,7 @@ def test_the_dry_run_job_of_a_read_is_sent_before_its_templates_are_sorted_as_te
     clusters = [{"Id": 1, "Name": "C", "NodeTypes": nodes}]
     answers = {"ListAvailableClusters": lambda request: httpx.Response(200, json=clusters)}
     fake, m, site = make(tmp_path, places, clock, answers)
-    assert send(m, site, places, clock, max_order=1) == 0     # fault 10: a template named by a number, sorted as text
+    assert send(m, site, places, clock, max_order=1) == 0     # a template named by a number, sorted as text
     assert path_ends(fake)[:len(READ_PATHS) + 1] == [*READ_PATHS, "DryRunJob"]
     read = next(line for line in lines_of(records_of(places)[0]) if line["event"] == "read")
     assert read["read"]["templates"] == [7, "RunQExecute", "RunQInit"]
@@ -227,8 +227,7 @@ def test_the_dry_run_job_of_a_read_is_sent_before_its_templates_are_sorted_as_te
 
 UNREAD_RESULTS = {       # case: the results.pkl of the job, and the error of the stop at its result
     "not_a_pickle": (b"artefact", "a result file cannot be read: the pickle cannot be read: UnpicklingError"),
-    "no_counts": (pickle.dumps([]), "the result files do not give the counts and the device seconds; the job is "
-                                    "finished, a resume reads them again"),
+    "no_counts": (pickle.dumps([]), "the result files do not give the counts and the device seconds"),
 }
 
 

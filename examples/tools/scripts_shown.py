@@ -10,6 +10,8 @@ import runpy
 from pathlib import Path
 from typing import Final
 
+from readme import KERNEL_FIRST
+
 SCRIPTS: Final = (("emulate_qutip.py", "qutip_qip", "QuTiP"), ("emulate_qrisp.py", "qrisp", "Qrisp"))
 LINES: Final = 20                # the most lines of a job shown
 WIDE: Final = 20                 # qubits: a QuTiP job on so many or more is left to a terminal
@@ -42,6 +44,6 @@ def show_scripts(folder: Path) -> None:
         if importlib.util.find_spec(module) is None:
             print(f"{name} is not installed here: its stored line above holds what it gives.")
         elif name == "QuTiP" and (wide := widest(folder)) >= WIDE:
-            print(f"A job on {wide} qubits: run it in a terminal, with `python {script}` in its folder.")
+            print(f"A job on {wide} qubits: run it in a terminal, with `python {script}` in its folder. {KERNEL_FIRST}")
         else:
             runpy.run_path(str(path), run_name="__main__")

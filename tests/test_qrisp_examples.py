@@ -1,6 +1,7 @@
 """The Qrisp examples: the writer, its files and each site's offline check; only the last test needs Qrisp."""
 
 import ast
+import json
 import re
 import subprocess
 import sys
@@ -114,6 +115,22 @@ def test_the_readme_and_the_script_name_the_function_of_the_program_and_the_file
     assert len(named) == 2 and named[0] == named[1], named
     function, file = named[0]
     assert function in defined_in(file) and listed()[folder.name] == function
+
+
+def test_the_note_of_ising2_and_the_page_of_all_the_examples_say_what_ran_as_the_portal_shows():
+    from notes import NOTES  # plain data: no Qrisp
+
+    cells = json.loads((QRISP.parent / "all_examples.ipynb").read_text(encoding="utf-8"))["cells"]
+    page = "".join(next(cell for cell in cells if cell.get("id") == "cell-4")["source"])
+    about = NOTES["ISING2"].about
+    for text in (about, page):
+        assert "very likely" not in text and "inferred" not in text, text
+    assert "the site's compile merged the steps, and both jobs ran with 2 CZ (the job page of the portal)" in about
+    assert "`ising2` ran with 2 CZ for the 10 CX of its text, and `QRISP` with 10 CZ for its 20 two-qubit gates" in page
+    sent = (QRISP / "ising2" / "ISING2.qasm").read_text(encoding="utf-8").splitlines()
+    chain = json.loads((QRISP.parent / "hamiltonian" / "state_transfer" / "manifest.json").read_text(encoding="utf-8"))
+    assert [line.partition(" ")[0] for line in sent].count("cx") == 10
+    assert {job["name"]: job["two_qubit"] for job in chain["jobs"]}["QRISP"] == 20
 
 
 def test_qrisp_makes_the_same_files_again_and_each_ideal_names_the_likeliest_outcome(tmp_path):

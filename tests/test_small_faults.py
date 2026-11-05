@@ -1,4 +1,4 @@
-"""Faults 9, 16 and 32 of the plan: the small ones, each with a plain fix."""
+"""Small faults, each with a plain fix: the forms of a secret, a cut text id, python -OO and a set literal."""
 
 import os
 import subprocess

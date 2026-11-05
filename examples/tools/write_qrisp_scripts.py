@@ -15,8 +15,8 @@ from circuit import circuit_of
 from emulate import jobs_of
 from overview import write_stored
 from qrisp_emulator import PLACES, WHY, Call, measures, qrisp_calls
-from script_parts import TOP, angle_text, commented, function_of, keys_of, main_block
-from script_qasm import QRISP_EXTRA_IMPORT, QRISP_HELP, QRISP_IMPORTS, QRISP_QASM, QRISP_TO_QASM, for_qasm
+from script_parts import MAIN_IMPORT, TOP, angle_text, commented, example_path, function_of, keys_of, main_block
+from script_qasm import QRISP_EXTRA_IMPORT, QRISP_HELP, QRISP_QASM, QRISP_TO_QASM, for_qasm
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "qrisp"))
 from programs import source_of
@@ -25,8 +25,8 @@ EXAMPLES: Final = Path(__file__).resolve().parent.parent
 SCRIPT: Final = "emulate_qrisp.py"
 # The names a script binds or looks up when it runs: no job function takes them.
 TAKEN: Final = {"pi", "QuantumCircuit", "JOBS", "shares_of", "top", "StringIO", "redirect_stdout", "redirect_stderr",
-                "sys", "Path", "to_qasm"}
-IMPORTS: Final = "from contextlib import redirect_stderr, redirect_stdout\nfrom io import StringIO\n"
+                "os", "sys", "Path", "to_qasm"}
+IMPORTS: Final = MAIN_IMPORT + "from contextlib import redirect_stderr, redirect_stdout\nfrom io import StringIO\n"
 SHARES: Final = '''
 
 def shares_of(qc):
@@ -85,8 +85,7 @@ class Script:
 
     def _made(self) -> str:
         manifest = json.loads((self.folder / "manifest.json").read_text(encoding="utf-8"))
-        made = manifest.get("made_with", "")
-        if not made.startswith("Qrisp"):
+        if not (made := manifest.get("made_with", "")):
             return ""
         texts = "Its texts were" if len({job["file"] for job in manifest["jobs"]}) > 1 else "Its text was"
         if not self.path.startswith("qrisp/"):
@@ -100,9 +99,9 @@ class Script:
         body = "".join(f"\n{self.job(job['name'], job['file'])}\n" for job in jobs)
         qasm = for_qasm(self.folder)
         uses_pi = re.search(r"^    qc\..*\bpi\b", body, re.M)                  # in a call, not in a comment
-        imports = (QRISP_IMPORTS if qasm else "") + IMPORTS + ("from math import pi\n" if uses_pi else "")
+        imports = IMPORTS + ("from math import pi\n" if uses_pi else "")
         imports += (QRISP_EXTRA_IMPORT if qasm else "") + "\nfrom qrisp import QuantumCircuit\n"
-        tail = SHARES + TOP + (QRISP_TO_QASM if qasm else "") + main_block(LOOP, QRISP_QASM if qasm else "")
+        tail = SHARES + TOP + (QRISP_TO_QASM if qasm else "") + main_block(self.folder, SCRIPT, LOOP, QRISP_QASM)
         rows = "".join(f'    "{job["name"]}": {self.defined[job["name"]]},\n' for job in jobs)
         return (head(self.path, keys_of(jobs), self._made(), qasm) + imports + "\n" + body
                 + "\n# Each job and the function that builds its circuit.\nJOBS = {\n" + rows + "}\n" + tail)
@@ -110,7 +109,7 @@ class Script:
 
 def script_text(folder: Path, root: Path = EXAMPLES) -> str:
     """The emulate_qrisp.py of one folder below `root`."""
-    return Script(folder, folder.relative_to(root).as_posix()).text()
+    return Script(folder, example_path(folder, root)).text()
 
 
 if __name__ == "__main__":

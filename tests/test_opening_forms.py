@@ -166,7 +166,7 @@ def lock_of_test(phases: list):
     ('{"event": "rule", "id": null, "rule": "sho', {}),
     ('{"event": "rule", "rule": "sho', {}),
     ('{"job": 7, "id": "J-1", "z', {"job_id": "7", "job_id_may_be_cut": False}),
-    ('{"id": "a\\"', {"job_id": 'a\\"', "job_id_may_be_cut": True}),       # fault 16, fixed: this id is cut
+    ('{"id": "a\\"', {"job_id": 'a\\"', "job_id_may_be_cut": True}),       # this id is cut
 ], ids=["text closed", "text cut", "number in the middle", "number at the end", "empty", "only its first quote",
         "null", "no id", "the first of two", "cut after an escaped quote"])
 def test_a_cut_line_gives_its_number_its_text_and_any_job_id_it_holds(text, found):
@@ -636,7 +636,7 @@ def test_the_name_of_the_signal_reaches_the_stop_line_and_the_text_of_the_call(t
 
 def test_another_record_with_seconds_too_large_for_a_float_counts_them_at_the_job_time_limit(
         tmp_path, places, clock, monkeypatch):
-    # fault 15, fixed: the send ended after the start line, with no stop line
+    # the send goes on past its start line to the end line
     other = another_record(places, 10 ** 400)
     before = other.read_bytes()
     own_handlers()
@@ -652,7 +652,7 @@ def test_another_record_with_seconds_too_large_for_a_float_counts_them_at_the_jo
 @pytest.mark.parametrize("stage", [{}, {"max_order": 2}], ids=["collects", "sends"])
 def test_a_resume_whose_earlier_lines_hold_an_event_that_is_a_list_passes_that_line_over(
         tmp_path, places, clock, monkeypatch, stage):
-    # fault 15, fixed: the send ended after its resume line, with no stop line
+    # the send goes on past its resume line to the end line
     m = write_manifest(tmp_path / "m")
     assert send(m, FakeSite(), places, clock, max_order=1) == 0
     rec = records_of(places)[0]
@@ -670,7 +670,7 @@ def test_a_resume_whose_earlier_lines_hold_an_event_that_is_a_list_passes_that_l
 
 def test_an_interrupt_at_the_say_of_the_new_record_writes_its_stop_line_and_ends_in_130(
         tmp_path, places, clock, monkeypatch):
-    # fault 15, fixed: the loop was not yet there to write a stop line
+    # the loop is not yet there to write a stop line
     said = []
 
     def say(text):

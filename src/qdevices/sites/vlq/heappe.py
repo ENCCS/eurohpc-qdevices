@@ -6,6 +6,7 @@ The job's environment is never written to a record; each password joins the toke
 import base64
 from dataclasses import dataclass, field
 
+from ...values import is_int
 from .. import pickle_reader
 from ..base import Channel, SiteError, cut
 from .envelope import Envelope
@@ -81,7 +82,7 @@ class HeappeJobs:
         """The info of a job, which must give its state as an integer; its first task is kept for the downloads."""
         info = self.client.answer("GET", "/JobManagement/CurrentInfoForJob", step=step,
                                   params={"SubmittedJobInfoId": job_id})
-        if not isinstance(info, dict) or not isinstance(info.get("State"), int):
+        if not isinstance(info, dict) or not is_int(info.get("State")):       # true is no state, though an int
             raise SiteError("the answer has no state", body=cut(info), step=step)
         task = _first_task(info.get("Tasks"))
         if task is not None:

@@ -123,8 +123,9 @@ NOTES: Final = {
         "Two spins in a field",
         "Five first-order Trotter steps of the Ising model, by Qrisp's `trotterization`. On two qubits all the steps "
         "make one two-qubit block, which 2 CX can make. The same model at 16 steps, with 32 two-qubit gates in the "
-        "text, read `11` in 789 of 1000, against 783 here, so the site's compile very likely merged the steps: "
-        "[`hamiltonian/two_spins`](../../hamiltonian/two_spins/README.md) holds both jobs.",
+        "text, read `11` in 789 of 1000, against 783 here: the site's compile merged the steps, and both jobs ran with "
+        "2 CZ (the job page of the portal). [`hamiltonian/two_spins`](../../hamiltonian/two_spins/README.md) holds "
+        "both jobs.",
         ("Start: 00", "One Trotter step: ZZ, then X on each spin", "Five steps in all", "Measure", "11 most often"),
         "1000 shots: `11`: 783, then `00`: 95."),
 }

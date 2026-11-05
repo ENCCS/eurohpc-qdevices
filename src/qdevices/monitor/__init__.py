@@ -9,6 +9,7 @@ from .. import billing, older
 from .. import record as records
 from ..finder import AppRecords, OlderRecords, Unread, real, unique
 from ..ledger import Ledger, Status
+from ..resolve import DECISIONS, flag, joined
 from .summary import Summary, init_jobs, short
 
 if TYPE_CHECKING:
@@ -60,7 +61,6 @@ class _Totals:
     jobs: int = 0
     shots: int = 0
     seconds: float = 0.0
-    no_seconds: int = 0
     published: float | None = None
     inits: int = 0
     init_seconds: float = 0.0
@@ -73,7 +73,6 @@ class _Totals:
         self.shots += s.shots
         self.seconds += s.seconds
         self.counted += s.counted
-        self.no_seconds += s.no_seconds
         self.inits += s.init_jobs
         self.init_seconds += s.init_node_seconds
         if s.published is not None:
@@ -100,8 +99,14 @@ def usage(summaries: Iterable[Summary | Unread], cfg: dict) -> list[str]:
     measured, notes = billing.usage_words()
     out.append("These totals are read from the records found, not from the accounting of the sites. The seconds "
                f"are what each site measures: {measured}. The counted seconds put the seconds of a decision of "
-               f"`qdevices resolve --over-limit`, `--expired` or `--gone` in place of the measured ones.{notes}")
+               f"{_decisions()} in place of the measured ones.{notes}")
     return out
+
+
+def _decisions() -> str:
+    """The decisions that count seconds, as the usage note names them: `qdevices resolve --over-limit`, and so on."""
+    first, *rest = map(flag, DECISIONS)
+    return joined([f"`qdevices resolve {first}`", *(f"`{option}`" for option in rest)])
 
 
 def _awards(totals: dict[tuple, _Totals], cfg: dict) -> list[str]:

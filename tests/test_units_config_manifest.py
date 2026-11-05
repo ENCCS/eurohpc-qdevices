@@ -66,7 +66,7 @@ def test_every_refusal_of_the_config_in_full(golden, tmp_path):
 
 
 def test_a_config_that_is_not_utf8_is_a_config_error(tmp_path):
-    """Fault 7 of the plan, fixed: the command line said a traceback, not REFUSED."""
+    """The command line says REFUSED, not a traceback."""
     path = tmp_path / "qdevices.toml"
     path.write_bytes(b'[vlq]\nprojects = ["\xff"]\n')
     with pytest.raises(config.ConfigError) as refused:

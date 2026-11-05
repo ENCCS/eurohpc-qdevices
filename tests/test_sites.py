@@ -1,4 +1,7 @@
-"""Invariants 7, 11 and 12, and the fixed addresses of invariant 5, on the real site classes over MockTransport."""
+"""The real site classes over MockTransport.
+
+Refusals by site, no retry and no redirect, no site data unpickled, and the fixed addresses of the token.
+"""
 
 import hashlib
 import importlib

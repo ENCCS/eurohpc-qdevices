@@ -1,4 +1,4 @@
-"""Section 7: a Piast-Q window that wraps or is empty, or an unknown zone, is refused when the config is read."""
+"""A Piast-Q window that wraps or is empty, or an unknown zone, is refused when the config is read."""
 
 import json
 

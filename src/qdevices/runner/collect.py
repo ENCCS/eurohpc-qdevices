@@ -1,12 +1,14 @@
 """From a job id to a final line. Never submits and never cancels."""
 
+from collections.abc import Callable
 from datetime import datetime
 from typing import NoReturn
 
 from .. import billing
-from ..resolve import EXPIRED_MINUTES
+from ..resolve import EXPIRED_MINUTES, UNANSWERED_HOURS, answered
 from ..rules import Point
 from ..sites.base import Expired, SiteError
+from ..values import measure
 from . import hooks
 from .call import Call
 from .stop import StopKind, UnderWay
@@ -50,7 +52,7 @@ class Collect:
         try:
             state = self.call.site.status(self.job_id)
         except SiteError as exc:
-            self._missed(exc, "the state cannot be read", StopKind.STATUS_ERROR, "a resume collects it")
+            self._missed(exc, "the state cannot be read", StopKind.STATUS_ERROR, self._then_status)
             return False
         if state is None:           # no state: a missed poll with no line
             return False
@@ -74,21 +76,36 @@ class Collect:
             self.call.rec.write("status", **self.where, state=state["state"], poll=self.polls)
             self.last = state["state"]
 
-    def _missed(self, exc: SiteError, what: str, kind: StopKind, then: str) -> None:
-        """A read that failed: a stop that leaves the order open, or a missed poll, asked again at the next poll."""
+    def _missed(self, exc: SiteError, what: str, kind: StopKind, then: Callable[[dict], str]) -> None:
+        """A read that failed: a stop that leaves the order open, or a missed poll, asked again at the next poll.
+
+        The stop line holds `missed`, the kind of the failure, or None for one that ended the wait at once; `then`
+        gives what the stop says to do, from the fields of its line.
+        """
         call = self.call
         if isinstance(exc, Expired):
             self._expired(exc)
         missed = exc.missed
         if missed is None or call.clock.monotonic() >= self.deadline:
-            info = call.error(exc)
+            fields = {**self.where, **call.error(exc), "missed": missed, "missed_polls": self.misses}
             missed_before = f", after {self.misses} missed polls" if self.misses else ""
-            call.stop(kind, f"{self.label}: {what}: {info['error']}{missed_before}. The order stays open; {then}"
-                      f"{self.note}", **self.where, **info, missed_polls=self.misses)
+            call.stop(kind, f"{self.label}: {what}: {fields['error']}{missed_before}. The order stays open; "
+                      f"{then(fields)}", **fields)
         self.misses += 1
         if (exc.step, missed) != self.failure:       # a "status" line when the kind of failure changes
             call.rec.write("status", **self.where, missed=missed, misses=self.misses, **call.error(exc))
             self.failure = (exc.step, missed)
+
+    def _then_status(self, _stop: dict) -> str:
+        """What a status_error stop says to do."""
+        return f"a resume collects it{self.note}"
+
+    def _then_result(self, stop: dict) -> str:
+        """What a result_error stop says to do: the rule of `resolve --unreadable` for the kind of its line."""
+        then, apart = (("a resume reads it again", f"{EXPIRED_MINUTES} minutes") if answered(stop)
+                       else ("resume later", f"{UNANSWERED_HOURS} hours"))
+        return (f"{then}{self.note}. When two calls {apart} or more apart got this stop, record it with: "
+                f"{self.call.resolve_command(self.job['order'], '--unreadable')}")
 
     def _configuring(self, state: dict) -> None:
         """A job made and never seen as submitted, that the site shows as still being configured."""
@@ -130,7 +147,7 @@ class Collect:
                 result = call.site.result(self.job_id)
                 break
             except SiteError as exc:
-                self._missed(exc, "the result cannot be read", StopKind.RESULT_ERROR, "a resume reads it again")
+                self._missed(exc, "the result cannot be read", StopKind.RESULT_ERROR, self._then_result)
             call.sleep(call.site.poll_seconds)
         wall = None if self.t0 is None else round(call.clock.monotonic() - self.t0, 3)
         seconds = self._seconds(result.get("seconds"), wall)
@@ -145,7 +162,10 @@ class Collect:
         hooks.at(call, Point.AFTER_RESULT, line, job=job)
 
     def _seconds(self, seconds: float | None, wall: float | None) -> float | None:
-        """The seconds the site gave; at a site that gives none and counts wall time, the wall seconds."""
+        """The seconds the site gave; at a site that gives none and counts wall time, the wall seconds.
+
+        For a job a resume collects: the time since it was submitted, or none below zero (a clock that went back).
+        """
         call = self.call
         if seconds is not None or call.site.seconds_kind != "wall":
             return seconds
@@ -153,5 +173,5 @@ class Collect:
             return wall
         since = call.submitted_utc(self.job["order"])
         if since:
-            return round((call.clock.utc() - datetime.fromisoformat(since)).total_seconds(), 3)
+            return measure(round((call.clock.utc() - datetime.fromisoformat(since)).total_seconds(), 3))
         return seconds

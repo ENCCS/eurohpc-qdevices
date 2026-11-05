@@ -1,4 +1,4 @@
-"""Invariant 4: one live call per site at a time."""
+"""One live call per site at a time."""
 
 import errno
 import json

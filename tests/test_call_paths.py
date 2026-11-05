@@ -251,7 +251,7 @@ def test_after_an_error_of_the_program_a_submitted_line_whose_write_fails_is_wri
     say = saying([], "  job J-1 sent", ValueError("a fault of the say"))
     assert live(write_manifest(tmp_path / "m"), FakeSite(), places, clock, say, max_order=1) == 3
     rec = records_of(places)[0]
-    assert events_of(rec) == [*BEFORE_SEND, "submitting", "stop", "submitted"]     # fault 17, fixed: the stop is tried
+    assert events_of(rec) == [*BEFORE_SEND, "submitting", "stop", "submitted"]     # the stop line is tried
     assert closed(made) == [True]
     assert Ledger(lines_of(rec)).orders[1].status == "open"
 
@@ -261,7 +261,7 @@ def test_after_an_interrupt_a_submitted_line_whose_write_fails_is_written_once_m
     fail_once(monkeypatch, "submitted", no_space())
     made = records_made(monkeypatch)
     say = saying([], "  job J-1 sent", KeyboardInterrupt())
-    assert live(write_manifest(tmp_path / "m"), FakeSite(), places, clock, say, max_order=1) == 130     # fault 14
+    assert live(write_manifest(tmp_path / "m"), FakeSite(), places, clock, say, max_order=1) == 130
     rec = records_of(places)[0]
     assert events_of(rec) == [*BEFORE_SEND, "submitting", "stop", "submitted"]
     assert closed(made) == [True]
@@ -284,7 +284,7 @@ def test_a_stop_line_that_cannot_be_written_after_an_interrupt_is_warned_and_end
     fail_always(monkeypatch, "stop")
     made, said = records_made(monkeypatch), []
     site = FakeSite(states={"J-1": [ctrl_c]})
-    assert live(write_manifest(tmp_path / "m"), site, places, clock, said.append, max_order=1) == 130     # fault 14
+    assert live(write_manifest(tmp_path / "m"), site, places, clock, said.append, max_order=1) == 130
     assert events_of(records_of(places)[0]) == [*BEFORE_SEND, "submitting", "submitted"]
     assert not (places.state / "euroqexa.holder").exists()
     assert handlers() == [mine, mine]

@@ -97,9 +97,18 @@ is not `true` or `false`, passes with a `NOTE`: it never stops a call by itself.
   run on the set `default` unless another is named when the backend is made, and a set can be read by its
   id at <https://extranet.it4i.cz/vlq-calibration/> (IT4I's Calibration and Health page). The app names no
   set. When a new set is made is not published.
+- A result needs the counts in `results.pkl` and the key `remote_hw_runtime` of `job.pkl`, the device
+  seconds. A value of it that is not a finite number of 0 or more is kept as `null`. With no counts, no
+  `remote_hw_runtime` at all, or a file that cannot be read, the call stops at `result_error` and the order
+  stays open. When two calls 10 minutes or more apart got that stop,
+  `qdevices resolve RECORD ORDER --unreadable` makes the order final, counted at `job_seconds_limit`. A
+  download that gets no usable answer (a redirect or an HTTP error of 400 or more, or no answer up to
+  `wait_seconds`) also stops at `result_error`; then the two calls must be 24 hours or more apart
+  ({ref}`resolving`).
 - HEAppE gives `StartTime` and `EndTime` with no zone, and does not publish its zone. They appear to be
   local time: in the release gate, in summer time, they were two hours ahead of UTC. The `node_seconds` of
   an init job are `EndTime` minus `StartTime`, so they may be one hour off across a change of the clocks.
+  A time below zero is no measure: it is written as `null` and left out of the sum of `usage`.
 
 ## Traps
 

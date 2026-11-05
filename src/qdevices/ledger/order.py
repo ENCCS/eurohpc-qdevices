@@ -93,6 +93,8 @@ class Order:
                           Outcome.RESOLVED_STUCK if e.get("stuck") else Outcome.RESOLVED_NONE)
         elif e.get("expired"):
             self.final, self.counted = Outcome.RESOLVED_EXPIRED, number(e.get("counted_seconds"))
+        elif e.get("unreadable"):
+            self.final, self.counted = Outcome.RESOLVED_UNREADABLE, number(e.get("counted_seconds"))
         elif e.get("gone"):
             self.final, self.counted = Outcome.RESOLVED_GONE, number(e.get("counted_seconds"))
         elif e.get("over_limit"):

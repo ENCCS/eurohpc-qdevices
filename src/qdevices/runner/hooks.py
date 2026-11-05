@@ -4,9 +4,10 @@ import json
 from typing import Any, Final
 
 from ..config import Windows
+from ..errors import described
 from ..ledger import job_id, seconds_of
 from ..qasm import Qasm
-from ..rules import GENERIC, Point, checked, verdict
+from ..rules import GENERIC, Point, checked, shot_state, verdict
 from .call import Call
 from .stop import StopKind
 
@@ -40,7 +41,7 @@ def _verdicts_of(point: str, user: dict, *args) -> list[dict]:
         try:
             out.append(_plain(checked(user[point](*args), point)))       # plain here: str() of a value can raise
         except (Exception, SystemExit, GeneratorExit) as exc:      # an interrupt stays an interrupt
-            out.append(verdict(point, False, f"the hook {point} raised {type(exc).__name__}: {exc}"))
+            out.append(verdict(point, False, f"the hook {point} raised {described(exc)}"))
     return out
 
 
@@ -60,8 +61,7 @@ def _state(call: Call, job: dict) -> dict:
     return _plain({"site": call.site.name, "machine": call.man["machine"], "project": call.man["project"],
                    "used_seconds": call.used(), "budget_seconds": call.site_config["budget_seconds"],
                    "job_seconds_limit": call.job_limit, "wait_seconds": float(call.site_config["wait_seconds"]),
-                   "site_max_shots": call.site_config.get("site_max_shots") or call.site.max_shots,
-                   "max_shots": call.site_config["max_shots"],
+                   **shot_state(call.site_config, call.site.max_shots),
                    "max_shots_times_gates": call.site.max_shots_times_gates,
                    "gate_count": None if text is None else Qasm.parse(text.decode("utf-8", "replace")).gate_count,
                    "token_seconds_left": call.site.token_seconds_left(),

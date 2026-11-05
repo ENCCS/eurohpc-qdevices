@@ -88,7 +88,15 @@ def test_usage_counts_init_jobs_and_their_node_time():
     lines = [{"event": "init", "order": 1, "step": "init_created", "init_job": 9},
              {"event": "init", "order": 1, "step": "init_status", "init_job": 9, "node_seconds": 12.0},
              {"event": "init", "order": 2, "step": "init_created", "init_job": 11}]
-    assert monitor.init_jobs(lines) == (2, 12.0, 1)
+    assert monitor.init_jobs(lines) == (2, 12.0)
+
+
+def test_init_node_seconds_below_zero_in_an_older_record_are_no_measure_and_left_out_of_the_sum():
+    lines = [{"event": "init", "order": 1, "step": "init_created", "init_job": 9},
+             {"event": "init", "order": 1, "step": "init_status", "init_job": 9, "node_seconds": 12.0},
+             {"event": "init", "order": 2, "step": "init_created", "init_job": 11},
+             {"event": "init", "order": 2, "step": "init_status", "init_job": 11, "node_seconds": -3570.0}]
+    assert monitor.init_jobs(lines) == (2, 12.0)
 
 
 def test_the_monitor_reads_this_apps_records(tmp_path, places, clock):

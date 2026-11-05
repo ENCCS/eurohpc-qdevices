@@ -1,7 +1,9 @@
 --job:
-  <TMP>/older/run1_20260101T100000Z.jsonl is a record of another runner: the app does not collect it, so --job and --expired are not taken (collect it with that runner). --gone takes an open order whose job the site no longer gives
+  <TMP>/older/run1_20260101T100000Z.jsonl is a record of another runner: the app does not collect it, so --job, --expired and --unreadable are not taken (collect it with that runner). --gone takes an open order whose job the site no longer gives
 --expired:
-  <TMP>/older/run1_20260101T100000Z.jsonl is a record of another runner: the app does not collect it, so --job and --expired are not taken (collect it with that runner). --gone takes an open order whose job the site no longer gives
+  <TMP>/older/run1_20260101T100000Z.jsonl is a record of another runner: the app does not collect it, so --job, --expired and --unreadable are not taken (collect it with that runner). --gone takes an open order whose job the site no longer gives
+--unreadable:
+  <TMP>/older/run1_20260101T100000Z.jsonl is a record of another runner: the app does not collect it, so --job, --expired and --unreadable are not taken (collect it with that runner). --gone takes an open order whose job the site no longer gives
 --gone on a final order:
   order 3 of <TMP>/older/run1_20260101T100000Z.jsonl is final: --gone takes only an open order, with a job id and no final line, whose job the site no longer gives
 --gone on a lost order:

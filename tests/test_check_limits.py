@@ -1,4 +1,4 @@
-"""Faults 27 and 28 of the plan: huge numbers and deep nesting are refused or left unread by the check."""
+"""Huge numbers and deep nesting are refused or left unread by the check."""
 
 import json
 

@@ -3,7 +3,7 @@
   "site": "euroqexa",
   "machine": "EQE1",
   "project": "MY-PROJECT",
-  "made_with": "Qrisp and a small function, examples/hamiltonian/write_chain.py",
+  "made_with": "a small function, examples/hamiltonian/write_chain.py",
   "ideal": "keys read q[2] q[1] q[0]: 001 at the start, 100 on arrival",
   "jobs": [
     {"order": 1, "name": "MAIN", "file": "MAIN.qasm", "sha256": "13ac38c6ebe118b49769e417ca3934017c4937de16644aeaddecdc5e946a9f4f", "shots": 1000, "time": "T", "steps": 2, "gates": 30, "two_qubit": 10, "key": "100", "excitations": 1, "exact_shares": {"100": 1.0}, "text_shares": {"001": 0.026555, "010": 0.003037, "100": 0.970409}}

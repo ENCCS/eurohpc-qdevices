@@ -69,11 +69,12 @@ class Resolution(ABC):
     def site(self) -> str:
         """The site whose lock the resolve takes; Refused when the record or the decision is not for one."""
 
-    def read(self, site: str) -> list[dict]:
-        """The lines of the record, read again under the lock."""
+    @staticmethod
+    def read(path: Path) -> list[dict]:
+        """The lines of a record: read once to find its site, then again under the lock; Refused when unreadable."""
         try:
-            return records.RecordLines.read(self.path).events
-        except records.RecordError as exc:          # removed or changed since the first read
+            return records.RecordLines.read(path).events
+        except records.RecordError as exc:          # not there, or removed or changed since the first read
             raise Refused(str(exc)) from None
 
     def decided(self, site: str, events: list[dict]) -> list[dict]:
@@ -102,7 +103,7 @@ class Resolution(ABC):
                           f"({type(exc).__name__}: {exc})") from None
 
     def _case(self, site: str) -> Case:
-        events = self.read(site)
+        events = self.read(self.path)
         lines = self.decided(site, events)
         o = Ledger(lines).orders.get(self.order)
         limit = self._limit(site) if self.decision is not None else None

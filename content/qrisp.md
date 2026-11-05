@@ -23,8 +23,8 @@ answers are in Qrisp's labels.
 
 The [table in `examples/qrisp/`](https://github.com/ENCCS/eurohpc-qdevices/blob/main/examples/qrisp/README.md) lists
 them, with what stayed readable. `bell` and `ghz3` take 100 shots, the others 1000. One run each, on one day: it shows how
-much of each answer survived that day, not how good the machine is. The site's compile can very likely merge gates, so
-the size of a text is not always the cost of a job: `ising2` read the same at 5 steps and at 16.
+much of each answer survived that day, not how good the machine is. The site's compile can merge gates, so the size
+of a text is not always the cost of a job: `ising2` read the same at 5 steps and at 16, and both ran with 2 CZ.
 
 To emulate any of them with no account: `./emulate.sh` in its folder, or the page
 [all_examples.ipynb](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/all_examples.ipynb) on Binder.
@@ -61,7 +61,13 @@ pixi run --manifest-path examples/qrisp/pixi.toml qrisp-examples --project YOURS
    to `examples/qrisp/notes.py`, which its README takes.
 2. Run the script again. It writes one folder for each program, with the text and a manifest of one job
    for Euro-Q-Exa, with its SHA-256.
-3. To collect several programs in one run, copy their job lines into one manifest, with the orders 1 to N
+3. Make the rest of the folder. The script does not write the stored results, `emulate_qutip.py`,
+   `emulate_qrisp.py` or the pictures: a new folder has none of them, and a changed one still shows the old
+   circuit. From the top of the clone, run the tasks `qutip-emulated`, `qrisp-emulated`, `qutip-scripts`,
+   `qrisp-scripts` and `pictures` of that workspace, in this order, each with the folder in `examples/qrisp/`.
+   [After a change](https://github.com/ENCCS/eurohpc-qdevices/blob/main/examples/README.md#after-a-change) gives
+   the commands.
+4. To collect several programs in one run, copy their job lines into one manifest, with the orders 1 to N
    ({doc}`manifests-and-records`).
 
 ## How the text is written

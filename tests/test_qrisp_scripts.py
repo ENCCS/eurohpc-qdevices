@@ -4,9 +4,12 @@ The first tests read the scripts and need no Qrisp. Those that run a script need
 """
 
 import ast
+import importlib
 import json
 import platform
+import re
 import runpy
+import shutil
 import sys
 from pathlib import Path
 
@@ -47,7 +50,7 @@ def imported(module: ast.Module) -> set:
 @pytest.mark.parametrize("folder", FOLDERS, ids=IDS)
 def test_a_script_imports_only_qrisp_and_the_standard_library_and_qasm2_for_euroqexa(folder):
     found = imported(tree(folder))
-    assert found <= {"qrisp", "contextlib", "io", "math", "sys", "pathlib", "qasm2"}, found
+    assert found <= {"qrisp", "contextlib", "io", "math", "os", "sys", "pathlib", "qasm2"}, found
     assert ("qasm2" in found) == for_qasm(folder)
 
 
@@ -99,9 +102,11 @@ def test_each_script_gives_the_stored_shares_of_every_job(folder):
         assert largest_apart(said, stored[job["name"]]) <= APART, job["name"]
 
 
-def test_a_script_run_as_a_program_prints_a_line_for_each_job_as_emulate_sh_does(capsys):
+def test_a_script_run_as_a_program_prints_a_line_for_each_job_as_emulate_sh_does(monkeypatch, capsys):
     pytest.importorskip("qrisp")
     folder = EXAMPLES / "qrisp" / "bell"
+    monkeypatch.setattr(sys, "argv", [str(folder / SCRIPT)])                       # python emulate_qrisp.py
+    monkeypatch.setattr(sys, "orig_argv", [sys.executable, str(folder / SCRIPT)])
     runpy.run_path(str(folder / SCRIPT), run_name="__main__")
     stored = qrisp_stored(folder)
     assert capsys.readouterr().out.splitlines() == [
@@ -115,6 +120,30 @@ def test_the_writer_gives_the_same_bytes_again(folder):
     from write_qrisp_scripts import script_text
 
     assert script_text(folder) == (folder / SCRIPT).read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize("writer", ["write_qutip_scripts", "write_qrisp_scripts"])
+def test_both_writers_stop_with_one_line_at_a_folder_outside_examples(writer, tmp_path):
+    """A folder as `qrisp-examples --out my-runs` writes one: a manifest and its text, but not below examples/."""
+    pytest.importorskip("qutip_qip" if writer == "write_qutip_scripts" else "qrisp")
+    folder = tmp_path / "my-runs" / "bell"
+    folder.mkdir(parents=True)
+    for name in ("manifest.json", "BELL.qasm"):
+        shutil.copy(EXAMPLES / "qrisp" / "bell" / name, folder / name)
+    said = f"{folder}: emulate_qutip.py and emulate_qrisp.py are written in the example folders below examples/ only"
+    with pytest.raises(SystemExit, match=f"^{re.escape(said)}$"):
+        importlib.import_module(writer).script_text(folder, tmp_path / "examples")
+
+
+@pytest.mark.parametrize("writer", ["write_qutip_scripts", "write_qrisp_scripts"])
+def test_no_job_function_takes_a_name_that_a_script_imports(writer):
+    """A job named OS would give def os(), which would hide the module os from the main block."""
+    pytest.importorskip("qutip_qip" if writer == "write_qutip_scripts" else "qrisp")
+    module = importlib.import_module(writer)
+    bound = {(alias.asname or alias.name).split(".")[0] for folder in FOLDERS
+             for node in ast.parse(module.script_text(folder)).body if isinstance(node, (ast.Import, ast.ImportFrom))
+             for alias in node.names}
+    assert bound <= module.TAKEN, bound - module.TAKEN
 
 
 @pytest.mark.parametrize("folder", FOLDERS, ids=IDS)
@@ -153,3 +182,24 @@ def test_a_script_of_every_gate_gives_our_shares(tmp_path):
     script, ours = every_gate_script(tmp_path, script_text)
     assert largest_apart(script["shares_of"](script["JOBS"]["EVERY"]()), ours) <= 0.0001
     assert "pi" not in script                          # no call uses pi: the comment line of r names it, no import
+
+
+@pytest.mark.parametrize(("made", "said"), [
+    ("a small function, examples/hamiltonian/write_chain.py",
+     "Its text was made with a small function, examples/hamiltonian/write_chain.py."),
+    ("Qrisp and a small function, examples/hamiltonian/write_chain.py",
+     "Its text was made with Qrisp and a small function, examples/hamiltonian/write_chain.py."),
+    (None, None)], ids=["chain-alone", "with-qrisp", "none"])
+def test_a_script_says_what_made_its_text_as_the_manifest_says_with_qrisp_or_not(made, said, tmp_path):
+    """hamiltonian/live: its one text comes from chain.py alone, and the made_with of its manifest says so."""
+    pytest.importorskip("qrisp")
+    from write_qrisp_scripts import script_text
+
+    folder, copy = EXAMPLES / "hamiltonian" / "live", tmp_path / "examples" / "hamiltonian" / "live"
+    copy.mkdir(parents=True)
+    shutil.copy(folder / "MAIN.qasm", copy / "MAIN.qasm")
+    manifest = json.loads((folder / "manifest.json").read_text(encoding="utf-8"))
+    manifest = {key: value for key, value in {**manifest, "made_with": made}.items() if value is not None}
+    (copy / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    doc = " ".join(ast.get_docstring(ast.parse(script_text(copy, tmp_path / "examples"))).split())
+    assert (said in doc) if said else ("made with" not in doc)

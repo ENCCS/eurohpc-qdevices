@@ -11,8 +11,8 @@ positional arguments:
     send                send the jobs of a manifest, one at a time (needs --live)
     resolve             record what became of a lost order, of a VLQ job whose submit request may
                         have reached the site, of a job the site showed only as New for days, of a
-                        result above job_seconds_limit, or of a result or a job the site no longer
-                        gives (offline)
+                        result above job_seconds_limit, of a result that cannot be read, or of a
+                        result or a job the site no longer gives (offline)
     unlock              remove a holder file left by another host (offline)
     runs                one line for each record
     usage               totals by site and project

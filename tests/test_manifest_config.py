@@ -1,4 +1,4 @@
-"""Section 4 (the manifest) and section 7 (the config)."""
+"""The manifest and the config."""
 
 import json
 

@@ -6,6 +6,8 @@
   order 1 of <TMP>/b/records/euroqexa/m/run_20260105T120000Z.jsonl is open: --expired takes only an open order whose last stop is result_expired, after two calls 10 minutes or more apart got that answer (its last stop is not result_expired)
 --over-limit on it:
   order 1 of <TMP>/b/records/euroqexa/m/run_20260105T120000Z.jsonl is open: --over-limit takes only a final order whose result has more seconds than job_seconds_limit (it has no result with seconds)
+--unreadable on it:
+  order 1 of <TMP>/b/records/euroqexa/m/run_20260105T120000Z.jsonl is open: --unreadable takes only an open order whose last stop is result_error, after two calls 10 minutes or more apart got an answer that could not be used, or two calls 24 hours or more apart got that stop (its last stop is not result_error)
 --none on an open order with no status line:
   order 1 of <TMP>/c/records/vlq/m/run_20260105T120100Z.jsonl is open, not lost: with --job or --none only a lost order, an open VLQ order whose last stop is submit_unknown, or an open order that the site showed only as New for 3 days or more and still New in the last 24 h, is resolved (it has no status line)
 --job on an open VLQ order whose last stop is submit_unknown:
@@ -22,3 +24,11 @@
   order 1 of <TMP>/e/records/piastq/m/run_20260109T120400Z.jsonl is open: --expired takes only an open order whose last stop is result_expired, after two calls 10 minutes or more apart got that answer (one call only got that answer: resume once more, 10 minutes or more later)
 --expired after two calls a minute apart:
   order 1 of <TMP>/e/records/piastq/m/run_20260109T120400Z.jsonl is open: --expired takes only an open order whose last stop is result_expired, after two calls 10 minutes or more apart got that answer (the calls that got it are less than 10 minutes apart: resume once more later)
+--unreadable on an order whose last stop is result_expired:
+  order 1 of <TMP>/e/records/piastq/m/run_20260109T120400Z.jsonl is open: --unreadable takes only an open order whose last stop is result_error, after two calls 10 minutes or more apart got an answer that could not be used, or two calls 24 hours or more apart got that stop (its last stop is not result_error)
+--unreadable after one call got result_error:
+  order 1 of <TMP>/u/records/piastq/m/run_20260109T120500Z.jsonl is open: --unreadable takes only an open order whose last stop is result_error, after two calls 10 minutes or more apart got an answer that could not be used, or two calls 24 hours or more apart got that stop (one call only got an answer that could not be used: resume once more, 10 minutes or more later)
+--unreadable after two calls a minute apart:
+  order 1 of <TMP>/u/records/piastq/m/run_20260109T120500Z.jsonl is open: --unreadable takes only an open order whose last stop is result_error, after two calls 10 minutes or more apart got an answer that could not be used, or two calls 24 hours or more apart got that stop (the calls that got an answer that could not be used are less than 10 minutes apart: resume once more later)
+--expired on an order whose last stop is result_error:
+  order 1 of <TMP>/u/records/piastq/m/run_20260109T120500Z.jsonl is open: --expired takes only an open order whose last stop is result_expired, after two calls 10 minutes or more apart got that answer (its last stop is not result_expired)

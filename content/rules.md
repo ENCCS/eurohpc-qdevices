@@ -53,8 +53,11 @@ leftmost character of each key of `counts`: element i of a shot is qubit i (rele
 client library), and the app joins the shot in that order. On Euro-Q-Exa and VLQ the keys are as the
 site gives them; LRZ publishes no bit order. On Euro-Q-Exa, as measured with this app and not published by
 LRZ, a key reads q[n-1] ... q[0], so q[0] is the rightmost character: a job with H on q[2] varied only the
-leftmost. Qrisp's label of a variable reads q[0] first, so reverse a key to compare it with `get_measurement`
-({doc}`qrisp`).
+leftmost. On VLQ a key reads c[n-1] ... c[0], so c[0] is the rightmost character; the examples measure q[i]
+into c[i]. IT4I's guide gives no bit order. Jobs of six bits showed it, though not with this app: one that
+flipped only the qubit read into c[0] gave `000001` in most shots. The app reads the counts from the same
+result file of the site, in the same way. Qrisp's label of a variable reads q[0] first, so reverse a key to
+compare it with `get_measurement` ({doc}`qrisp`).
 
 ## The generic rules
 

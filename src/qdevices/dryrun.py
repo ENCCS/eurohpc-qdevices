@@ -13,6 +13,7 @@ from .saved_reads import SavedReads
 from .screen import quoted
 from .screen import say as default_say
 from .sites import SITES
+from .values import is_int
 
 
 def _failed(say: Callable[[str], None], problems: list[str]) -> int:
@@ -62,7 +63,7 @@ class _DryRun:
             self.say(f"  layout    {self.read.get('qubits')} qubits, {self.read.get('pairs')} pairs, layout_sha256 "
                      f"{self.read['layout_sha256']}")
 
-    def _checks(self) -> int | None:
+    def _checks(self) -> dict:
         man, cls, site_config = self.man, self.cls, self.site_config
         self.problems += project_problems(man, site_config)
         pin = layout.Pin.of(man, cls)
@@ -71,18 +72,18 @@ class _DryRun:
             self.say("  note      the layout pin of the manifest is compared with a read only, and none is saved")
         if site_config["budget_seconds"] is None:
             self.problems.append(f"no budget_seconds for {man['site']} in qdevices.toml: a send is refused without it")
-        site_most = site_config.get("site_max_shots") or cls.max_shots
+        limits = rules.shot_state(site_config, cls.max_shots)
+        site_most = limits["site_max_shots"]
         if cls.max_shots and site_most > cls.max_shots:
             self.say(f"  note      site_max_shots {site_most} is above the limit of {cls.max_shots} the app holds for "
                      f"{man['site']}: the site may accept such a job and not run it")
-        limits = [n for n in (site_most, site_config["max_shots"]) if n is not None]
-        return min(limits) if limits else None
+        return limits
 
-    def _plan(self, most: int | None) -> None:
+    def _plan(self, limits: dict) -> None:
         total_shots, total_cost = 0, 0.0
         self.say("  plan")
         for job in self.man["jobs"]:
-            shots, cost = self._job(job, most)
+            shots, cost = self._job(job, limits)
             total_shots += shots
             total_cost += cost or 0.0
         count, site = len(self.man["jobs"]), self.man["site"]
@@ -90,14 +91,15 @@ class _DryRun:
                  + (f", {total_cost:.3f} s by the published rule" if billing.publishes(site) else ""))
         self.say(f"  billing   {self.cls.profile.billing.text}")
 
-    def _job(self, job: dict, most: int | None) -> tuple[int, float | None]:
+    def _job(self, job: dict, limits: dict) -> tuple[int, float | None]:
         cls, where, shots = self.cls, f"order {job.get('order')} ({job.get('name')})", job.get("shots")
         mine = list(cls.validate(job, self.read)) if "text" in job else []
-        if most is not None and isinstance(shots, int) and shots > most:
-            mine.append(f"{shots} shots, the limit is {most}")
+        if is_int(shots):                 # shots of another type are a problem of the manifest
+            shot_rule = rules.shot_limit(job, limits)
+            mine += [] if shot_rule["passed"] else [shot_rule["reason"]]
         shown, gate_problems, gate_notes = self._gates(job)
         mine += gate_problems
-        counted = isinstance(shots, int) and shots <= manifests.MOST_SHOTS        # above it, refused by the manifest
+        counted = manifests.takes_shots(shots)                  # others are refused by the manifest, and not costed
         cost = billing.published_seconds(self.man["site"], shots) if counted else None
         self.say(f"    [{job.get('order')}/{len(self.man['jobs'])}] {job.get('name')!s:<12} {shots!s:>6} shots  "
                  f"{job.get('file')}  options {job.get('options') or {}}{shown}"

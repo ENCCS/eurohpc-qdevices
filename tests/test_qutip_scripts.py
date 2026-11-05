@@ -54,7 +54,7 @@ def run(folder: Path) -> dict:
 @pytest.mark.parametrize("folder", FOLDERS, ids=IDS)
 def test_a_script_imports_only_numpy_qutip_and_qutip_qip_and_nothing_from_tools(folder):
     found = imported(tree(folder))
-    assert found == {"numpy", "qutip", "qutip_qip"} | ({"re", "sys"} if for_qasm(folder) else set())
+    assert found == {"numpy", "qutip", "qutip_qip", "os", "sys"} | ({"re"} if for_qasm(folder) else set())
 
 
 @pytest.mark.parametrize("folder", FOLDERS, ids=IDS)
@@ -117,6 +117,23 @@ def test_only_the_job_on_25_qubits_is_wide():
         EXAMPLES / "qrisp" / "hello" / "README.md").read_text(encoding="utf-8")
 
 
+def test_the_script_of_the_wide_job_says_to_shut_the_kernel_down_first_on_binder(tmp_path):
+    """The docstrings of qrisp/hello and qrisp/bell as the writer writes them now; the README gives the numbers."""
+    pytest.importorskip("qutip_qip")
+    from readme import KERNEL_FIRST
+    from write_qutip_scripts import script_text
+
+    said = {}
+    for name in ("hello", "bell"):
+        folder, copy = EXAMPLES / "qrisp" / name, tmp_path / "examples" / "qrisp" / name
+        copy.mkdir(parents=True)
+        for file in ("manifest.json", *(job["file"] for job in jobs_of(folder))):
+            shutil.copy(folder / file, copy / file)
+        said[name] = " ".join(ast.get_docstring(ast.parse(script_text(copy, tmp_path / "examples"))).split())
+    assert f"it takes about 25 seconds and 1.5 GB of memory on a laptop. {KERNEL_FIRST}" in said["hello"]
+    assert not any(c.isdigit() for c in KERNEL_FIRST) and KERNEL_FIRST not in said["bell"]
+
+
 @pytest.mark.parametrize(("names", "taken"), [(["CLASS"], set()), (["PRINT"], set()), (["1BELL"], set()),
                                               (["__FILE__"], set()), (["TOP"], {"top"}), (["BELL", "Bell"], set())],
                          ids=["keyword", "builtin", "not-a-name", "two-underscores", "taken", "twice"])
@@ -142,9 +159,11 @@ def test_each_script_gives_the_stored_shares_of_every_job(folder):
         assert script["top"](said) == top(stored[job["name"]]) == top(said), job["name"]
 
 
-def test_a_script_run_as_a_program_prints_a_line_for_each_job_as_emulate_sh_does(capsys):
+def test_a_script_run_as_a_program_prints_a_line_for_each_job_as_emulate_sh_does(monkeypatch, capsys):
     pytest.importorskip("qutip_qip")
     folder = EXAMPLES / "hamiltonian" / "state_transfer"
+    monkeypatch.setattr(sys, "argv", [str(folder / SCRIPT)])                       # python emulate_qutip.py
+    monkeypatch.setattr(sys, "orig_argv", [sys.executable, str(folder / SCRIPT)])
     runpy.run_path(str(folder / SCRIPT), run_name="__main__")
     lines = capsys.readouterr().out.splitlines()
     stored = qutip_stored(folder)

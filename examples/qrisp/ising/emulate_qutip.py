@@ -22,6 +22,7 @@ examples/tools/write_qutip_scripts.py writes this file from the text of each job
 so you can copy it anywhere.
 """
 
+import os
 import re
 import sys
 
@@ -251,14 +252,21 @@ def to_qasm(qc, read):
 
 
 if __name__ == "__main__":
-    if sys.argv[1:2] == ["--qasm"]:
-        names = sys.argv[2:] or list(JOBS)
+    # The script reads its arguments when sys.orig_argv (Python 3.10 or later) ends with sys.argv and sys.argv[0] is
+    # the file in __file__, as with python FILE; else (python -m, a Jupyter kernel) only when the first is --qasm.
+    program = ("__file__" in globals() and getattr(sys, "orig_argv", [])[-len(sys.argv):] == sys.argv
+               and sys.argv and os.path.realpath(sys.argv[0]) == os.path.realpath(__file__))
+    args = sys.argv[1:] if program or sys.argv[1:2] == ["--qasm"] else []
+    if not args:
+        for name, (build, read) in JOBS.items():
+            print(f"{name}: QuTiP, run now, no noise  {top(shares_of(build(), read))}")
+        print("Emulated on this computer: nothing was sent.")
+    elif args[0] == "--qasm":
+        names = args[1:] or list(JOBS)
         if unknown := [name for name in names if name not in JOBS]:
             sys.exit(f"no job {', '.join(unknown)} here; the jobs: {', '.join(JOBS)}")
         for name in names:
             build, read = JOBS[name]
             print(("" if len(names) == 1 else f"// {name}\n") + to_qasm(build(), read), end="")
     else:
-        for name, (build, read) in JOBS.items():
-            print(f"{name}: QuTiP, run now, no noise  {top(shares_of(build(), read))}")
-        print("Emulated on this computer: nothing was sent.")
+        sys.exit("usage: python emulate_qutip.py [--qasm [JOB ...]]")

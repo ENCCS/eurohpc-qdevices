@@ -83,12 +83,12 @@ def fixed_set(tmp_path, places, clock) -> dict:
     return found
 
 
-def test_runs_of_the_fixed_set_and_the_line_the_run_10_script_reads(tmp_path, places, clock, capsys, golden):
+def test_runs_of_the_fixed_set_and_its_open_order_line_starts_with_the_site(tmp_path, places, clock, capsys, golden):
     found = fixed_set(tmp_path, places, clock)
     code, text = run(places, clock, capsys, "runs", tmp_path / "absent.jsonl")
     golden("monitor_runs", text)
     line = line_of(text.splitlines(), found["vlq"])
-    assert code == 0 and re.match("vlq .*open or lost", line)          # as the script greps: '^vlq .*open or lost'
+    assert code == 0 and re.match("vlq .*open or lost", line)     # so a script finds it with '^vlq .*open or lost'
 
 
 def test_usage_of_the_fixed_set(tmp_path, places, clock, capsys, golden):

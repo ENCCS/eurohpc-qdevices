@@ -91,6 +91,8 @@ class Channel:
     client: httpx.Client
 
     def _unsafe(self, method: str, path: str, kwargs: dict) -> str | None:
+        if not isinstance(method, str):          # first: b"DELETE" would pass the checks below, and httpx sends it
+            return "its method is not text"
         if httpx.URL(path).is_absolute_url:
             return "an absolute URL would leave the fixed address of the client"
         given = sorted(_CLIENT_KEYWORDS.intersection(kwargs))
@@ -101,8 +103,6 @@ class Channel:
         return self._unsafe_in_form(method, path, kwargs)     # after the checks above, so their refusals come first
 
     def _unsafe_in_form(self, method: str, path: str, kwargs: dict) -> str | None:
-        if not isinstance(method, str):
-            return "its method is not text"
         token = self.client.headers.get("authorization")
         if httpx.Headers(kwargs.get("headers") or {}).get("authorization", token) != token:
             return "the token goes only in the headers of the client"

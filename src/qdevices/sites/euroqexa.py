@@ -25,6 +25,7 @@ FAILED: Final = frozenset({"FAILED", "CANCELLED", "CANCELED"})
 _REFUSAL_WORDS: Final = re.compile(r"\b(?:cz|pair|coupler|direction|locus|loci|qubit|no_modify|gate(?!way)|native)",
                                    re.IGNORECASE)
 _ALWAYS: Final = frozenset({"measure", "barrier"})
+_PROGRAM: Final = re.compile(r"\bOPENQASM\s+[0-9]")      # the version line that opens each OpenQASM program
 COMPILED: Final = "without no_modify the site compiles the circuit, so its own count of gates can be higher"
 LOGIN: Final = (
     "Euro-Q-Exa: make a token on the Tokens page of the Munich Quantum Portal, https://portal.quantum.lrz.de.",
@@ -119,6 +120,8 @@ class EuroQExa(Site):
         parsed = Qasm.parse(text)
         problems = [] if _is_utf8(job["text"]) else ["the file is not UTF-8 text"]       # submit decodes strictly
         problems += [] if "OPENQASM" in text else ["the file is not an OpenQASM text"]
+        if (programs := len(_PROGRAM.findall(parsed.clean))) > 1:            # the joined --qasm of several jobs
+            problems.append(f"the file holds {programs} OpenQASM programs: a file to send holds one job")
         qubits = parsed.qubit_problems(read)
         problems += qubits
         if job["options"].get("no_modify") and read and read.get("gate_names"):

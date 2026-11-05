@@ -1,4 +1,4 @@
-"""The third round of fault fixes, items 4 to 10: each fault is a refusal, a stop or a line, before anything is sent."""
+"""Odd values in the config, the texts, the ids and the answers of a site: each is a refusal, a stop or a line."""
 
 import copy
 import json

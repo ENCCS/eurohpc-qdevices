@@ -1,4 +1,4 @@
-"""Faults 4, 11 and 30 of the plan: a local file of an odd form is a refusal or a line not read, no traceback."""
+"""A local file of an odd form is a refusal or a line not read, no traceback."""
 
 import json
 import os
@@ -150,7 +150,7 @@ def test_resolve_of_an_order_whose_name_holds_a_lone_surrogate_writes_its_decisi
 
 
 def test_a_close_that_fails_while_another_error_leaves_keeps_that_error(tmp_path, clock, monkeypatch):
-    """Fault 18 of the plan: the error of the close replaced the one on its way out."""
+    """An error of the close does not replace the one on its way out."""
     def failing(self):
         raise OSError(5, "Input/output error")
 

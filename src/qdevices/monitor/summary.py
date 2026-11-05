@@ -7,7 +7,9 @@ from typing import Any, Final, Self
 from .. import billing, older
 from ..ledger import Ledger, Outcome, Status, seconds_of
 from ..record import RecordLines
+from ..resolve import DECISIONS, joined
 from ..sites.protocol import INIT_CREATED, INIT_JOB, INIT_STATUS, NODE_SECONDS
+from ..values import measure
 
 _SHORT: Final = 70
 
@@ -23,8 +25,8 @@ def short(text: Any, width: int = _SHORT) -> str:
     return text if len(text) <= width else text[:width - 3] + "..."
 
 
-def init_jobs(events: list[dict]) -> tuple[int, float, int]:
-    """The init jobs of a record: how many, their node seconds where known, and how many have none."""
+def init_jobs(events: list[dict]) -> tuple[int, float]:
+    """The init jobs of a record: how many, and their node seconds where measured; a time below zero is no measure."""
     ids, seconds = set(), {}
     for e in events:
         if e.get("event") != "init":
@@ -34,8 +36,8 @@ def init_jobs(events: list[dict]) -> tuple[int, float, int]:
         elif e.get("step") == "created" and e.get("job") is not None:      # an older runner
             ids.add(e["job"])
         if e.get("step") == INIT_STATUS and isinstance(e.get(NODE_SECONDS), (int, float)):
-            seconds[e.get(INIT_JOB)] = float(e[NODE_SECONDS])
-    return len(ids), round(sum(seconds.values()), 3), len(ids - set(seconds))
+            seconds[e.get(INIT_JOB)] = measure(float(e[NODE_SECONDS]))
+    return len(ids), round(sum(s for s in seconds.values() if s is not None), 3)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -56,7 +58,6 @@ class Summary:
     published: float | None
     init_jobs: int
     init_node_seconds: float
-    init_no_seconds: int
     open: list[tuple[int, Status]]
     cut_lines: int
     last: str
@@ -72,7 +73,7 @@ class Summary:
         results, seconds, decided, counted = cls._orders(merged)
         start = own.start or {}
         stamps = [e["utc"] for e in events if e.get("utc")]
-        inits, init_seconds, init_unknown = init_jobs(events)
+        inits, init_seconds = init_jobs(events)
         published = [billing.published_seconds(site, r.get("shots") or 0)
                      for r, s in zip(results, seconds, strict=True) if s is not None]
         return cls(path=str(path), site=site, project=own.project or "-",
@@ -82,8 +83,8 @@ class Summary:
                    seconds=round(sum(s for s in seconds if s is not None), 3), no_seconds=seconds.count(None),
                    counted=round(sum(s for s in counted if s is not None), 3), decided=len(decided),
                    published=round(sum(p for p in published if p is not None), 3) if billing.publishes(site) else None,
-                   init_jobs=inits, init_node_seconds=init_seconds, init_no_seconds=init_unknown,
-                   open=merged.open_or_lost, cut_lines=len(lines.cut), last=cls._last_call(events),
+                   init_jobs=inits, init_node_seconds=init_seconds, open=merged.open_or_lost,
+                   cut_lines=len(lines.cut), last=cls._last_call(events),
                    first_utc=min(stamps, default=None), last_utc=max(stamps, default=None))
 
     def line(self) -> str:
@@ -114,7 +115,8 @@ class Summary:
         jobs = self.manifest_jobs if self.manifest_jobs is not None else "-"
         parts = [f"{self.results} results of {jobs} jobs", f"{self.seconds:.1f} s measured"]
         if self.decided:
-            parts.append(f"{self.counted:.1f} s counted ({self.decided} orders resolved over the limit or expired)")
+            parts.append(f"{self.counted:.1f} s counted ({self.decided} orders resolved "
+                         f"{joined(list(DECISIONS.values()))})")
         if self.no_seconds:
             parts.append(f"{self.no_seconds} results with no seconds")
         if self.published is not None:

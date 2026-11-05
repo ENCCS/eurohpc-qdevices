@@ -1,4 +1,4 @@
-"""Item 10 of the third round: faults that ended in a traceback with nothing sent, each now a plain outcome."""
+"""Faults that ended in a traceback with nothing sent, each now a plain outcome."""
 
 import json
 

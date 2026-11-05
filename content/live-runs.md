@@ -42,8 +42,11 @@ For VLQ, a job request is any request of the metered job. Each site page says wh
   lost order.
 - In the wait, a failed read of the state or result (no answer, 500 or more, or the Piast-Q answer of too
   many connections) is a missed poll, asked again at the next poll until `wait_seconds`. When the wait ends
-  with no good answer, or an answer ends it at once, the call stops (`status_error` or `result_error`). The
-  order stays open, and a resume collects it later.
+  with no good answer, or an answer ends it at once, the call stops (`status_error` or `result_error`). Its
+  stop line holds `missed`: the kind of the last missed poll, or `null` when an answer ended the wait at once.
+  The order stays open, and a resume collects it later. A result that still cannot be read is made final
+  with `qdevices resolve RECORD ORDER --unreadable`: after two calls 10 minutes or more apart when the
+  answer could not be used, else after two calls 24 hours or more apart ({ref}`resolving`).
 - The wait for a VLQ init job ends at the first failed read (a stop `prepare`). The order stays unsent. A
   resume with `--max-order` makes a new init job.
 - A line `RECORD WRITE FAILED (...): order N (NAME), job ID: ...` or `Under way at the stop: ...` gives the
@@ -101,9 +104,17 @@ other:
 | open or lost, with a job id that no URL can hold (a newline in it) | `--job ID` with the id the site shows, or `--none` | no read of its state can name the job | with `--none`: final, counts at `job_seconds_limit`, as a job may exist |
 | open, shown only as `New` (Piast-Q) | `--none` | every status line with a state says `New` (a missed poll is passed over), the first is 3 days old or more and the last at most 24 hours old: resume once more first | counts at `job_seconds_limit`, as its job may still run |
 | open, last stop `result_expired` (Piast-Q) | `--expired` | two calls 10 minutes or more apart got that answer | final, counts at `job_seconds_limit` |
+| open, last stop `result_error`: the job finished, and its result cannot be read | `--unreadable` | two calls 10 minutes or more apart got an answer that could not be used, or two calls 24 hours or more apart got that stop (below) | final, counts at `job_seconds_limit` |
 | final, the result has more seconds than `job_seconds_limit` | `--over-limit` | the time is a wait at the site, cause not known, not the run of the job | counts at `job_seconds_limit`; the measured seconds stay in the record |
 
 ![The states of an order: unsent, lost, open and final, and the lines that move it](figs/order-states.svg)
+
+For `--unreadable`, an answer that could not be used is a `result_error` stop with `missed` `null` and no
+`http_status` of 300 or more. Any other `result_error` stop got no usable answer: missed polls up to
+`wait_seconds`, a redirect or an HTTP error of 400 or more, or a stop line of qdevices before 0.2.0, which
+has no `missed`. The stop says how far apart the two calls must be, and names the command. A record with an
+`--unreadable` decision needs qdevices 0.2.0 or later; an older app reads the order as open and refuses new
+sends of that site.
 
 The app never sends a resolved order again, and never cancels the job at the site. For an open order that
 `resolve` does not take, ask the site (each site page gives its support), and resume once the job is final.
@@ -119,8 +130,8 @@ not write, and which is not in the records folder of the app.
   or result that the other runner writes later stands. A send reads only the decisions of its own site.
 - It takes `--none` for a lost order (final, with no job), `--gone` for an open order whose job the site
   no longer gives (final, counts at `job_seconds_limit`), and `--over-limit` as above.
-- It refuses `--job` and `--expired`: the app does not collect such a record, so collect it with its
-  runner. `--gone` on a record of this app is refused: there, `--expired` takes such an order.
+- It refuses `--job`, `--expired` and `--unreadable`: the app does not collect such a record, so collect
+  it with its runner. `--gone` on a record of this app is refused: there, `--expired` takes such an order.
 
 (tokens)=
 

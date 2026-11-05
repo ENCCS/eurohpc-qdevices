@@ -1,6 +1,6 @@
 # Two spins in a field
 
-Five first-order Trotter steps of the Ising model, by Qrisp's `trotterization`. On two qubits all the steps make one two-qubit block, which 2 CX can make. The same model at 16 steps, with 32 two-qubit gates in the text, read `11` in 789 of 1000, against 783 here, so the site's compile very likely merged the steps: [`hamiltonian/two_spins`](../../hamiltonian/two_spins/README.md) holds both jobs.
+Five first-order Trotter steps of the Ising model, by Qrisp's `trotterization`. On two qubits all the steps make one two-qubit block, which 2 CX can make. The same model at 16 steps, with 32 two-qubit gates in the text, read `11` in 789 of 1000, against 783 here: the site's compile merged the steps, and both jobs ran with 2 CZ (the job page of the portal). [`hamiltonian/two_spins`](../../hamiltonian/two_spins/README.md) holds both jobs.
 
 ```mermaid
 flowchart LR

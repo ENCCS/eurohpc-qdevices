@@ -39,6 +39,6 @@ class ExampleFolder:
     def write_page(self, page: Readme) -> None:
         """Write README.md and copy the three scripts."""
         self.path.mkdir(parents=True, exist_ok=True)
-        (self.path / "README.md").write_text(page.text(self.name), encoding="utf-8")
+        (self.path / "README.md").write_text(page.text(self.name, self.path), encoding="utf-8")
         for model, script in SCRIPT_MODELS.items():
             shutil.copy(TOOLS / model, self.path / script)

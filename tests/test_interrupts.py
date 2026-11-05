@@ -1,4 +1,4 @@
-"""Invariants 2 (never cancel), 9 (the screen never ends a call) and 10 (resume only from the record itself)."""
+"""Never cancel, the screen never ends a call, and resume only from the record itself."""
 
 import io
 import os

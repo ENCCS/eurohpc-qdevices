@@ -1,14 +1,24 @@
 """The README.md of an example folder: what it does, a diagram, what came back, how to run it."""
 
+import os
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Final
 
+EXAMPLES: Final = Path(__file__).resolve().parent.parent
 MANUAL: Final = "https://enccs.github.io/eurohpc-qdevices/"
 BINDER: Final = "https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/all_examples.ipynb"
 NOT_SENT: Final = "Not sent yet with this app."
 DRAWN: Final = {"hamiltonian/state_transfer": "MAIN", "euroqexa-three-jobs": "BELL"}   # circuit.png; else the first job
 # What emulate_qutip.py takes for a job on so many qubits, as its docstring and the README say.
 WIDE: Final = {25: "about 25 seconds and 1.5 GB of memory on a laptop"}  # measured: 22 s, a peak footprint of 1.53 GB
+MENU: Final = "Kernel > Shut Down All Kernels"  # JupyterLab's menu item that shuts every kernel down
+ON_BINDER: Final = ("On mybinder.org a session always has 1 GB of memory, only at times more, and at most 2 GB ([its "
+                    "guidelines](https://mybinder.readthedocs.io/en/latest/about/user-guidelines.html#user-memory)). "
+                    f"So this job may not fit there. Try it in a terminal with no notebook kernel running ({MENU}), or "
+                    "run it on your own computer.")  # in the README of a job WIDE names, from mybinder.org's guidelines
+KERNEL_FIRST: Final = (f"On Binder, shut down the notebook's kernel first ({MENU}); even then the job may not fit, as "
+                       "the README of its folder says.")  # with no number: in the script of that job and in Choose one
 ONE_RUN: Final = "One run, on one day: it shows how much of the answer survived that day, not how good the machine is."
 AFTER: Final = ("After a change, the stored results, the two scripts and the pictures here still show the old "
                 "circuit: [After a change]({up}README.md#after-a-change) says how to make them again.")
@@ -56,12 +66,13 @@ def flow(steps: tuple[str, ...]) -> str:
     return f"```mermaid\nflowchart {'TD' if len(steps) > 6 else 'LR'}\n    {nodes}\n```\n"
 
 
-def _up(path: str) -> str:
-    """The "../" that reach examples/ from the folder `path` under it."""
-    return "../" * (path.count("/") + 1)
+def _up(path: str, place: Path | None) -> str:
+    """The way up to examples/ from a folder: from its place in the clone, else as from its `path` below examples/."""
+    where = EXAMPLES / path if place is None or not place.resolve().is_relative_to(EXAMPLES.parent) else place
+    return Path(os.path.relpath(EXAMPLES, where.resolve())).as_posix() + "/"
 
 
-def _browser(path: str, notebook: str) -> str:
+def _browser(path: str, notebook: str, up: str) -> str:
     badge = "Or in your browser, with nothing to install: [![Run on Binder](https://mybinder.org/badge_logo.svg)]"
     terminal = (" Binder opens JupyterLab, where File > New > Terminal gives a terminal at the top of the clone: "
                 f"`cd examples/{path} && ./emulate.sh` runs this example there as on your own computer.")
@@ -69,11 +80,11 @@ def _browser(path: str, notebook: str) -> str:
         return (f"{badge}({BINDER}). The first start can take some minutes. That page holds all the examples: put "
                 f"`{path}` in `NAME` under Choose one.{terminal}")
     return (f"{badge}({notebook}), the notebook of this folder. The first start can take some minutes. "
-            f"[`all_examples.ipynb`]({_up(path)}all_examples.ipynb) holds all the examples: put "
+            f"[`all_examples.ipynb`]({up}all_examples.ipynb) holds all the examples: put "
             f"`{path}` in `NAME` under Choose one.{terminal}")
 
 
-def _emulate(path: str, notebook: str, qasm: str, qubits: int) -> str:
+def _emulate(path: str, notebook: str, qasm: str, qubits: int, up: str) -> str:
     own = (f"## Emulate it\n\nYour computer computes what the machine would do: no account, no token, and nothing is "
            f"sent. On your own computer:\n\n```bash\n"
            f"git clone --depth 1 https://github.com/ENCCS/eurohpc-qdevices\ncd eurohpc-qdevices/examples/{path}\n"
@@ -81,7 +92,8 @@ def _emulate(path: str, notebook: str, qasm: str, qubits: int) -> str:
            f"and of QuTiP, with no noise, then what the machine gave if this example has run. Add a simple model of "
            f"noise, which is ours and not a model of any machine, with `./emulate.sh --noise 0.03 "
            f"--readout 0.03`. It needs Python 3.8 or later, or [pixi](https://pixi.sh).")
-    return "\n\n".join(part for part in (own, _browser(path, notebook), _qutip_code(path, qubits), qasm) if part) + "\n"
+    parts = (own, _browser(path, notebook, up), _qutip_code(path, qubits), qasm)
+    return "\n\n".join(part for part in parts if part) + "\n"
 
 
 def _to_qasm(path: str, job: str, jobs: int) -> str:
@@ -100,7 +112,8 @@ def _to_qasm(path: str, job: str, jobs: int) -> str:
 
 
 def _qutip_code(path: str, qubits: int) -> str:
-    wide = f" Here `emulate_qutip.py` runs a job on {qubits} qubits: it takes {WIDE[qubits]}." if qubits in WIDE else ""
+    wide = (f" Here `emulate_qutip.py` runs a job on {qubits} qubits: it takes {WIDE[qubits]}. {ON_BINDER}"
+            if qubits in WIDE else "")
     return ("`emulate_qutip.py` and `emulate_qrisp.py` are this example in QuTiP code and in Qrisp code, gate by gate, "
             "to read. Run in this folder, each prints what its emulator gives, with no noise: `python "
             "emulate_qutip.py` where QuTiP and qutip-qip are installed, `python emulate_qrisp.py` where Qrisp is, as "
@@ -126,13 +139,13 @@ class Readme:
     notebook: str = ""                       # the Binder link of the folder's own notebook, if it has one
     qubits: int = 0                          # the most qubits a job uses: for so many, WIDE says what QuTiP takes
 
-    def text(self, path: str) -> str:
-        """The whole page, as Markdown; `path` is the folder under examples/."""
-        back = f"{self.back} {ONE_RUN}" if self.back else NOT_SENT
+    def text(self, path: str, place: Path | None = None) -> str:
+        """The whole page, as Markdown; `path` is the folder under examples/, `place` the folder on disk if known."""
+        back, up = (f"{self.back} {ONE_RUN}" if self.back else NOT_SENT), _up(path, place)
         return (f"# {self.title}\n\n{self.about}\n\n{flow(self.steps)}\n{self._pictures(path)}\n**What a perfect "
                 f"machine gives:** {self.perfect}\n\n**What came back:** {back}\n\n"
-                f"{_emulate(path, self.notebook, self._qasm(path), self.qubits)}\n"
-                f"{self._send()}\n{self._files(path)}\nMore: the [{SITES[self.site].title} page]"
+                f"{_emulate(path, self.notebook, self._qasm(path), self.qubits, up)}\n"
+                f"{self._send()}\n{self._files(up)}\nMore: the [{SITES[self.site].title} page]"
                 f"({MANUAL}{SITES[self.site].page}/) of the manual.\n")
 
     def _qasm(self, path: str) -> str:
@@ -177,9 +190,9 @@ class Readme:
                 f"never hand it to anyone else.\n"
                 f"4. Run `./submit.sh`. {self._sent()}\n5. Run `./run.sh --counts` to see what came back.\n")
 
-    def _files(self, path: str) -> str:
+    def _files(self, up: str) -> str:
         rows = [f"| `{name}` | {SITES[self.site].form} |" for name in self.files]
-        after = AFTER.format(up=_up(path))
+        after = AFTER.format(up=up)
         made = f"{self.made_by} {after}" if self.made_by else after
         ran = "| `results.json` | the counts of one run on the machine, with no job id and no date |\n"
         more = "".join(f"| `{name}` | {what} |\n" for name, what in self.more)

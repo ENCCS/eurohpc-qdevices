@@ -3,7 +3,7 @@
 from enum import StrEnum
 from typing import Any, Final
 
-from ..values import is_number
+from ..values import is_number, measure
 
 ID_KEYS: Final = ("id", "uuid", "job", "uid")
 NEVER_SUBMITTED: Final = ("upload_error", "not_submitted")  # stop kinds of older runners; a tuple: a kind may be a list
@@ -19,7 +19,7 @@ class Status(StrEnum):
 
 
 class Outcome(StrEnum):
-    """The 12 ways an order is final."""
+    """The 13 ways an order is final."""
 
     RESULT = "result"
     REFUSED = "refused"
@@ -32,11 +32,13 @@ class Outcome(StrEnum):
     RESOLVED_NEW = "resolved_new"
     RESOLVED_STUCK = "resolved_stuck"
     RESOLVED_EXPIRED = "resolved_expired"
+    RESOLVED_UNREADABLE = "resolved_unreadable"
     RESOLVED_GONE = "resolved_gone"
 
 
 AT_LIMIT: Final = frozenset({Outcome.FAILED, Outcome.EXPIRED, Outcome.RESOLVED_NEW, Outcome.RESOLVED_STUCK,
-                             Outcome.RESOLVED_EXPIRED, Outcome.RESOLVED_GONE})      # final, time not known
+                             Outcome.RESOLVED_EXPIRED, Outcome.RESOLVED_UNREADABLE,
+                             Outcome.RESOLVED_GONE})      # final, time not known
 
 
 def job_id(event: dict) -> Any:
@@ -58,9 +60,12 @@ def number(value: object) -> float | None:
 
 
 def seconds_of(result: dict) -> float | None:
-    """The seconds a result line holds: this app's "seconds", or the keys of the older runners."""
+    """The seconds a result line holds: this app's "seconds", or the keys of the older runners.
+
+    A time below zero, which an older version of the app wrote, is no measure: the next key is read.
+    """
     for key in ("seconds", "device_seconds", "wall_seconds"):
-        value = number(result.get(key))
+        value = measure(number(result.get(key)))
         if value is not None:
             return value
     return None

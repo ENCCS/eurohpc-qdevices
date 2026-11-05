@@ -9,7 +9,7 @@ keeps an exact record of what was sent and what came back. For **Euro-Q-Exa** (L
 
 ## What it does
 
-![From you to the machine: dry-run, check and send on your computer, a record on disk, and the site that runs the shots](content/figs/app-flow.png)
+![From you to the machine: dry-run, check and send on your computer, a record on disk, and the site that runs the shots; check reads the site once, and send sends it the jobs and gets the counts](content/figs/app-flow.png)
 
 - **Checks** a manifest offline: the circuit files, their SHA-256, the shots and the project (`dry-run`).
 - **Reads** the machine once before a run, and sends no job (`check --live`).
@@ -17,13 +17,14 @@ keeps an exact record of what was sent and what came back. For **Euro-Q-Exa** (L
 - **Does not write the circuits.** You bring each one as a text in the form its site takes: OpenQASM for
   Euro-Q-Exa, which compiles it; OpenQASM 3 in the machine's own gates (`r`, `cz`, `move`) for VLQ, which
   runs it as written; the broker's list of operations for Piast-Q. In [`examples/`](examples/README.md) the
-  texts are written by hand, or built as Qrisp programs and converted to OpenQASM 2 by
+  texts are written by hand, by a short Python function of the tutorial (`examples/hamiltonian/chain.py`,
+  for 11 of the 37 Euro-Q-Exa jobs), or built as Qrisp programs and converted to OpenQASM 2 by
   `examples/qrisp/qasm2.py`, a short converter of the examples, not of the app
   ([how](content/qrisp.md#how-the-text-is-written)). The README of each folder says how its text was made.
 - **Records** a line on disk before each request, and the counts when they come. After a crash, `--resume`
   collects the open jobs and never sends them again.
-- **Keeps to** your limits: the projects you name, the shots and the time of one job, and your budget of
-  seconds on the site.
+- **Keeps to** your limits: the projects you name, the shots of one job, and your budget of seconds on the
+  site. A result that took longer than your time limit for one job stops the run; the app cuts no job short.
 - **Shows** runs, jobs and usage from the records, offline.
 - **Never** cancels a job, sends one twice, or stores or prints a token.
 
@@ -33,7 +34,7 @@ In your browser, with nothing to install:
 
 [![All the examples on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/all_examples.ipynb) all the examples, side by side with what the machines gave
 
-[![The tutorial on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/hamiltonian/tutorial.ipynb) the Hamiltonian simulation tutorial
+[![The tutorial on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/hamiltonian/tutorial.ipynb) the Hamiltonian simulation tutorial, from the Schrödinger equation to a job on a quantum computer
 
 [![Two spins on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/ENCCS/eurohpc-qdevices/main?urlpath=lab/tree/examples/hamiltonian/two_spins/two_spins.ipynb) two spins in a field: the short start to Hamiltonian simulation
 
@@ -48,7 +49,7 @@ cd eurohpc-qdevices/examples/qrisp/bell
 ./emulate.sh
 ```
 
-Each folder of [`examples/`](examples/README.md) explains itself, with its README and scripts. [`examples/hamiltonian/`](examples/hamiltonian/README.md) is a tutorial, from the Schrödinger equation to a job on a quantum computer, which you run on the machine and anyone can emulate.
+Each folder of [`examples/`](examples/README.md) explains itself, with its README and scripts.
 
 ## Install and first run
 
@@ -58,7 +59,8 @@ pixi add "python=3.12"
 pixi add --pypi "eurohpc-qdevices @ git+https://github.com/ENCCS/eurohpc-qdevices"
 ```
 
-In a clone, put your projects and limits in `~/.config/qdevices/qdevices.toml`; start from `examples/qdevices.toml`.
+Put your projects and limits in `~/.config/qdevices/qdevices.toml`; start from
+[`examples/qdevices.toml`](examples/qdevices.toml). `examples/` has a manifest for each site.
 
 ```bash
 pixi run qdevices dry-run MANIFEST                          # offline: the files, their SHA-256, shots, project
@@ -66,6 +68,9 @@ pixi run qdevices login SITE                                # how to get the tok
 pixi run qdevices check SITE --live --manifest MANIFEST     # one read of the machine, no job
 pixi run qdevices send MANIFEST --live --max-order 1        # the first job alone
 ```
+
+To run an example on the machine, give its `manifest.json` your own names; `./run.sh --live` in its folder then
+runs the last two commands.
 
 ## Manual, tests and licence
 

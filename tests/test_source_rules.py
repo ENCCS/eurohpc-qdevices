@@ -23,8 +23,9 @@ OPEN_TO_ALL = ("qdevices.sites", "qdevices.sites.base", "qdevices.sites.protocol
 # What a module under sites/ may import of the app; each ends in a dot, as the name it is tested against does.
 BELOW_SITES = ("qdevices.sites.", "qdevices.qasm.", "qdevices.clock.", "qdevices.layout.", "qdevices.values.")
 UNPICKLERS = {"load", "loads", "Unpickler"}       # of the standard pickle: only the restricted reader may use them
-# Each except clause that catches Exception, as (file, enclosing function); a wave that moves one edits it here.
+# Each except clause that catches Exception, as (file, enclosing function); a change that moves one edits it here.
 BROAD = [
+    ("src/qdevices/errors.py", "described"),              # str() of an error raised by code of a user may raise
     ("src/qdevices/rulebook.py", "load"),                 # the code of a rules file: any error of it refuses the call
     ("src/qdevices/runner/hooks.py", "_verdicts_of"),     # a user hook that raises gives a failed verdict
     ("src/qdevices/runner/loop.py", "Loop._broken"),      # the lines of an error of the program, if they can be written
